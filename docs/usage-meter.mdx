@@ -1,0 +1,73 @@
+---
+title: "Usage Meter"
+---
+
+Usage meters are synonymous to a billable metric i.e., they define how the incoming events are aggregated in order to measure consumption. 
+
+If your pricing strategy has features that have variable pricing based on the consumption, you have to define a corresponding usage meter for it.
+
+Here's how you'll create a usage meter via the interface:
+
+1. **Define Usage Meter:**  
+   1. Access the `Usage Meters` option on the side menu  
+   2. Hit the `+ New Usage Meter` button on the top right corner  
+   3. Enter a meter name and description for the same (Description is optional)  
+   4. Associate the usage meter with the respective event schema
+2. **Set Filter Condition:** You can choose to aggregate only the events that match certain criteria. The filtering logic needs to be set up in this section.  
+   1. Choose an `Attribute/Dimension`  
+   2. Select the logical operator you wish to apply  
+   3. Lastly, enter the value it should match/check against
+3. **Set Aggregation Type:** The aggregation types define how the ingested events are compiled and calculated at the end of a billing cycle. They can be of two types.
+
+| Aggregation Type | Description                                                                                                                                                    | Example Use case                                                                             |
+| ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| COUNT            | Counts the number of times an incoming events occurs, matching it’s conditions. Togai will compute the number of unique events within the given time interval. | 1\. Number of transactions (payment gateways),2\. Number of chat requests (given to ChatGPT) |
+| SUM              | Sums a defined property of incoming events. Togai will compute the total of all values reported within a selected time.                                        | 1\. Total amount of money processed (payment gateways),2\. Total GB stored (cloud infra)     |
+
+  
+Here's an example of how to go about creating usage meters that shows when to use which aggregation type. Let's take the example of **Stripe Payments**. This is what their pricing looks like: 
+
+![](docs/images/stripe-pricing.png) 
+
+Let's model their Standard Plan: **`2.9% + 30¢`** per successful card charge. 
+
+To model this 2-part pricing of Stripe, you'll need to create **two usage meters**. The event schema to be associated to both the usage meters will look like this: 
+
+1. **Attribute:** Transaction\_amount (Unit as USD)
+2. **Payment Mode**: This is incase Stripe wants to charge differently or just segment users based on the Payment mode (Debit card, ACH etc).
+![](docs/images/stripe-create-event-schema.png)   
+
+#### Usage meter 1:
+
+This is to model the first part of the pricing: `**2.9% of transaction amount**`.
+
+ In this case, we need to sum the total transaction amount across various transactions for a particular user and then calculate 2.9% of that. 
+
+Clearly, this requires us to use the sum function and so we set the aggregation type to `Sum`. 
+
+![](docs/images/8d7a154-image.png)
+
+![](docs/images/9aa8d35-image.png)
+
+If you want to create a usage meter to aggregate only the transactions done using Debit cards and then charge them differently, you can use the **Dimension**: `Payment Mode` as a filter condition. 
+
+![](docs/images/5f60741-image.png) 
+
+#### Usage meter 2:
+
+This is to model the second part of the pricing: `**30¢ per transaction**`.
+
+In this case, for every unique transaction done by a user we need to increase the counter by 1\. So that we can then multiply the final number of the counter with 30 (cents). 
+
+Clearly, this requires us to use the count function and so we set the aggregation type to `Count`.
+
+![](docs/images/706a845-image.png)
+
+<Card title="Create usage meter API" icon="lightbulb" iconType="duotone" color="#2853C2" href="/api-reference/usage-meters/create-an-usage-meter">
+  [You can also create usage meters using our API](/api-reference/usage-meters/create-an-usage-meter)
+</Card>
+
+Notes: 
+
+1. Metering is done in **real-time** to facilitate entitlements.
+2. **Idempotency** of data is maintained (i.e. a record is processed atomically/only once.)

@@ -80,6 +80,13 @@
       ]
     },
     {
+      "group": "Billable Items",
+      "pages": [
+        "docs/billable-items-overview",
+        "docs/usage-meter"
+      ]
+    },
+    {
       "group": "Customers",
       "pages": [
         "api-reference/customers/list-customers",
