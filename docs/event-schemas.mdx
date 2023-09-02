@@ -1,0 +1,48 @@
+---
+title: "Event Schemas"
+---
+
+Event schemas represent the format in which your events will be processed and stored within Togai's system. Imagine this to be your database where you define fields.
+
+We support two types of fields for building a basic schema:  
+a. Attributes - These are continuous variables or numerical values upon which you'd want to apply mathematical functions.  
+b. Dimensions - These are categorical variables that can contain string values.
+
+For more complex schemas that require calculations to be performed on raw data metrics and return output values back to the event as an attribute, we launched support for Enriched Values. I recommend reading about [enriched values](/docs/enriched-values) before proceeding to the next section.
+
+### Create an event schema
+
+To create an event schema via the user interface:
+
+1. Access the **'Event Schemas'** option via the side menu
+2. From the top right corner, select the **'+ New Event Schema'** button
+3. Enter the name and description for the schema
+4. Add your attributes and the respective units for measurement
+5. Add your dimensions to record the string values
+6. If you have any dependencies or enriched values, define them
+7. The final step is to publish the event schema by hitting the **'Publish'** button  
+Note: If you're looking to modify or review the schema before confirming the creation, you can hit the **'Save As Draft'** button
+
+![2282](docs/images/create-event-schema.png "create-event-schema")
+
+Event schema creation
+
+Once the event schema is created, you can access the event schemas view to scan a list of All Schemas, Active Schemas, Drafts and Inactive Schemas.
+
+![2278](docs/images/view-event-schema.png "view-event-schema")
+
+All event schemas view
+
+  
+### Edit an Event Schema
+
+To edit an existing event schema, select the schema. This will take you to a page where you can:
+
+1. View a summary of the schema (Name, attributes and dimensions)
+2. View the usage meters attached to it
+3. View the various schema versions
+4. You can also push in test data from here to check the sanity of the schema
+
+On hitting the 'Edit Event Schema' button on the top right corner of the screen, you will be able to edit the schema per your requirements.
+
+_You can also create and update event schemas using our_ [API](api-reference/event-schemas/create-an-event-schema)_._
