@@ -7179,18 +7179,14 @@ components:
       in: path
       name: invoice_id
       required: true
-      content:
-        application/json:
-          schema:
+      schema:
             type: string
             example: ACC001
     credit_id:
       in: path
       name: credit_id
       required: true
-      content:
-        application/json:
-          schema:
+      schema:
             type: string
             example: creds.1znQx9jiIXw.r44fc
     filter_credit_id:
