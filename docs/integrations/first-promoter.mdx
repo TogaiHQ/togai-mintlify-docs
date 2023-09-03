@@ -1,0 +1,58 @@
+---
+title: "First Promoter"
+---
+
+The Togai and FirstPromoter Integration supports a uni-directional sync between Togai and Razorpay. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between FirstPromoter and Togai requires only a one-time setup. Follow the steps below:
+
+#### Installation of App Instances
+
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `FirstPromoter` from the available apps
+* Click on the `+Add connection` button
+![](docs/integrations/images/b71745d-image.png) 
+* **App link name**: Provide a name for this connection
+* **FirstPromoter API Key:** Head on over to your FirstPromoter account to generate your API key and then paste it in here.
+
+**Repeat the same process for Togai**, treating it as a separate App within the integration.
+
+**Note:** Togai is considered an app in our integration so it is easy for you to configure different keys for different flows. This way you can have specific permissions configured for a specific key, making it more secure. To create a secret key for Togai, go to the `Admin Center` on the left nav bar. Click on the `API tokens` tab. Then click on the `Generate new token` button.
+
+Currently, there is 1 action available for FirstPromoter. You can use this as a building block to build your own flows using the triggered and actions present for different apps or use one of the pre-defined ones in the `Flows` section.
+
+#### Flows and Automation
+
+* To enable flows, go to the `Flows` section within Integrations
+* Select the desired flow from the available options or create a new flow to meet your requirements. You can create a new flow by clicking on the `Create New Flow+` Button
+![](docs/integrations/images/d3f89f5-image.png) 
+* **To create a new flow:**
+* Enter the flow name and description
+* Select the flow type from the dropdown
+* **Inbound Flow** \- based on third party events(eg: Razorpay), actions are triggered in Togai
+* **Outbound Flow** \- based on events occurring in Togai, changes are made to the connected third party app
+* Define triggers by choosing the source application from where the flow starts
+* Select a predefined trigger from the dropdown list
+* Next, define an action which makes the desired changes by selecting the destination app
+* Select a predefined action from the dropdown list. You can add multiple actions.
+* Lastly, preview the flow and save changes  
+Else, choose an existing flow and select `+Add Connection`
+
+Configure the triggers and actions by specifying the app instance (FirstPromoter or Togai) associated with each step.  
+Now, when a new customer is added in Togai, it is synced in FirstPromoter as well. To refer to customers in FirstPromoter or Togai, you can obtain the customer ID and account ID. In Togai, go to Customers, select an account, and find the customer ID and account ID under the `Settings` tab. Use these IDs to reference the customer in FirstPromoter, or vice versa.
+
+#### Action available
+
+There is one action available in this Integration - Tracking a sale that came via Firstpromoter referral so that the appropriate price plan can be attached to the account. 
+
+To know more about how this works, you can take a [look at their documentation here](https://help.firstpromoter.com/en/articles/1574078-how-does-firstpromoter-track-affiliate-sales-saas-version)
+
+#### Customer ID and Account ID
+
+To refer to customers in FirstPromoter or Togai, you can obtain the customer ID and account ID.
+
+* In Togai, go to Customers, select an account, and find the customer ID and account ID under Settings.
+* Use these IDs to reference the customer in FirstPromoter, or vice versa.
+
+By following this API guide, you can leverage the Togai and FirstPromoter Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.
