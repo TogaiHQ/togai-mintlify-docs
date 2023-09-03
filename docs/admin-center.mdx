@@ -1,0 +1,89 @@
+---
+title: "Admin Center"
+---
+
+Access the **"Admin Center"** option from the side menu. Within this section, you can modify your Profile, User Settings, Currencies, Generate API Tokens and perform bulk imports.
+
+### 1\. Profile
+
+View your profile settings on the **"Profile"** tab. You can update your basic information such as name, email ID, company name and also change password.
+
+### 2\. Users
+
+Access the **"Users"** tab to view the list of  
+a. active users from your organisation  
+b. users who have been invited to use Togai but haven't accepted the invite\\
+
+Additionally, you can also add new users by hitting the **"Invite New User"** button.
+
+### 3\. Currencies
+
+Togai has a built-in support for multiple currencies to help you serve various geographies across the globe.
+
+Base currency is the default currency for the organisation. All widgets on the dashboard display values in the base currency.  
+To add multiple currencies:
+
+1. Hit the **"Add New Currency"** button
+2. Choose the currency from the dropdown list
+3. Enter the exchange rate to convert the values to your base currency. Please note that once the conversion rate is saved, it cannot be changed.
+4. Confirm the creation of the currency
+
+### 4\. API Tokens
+
+The API Tokens tab helps you generate new tokens and also view a list of the older ones.
+
+To create a new token:
+
+1. hit the **"Generate New Token"** button
+2. Copy the secret key
+3. Start using our [API's](/api-reference) to configure Togai for your systems!
+
+Please note that you can toggle to deactivate a token and also delete it.
+
+![](docs/images/8e4d4d5-Screenshot_2023-03-10_at_12.22.14_PM.png "Screenshot_2023-03-10_at_12.22.14_PM.png")
+
+### 5\. Bulk Import
+
+Bulk Import tab allows you to upload a csv file to migrate your customers/accounts into Togai. 
+
+To bulk upload from your system:
+
+1. Hit the **"New Import +"** button
+2. Choose the import type i.e., Customers or Accounts
+3. Download a sample csv format to arrange your data in the same format
+4. Upload your csv file
+5. Once you've selected your csv file to be uploaded, you'll be prompted to map all fields.
+6. Lastly, you can hit the **"Start Import"** button to begin importing your data.
+
+### 6\. Price Plan Migration
+
+You can migrate accounts from one plan to another with just a few clicks. Follow the steps below: 
+
+1. Choose the plan you want to migrate your accounts **FROM**
+2. Select the **version** of the plan you've chosen in the previous step
+3. Choose the price plan you want to migrate your accounts **TO**
+4. Select how you want this migration to happen. There are 4 options:  
+   1. Migrate `all accounts` to new price plan `immediately `  
+   2. Migrate `all accounts` to new price plan from `next pricing cycle`  
+   3. Migrate all accounts `without overrides` to new price plan `immediately `  
+   4. Migrate all accounts `without overrides` to new pricing plan from `next pricing cycle `
+![](docs/images/4d20e7b-image.png) 
+
+### 7\. Settings
+
+There are 6 entities for which you can create settings. 
+
+* Organization
+* Customer
+* Account
+* Event Schema
+* Usage Meter
+* Add on
+* Price Plan
+* Invoice
+
+In the Admin center, you can create settings for the Organization. For the rest, you can go to the corresponding sections. 
+
+Organization wide setting is a metadata component that can be used in certain scenarios like event enrichment and no-code center workflows. 
+
+The setting type can be JSON, JSON Logic, Numeric and String.

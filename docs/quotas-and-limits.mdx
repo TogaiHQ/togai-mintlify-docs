@@ -1,0 +1,40 @@
+---
+title: "Quotas and Limits"
+---
+
+Togai's Usage-Based metering and billing platform has quotas and limits to manage API requests and resource creation within an organization. Customers can adjust some quotas through Togai's customer support, and understanding them is crucial for avoiding service interruptions.
+
+### API request quotas
+
+These quotas limit the number of requests that can be made to Togai's APIs.
+
+| API Name                                | Quota                  | Is this adjustable? |
+| --------------------------------------- | ---------------------- | ------------------- |
+| Event ingestion                         | 50 requests per sec    | Yes                 |
+| Batch Event ingestion                   | 50 requests per sec    | Yes                 |
+| All other APIs with a valid auth token  | 10 requests per sec    | Yes                 |
+| Unauthenticated API requests from an IP | 5 requests per 30 mins | No                  |
+
+### Resource quotas
+
+These quotas limit the maximum number of resources that can be created within an organization in Togai.
+
+| Resource Name                           | Quota | Is this adjustable? |
+| --------------------------------------- | ----- | ------------------- |
+| Customers in a Togai Organisation       | 100   | Yes                 |
+| Accounts in a Togai Organisation        | 100   | Yes                 |
+| Account aliases in a Togai Organisation | 1000  | Yes                 |
+| PricePlans in a Togai Organisation      | 100   | Yes                 |
+| Event Schemas in a Togai Organisation   | 100   | Yes                 |
+| Usage Meters in a Togai Organisation    | 100   | Yes                 |
+
+### Other quotas
+
+| Service Name                                          | Quota                  | Is this Adjustable? |
+| ----------------------------------------------------- | ---------------------- | ------------------- |
+| Number of Forgot password requests from an IP address | 5 requests per 30 mins | Yes                 |
+| Sign-up requests from an IP address                   | 5 requests per 30 mins | Yes                 |
+
+### Adjusting Quotas
+
+To adjust a quota, please contact Togai's customer support team at 📧 [support@togai.com](mailto:support@togai.com)

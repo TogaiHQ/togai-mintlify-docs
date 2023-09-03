@@ -119,6 +119,24 @@
       ]
     },
     {
+      "group": "Configuration",
+      "pages": [
+        "docs/admin-center",
+        "docs/quotas-and-limits"
+      ]
+    },
+    {
+      "group": "Integrations",
+      "pages": [
+        "docs/stripe",
+        "docs/chargebee",
+        "docs/zohobooks",
+        "docs/zuora",
+        "docs/razorpay",
+        "docs/firstpromoter"
+      ]
+    },
+    {
       "group": "Entities",
       "pages": [{
         "group": "Customers",
