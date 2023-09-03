@@ -108,6 +108,7 @@
         {
           "group": "Customers",
           "pages": [
+            "docs/customers",
             "docs/credits",
             "docs/price-plan-schedule",
             "docs/proposal"

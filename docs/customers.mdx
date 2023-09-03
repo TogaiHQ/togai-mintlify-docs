@@ -1,0 +1,44 @@
+---
+title: "Customers"
+---
+
+Creating your customers and assigning price plans to them is the last piece with respect to Togai’s configuration.
+
+Everytime a customer is created, there’s an inherent hierarchy that kicks in.
+
+#### Create a Customer:
+
+1. To create a customer via the user interface:
+2. Access the **“Customers”** option from the side menu
+3. Click the **“+ New Customer”** button on the top right corner
+4. Enter the Customer Name, Email ID, Customer ID and Billing Address
+5. Confirm this by clicking **“Add Customer”**
+
+#### Create an Account:
+
+You’ll notice that once a customer is created, an account is created by default. If you wish to create multiple accounts for a single customer, select the customer:
+
+1. Click on **“Add Account”** on the top right corner
+2. Enter the Account Name
+3. Select the currency you want to apply to the account. Once the account level currency is set, it cannot be changed.
+4. Enter an Account ID
+5. You can choose to enter an account alias which will help you uniquely identify the account
+
+On selecting a particular account, you can view information associated with the account categorised as follows:
+
+1. Account Summary - This view displays the various billing components associated with the price plan. You can also add custom charges to the account on this page by:  
+   1. Hit the **"+ Add Customer Charges"** button  
+   2. Name - The name of the charge. This name will be displayed in the invoice to identify the specific charge being added. Choose a descriptive name that accurately represents the charge.  
+   3. Value - The value of the charge. Currently, the value is a fixed amount denominated in the same currency as the invoice currency of the corresponding account. Specify the charge amount based on the applicable currency.
+2. Price Plan Schedule - This view represents the billing schedule of price plans. You can also attach a new price plan for a new billing schedule for a particular account.
+3. Credits - The credits tab shows an overview of active credits, closing balance, running balance, inapplicable balance. You can also add credits by hitting the **"Add Credits"** button. Read more about credits [here](/docs/credits).
+4. Invoices - This view displays all invoices associated with the particular account
+
+#### Edit a Customer:
+
+1. Select the **“Edit Customer”** option on the top right corner
+2. This view will allow you to edit Customer Name, Email ID and Billing Address. Please note that the Customer ID is not an editable field.
+
+To view a list of all Customers, access the Customers view from the side menu. 
+
+_You can also create and manage Customers using our [API.](/api-reference/customers/create-a-customer)_
