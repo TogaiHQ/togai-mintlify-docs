@@ -1,0 +1,174 @@
+---
+title: "Price Plans"
+---
+
+Price plans are a collection of pre-set conditions with associated cost values that convert usage metrics into billable values. 
+
+### Create a price plan:
+
+To create a price plan via the user interface, access the **“Price Plans”** option on the side menu and hit **“+ New Price Plan”** 
+
+### 1\. Cycle Configuration
+
+**a. Define Price Plan** \- Enter a price plan name and description  
+**b. Pricing Cycle** \- A pricing cycle corresponds to the billing period and defines the interval at which invoices are supposed to be generated
+
+* Select a pricing cycle (Monthly/Quarterly/Half-Yearly/Annually)
+* Enter the start date of the pricing plan
+* Enter a value for grace period in days - grace period is a set amount of days to enable internal reconciliation before the final invoice is generated. It can also be 0.  
+**c. Currencies** \- Select the currency/currencies you want to apply on the price plan. Read more about currencies here.
+
+![2280](docs/images/f5aaacf-Screenshot_2023-03-07_at_6.35.28_PM.png "Screenshot 2023-03-07 at 6.35.28 PM.png")
+
+Price Plan Creation
+
+* Hit the “Proceed” button to move on to configure the price plan charges.
+  
+### 2\. Price Plan Charges
+
+### Fixed Fees
+
+“Fixed fees” define the one-time fee that is applicable on the use of your product. Here’s where the Addons are integrated into a price plan.
+
+**Add fixed fee:**
+
+1. Hit the **“+ Add Fixed Fees”** button
+2. On the side panel that opens up, choose the addon you want to apply
+3. Enter the respective currency rates for the addon and save
+
+![2290](docs/images/d4c5423-Screenshot_2023-03-07_at_6.45.03_PM.png "Screenshot 2023-03-07 at 6.45.03 PM.png")
+
+Add Fixed Fee
+
+**Edit or delete fixed fees:**
+
+1. Edit - Allows you to edit the addon name and currency values
+2. Delete - allows you to delete the fixed fee component from your price plan. (This action cannot be undone)
+  
+### Rate Cards
+
+To charge your customers based on their usage, you can add rate cards that relate to the usage meters defined previously. 
+
+**Add Rate Card:**
+
+1. Hit the **“+ Add Rate Card”** button
+2. Enter a rate card name
+3. Associate the card to a pre-defined usage meter
+4. Select a pricing model from the following options:
+* **Standard** \- Simple pricing model that charges the same price for all the consumed units.
+* **Tiered** \- As the name suggests, this model gives you the flexibility to define your slabs and the associated costs. We support defining distinct pricing types for each slab.
+* **Volume** \- Similar to the tiered pricing model except that only one price tier applies at the end of the billing period.
+1. Define the upper and lower limits for your slabs
+2. Select a **pricing type** from the following options:
+* **Per Unit** \- costs are defined for each unit consumed
+* **Flat** \- defines a flat fee for an entire slab
+* **Package** \- this pricing type segments the slabs by the mentioned package size. Costs are then defined for the package sizes.
+1. Enter the prices associated in the chosen currencies
+2. Togai also supports application of a minimum and maximum price limit on slabs. Define these min and max limits if applicable for your pricing strategy
+3. Confirm the creation of the price list by hitting the **“Add Rate Card”** button
+
+![2288](docs/images/dd9de93-Screenshot_2023-03-07_at_6.55.19_PM.png "Screenshot 2023-03-07 at 6.55.19 PM.png")
+
+Add Rate Card
+
+**Note:** Each rate card can only be associated with a single usage meter.
+
+**Edit or delete rate cards:**
+
+1. Edit - Allows you to edit the rate card details
+2. Delete - allows you to delete the rate card component from your price plan (This action cannot be undone)
+  
+### Add License
+
+Seat-based pricing allows you to charge your customers based on the number of seats or licenses they require.
+
+To configure seat-based pricing, follow these steps:
+
+1. **Create an AddOn:**  
+   * Navigate to the Billable items -> Add-ons section.  
+   * Click on the ‘+ New Add-on’ button, located at the top right.  
+   * Fill the Add-on Name and Type and Click on ‘Create’ to create an Add-on.  
+   * Create an Add-on of type "Licensed" to represent the number of users or seats. You can name this Add-on based on your requirements. For example, you can name it "users."
+
+_Note: Another way you can create an add-on is while creating a price plan._ 
+
+1. **Create License Under Your Price Plan:**  
+   * Hit the "Add License" button  
+   * Under the ‘Choose Add-on’ drop down, you can choose an existing add-on that you had previously created. Or click on ‘Create a New Add-on’ and create a new add-on from here.  
+   * Specify any cap you want to enforce on the number of licenses by entering the maximum value in the Maximum license quantity section.  
+   * Toggle the "Proration" button on if you wish to charge customers for licenses at a daily granularity level.  
+   * Configure the price per quantity of the add-on. For example, if the price per user or seat is $10, set the price to 10$ per quantity.  
+   * Click on ‘Add Seat License’ to create your license.  
+   * Hit the ‘Publish’ button to publish your price plan.
+2. **Specify the Number of Licenses:**  
+   * Under Account Summary -> Licenses, click on the "Manage License" button.  
+   * Click the ‘Add Licenses’ button and enter the number of licenses the customer wants to purchase or opt for.  
+   * Click the ‘Apply’ button to confirm the selection.
+
+**Edit or delete licenses:**
+
+1. Edit - Allows you to edit the number of licenses
+2. Delete - allows you to delete the licenses component from your price plan (This action cannot be undone)
+
+**Supported Features**
+
+1. **In-Advance and In-Arrears Invoicing of Licenses**  
+   * In-Advance Invoicing - For every change in the number of licenses, an invoice will be generated immediately. This invoice represents the finalized amount to be charged. If the customer has integrations with payment gateways, their credit card can be charged accordingly.  
+   * In-Arrears Invoicing - The pricing for changes in the number of licenses during an ongoing pricing cycle will be added to the current invoice.
+2. **Prorated Pricing of Licenses**  
+Optionally, businesses can choose to charge customers for licenses on a prorated basis at a daily granularity. For example, if a license is purchased on the 15th of a month, the customer will be charged only 50% of the configured rate. Prorated pricing cannot be configured with "in-advance" invoicing functionality.
+
+![Add Seat Licenses](docs/images/cac5a9c-Screenshot_2023-06-21_at_9.31.06_AM.png)
+
+Add Seat Licenses
+
+  
+### Minimum Commitment
+
+Minimum Commitment is a bare-minimum fee that a customer is required to pay if their projected usage target is not met. This is optional.
+
+**Add Minimum Commitment:**
+
+1. Hit the **“+ Add Minimum Commitment”** button
+2. Enter the currency values you want to charge your customers on the side panel that opens up and save it
+
+**Edit or delete minimum commitment:**
+
+1. Edit - Allows you to edit the currency values
+2. Delete - allows you to delete the minimum commitment component from your price plan (This action cannot be undone)
+
+To confirm the creation of your price plan, hit the **“Publish”** button. Once a price plan has been published, you cannot edit it.
+
+![2284](docs/images/e75ac33-Screenshot_2023-03-07_at_7.00.39_PM.png "Screenshot 2023-03-07 at 7.00.39 PM.png")
+
+Add Minimum Commitment
+
+  
+Here's what a configured price plan looks like:
+
+![2282](docs/images/e600df2-Screenshot_2023-03-07_at_7.02.32_PM.png "Screenshot 2023-03-07 at 7.02.32 PM.png")
+
+Price Plan
+
+To view a list of all price plans, access the price plans view from the side menu. 
+
+**Attach plan to Account:**
+
+1. Select an existing Price plan and click **“+ Attach Plan to Account”** on the top right corner
+2. Select the Customer ID from the pop-up
+3. Enter the date from which you want the Price plan to go live for that particular customer
+4. Togai also supports a toggle for pricing cycle overrides i.e., override the start date of a pricing plan by replacing it with a custom start date (Anniversary billing is one such example).
+
+**Note:** Price plans are always attached at an account level and not a customer level.
+
+_You can also create and manage Price Plans using our [API](/api-reference/price-plans/create-a-price-plan)._
+
+### Price Plan Migration
+
+This is currently available only via our API (the no-code frontend interface will be released shortly). 
+
+Togai now gives you the ability to migrate accounts from one price plan to another. You have 8 possible options to choose from when you want to migrate: 
+
+* **Overrides**: Skip accounts with overrides and migrate the rest or ignore existing overrides and migrate them too
+* **Migrate accounts to new plan** : Migrate immediately or from the next billing cycle
+* Migrate accounts associated to only a particular version of a plan to another plan or version

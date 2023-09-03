@@ -97,7 +97,24 @@
     {
       "group": "Pricing",
       "pages": [
-        "docs/add-ons"
+        "docs/add-ons",
+        {
+          "group": "Price Plans",
+          "pages": [
+            "docs/price-plans",
+            "docs/price-plan-overrides"
+          ]
+        },
+        {
+          "group": "Customers",
+          "pages": [
+            "docs/credits",
+            "docs/price-plan-schedule",
+            "docs/proposal"
+          ]
+        },
+        "docs/invoices",
+        "docs/entitlements"
       ]
     },
     {
