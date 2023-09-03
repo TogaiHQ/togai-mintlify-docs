@@ -1,0 +1,76 @@
+---
+title: "Chargebee"
+---
+
+The Togai and Chargebee Integration supports a bidirectional sync between Togai and Chargebee. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between Chargebee and Togai requires only a one-time setup. Follow the steps below:
+
+###  Installation of App Instances  
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `Chargebee` from the available apps
+* Click on the `+Add connection` button
+![](docs/integrations/images/b7c1203-image.png) 
+* **App link name**: Provide a name for this connection
+* **Chargebee API key:** Go to your chargebee account to fetch your API key and paste it here
+* **Site URL**: Your chargebee account will have a URL. For example, for an organization called Acme Inc, it might be Acme.chargebee.com. Input that in here. (We need this in order to sync invoices)
+* **Item Price:** Currently, for every Item Price, you'll need to create a separate connection and then use that connection for flows that involve this particular Item Price. In this section, paste the Item Price ID.
+
+**Repeat the same process for Togai**, treating it as a separate App within the integration.
+
+**Note:** Togai is considered an app in our integration so it is easy for you to configure different keys for different flows. This way you can have specific permissions configured for a specific key, making it more secure. To create a secret key for Togai, go to the `Admin Center` on the left nav bar. Click on the `API tokens` tab. Then click on the ‘`Generate new token`’ button.
+
+###  Triggers and Actions
+[](#triggers-and-actions)  
+There are 3 Actions and 2 Triggers available for Chargebee currently. The way it works is,
+
+When `{trigger}`, then do `{Action}`
+
+You can pick and choose the trigger and action that you want from the lengthy list available from all the applications. 
+
+You can use these as building blocks to build your own flows.
+
+An example flow would be: On creation of an account in Chargebee, create accounts in Togai and ZohoBooks. 
+
+![](docs/integrations/images/6dc67aa-image.png) 
+###  Flows and Automation
+* To enable flows, go to the `Flows` section within Integrations
+* Select the desired flow from the available options or create a new flow to meet your requirements. You can create a new flow by clicking on the `Create New Flow+` Button
+![](docs/integrations/images/d3f89f5-image.png) 
+* **To create a new flow:**  
+   * Enter the flow name and description  
+   * Select the flow type from the dropdown  
+   * **Inbound Flow** \- based on third party events(eg: Chargebee), actions are triggered in Togai  
+   * **Outbound Flow** \- based on events occurring in Togai, changes are made to the connected third party app  
+   * Define triggers by choosing the source application from where the flow starts  
+   * Select a predefined trigger from the dropdown list  
+   * Next, define an action which makes the desired changes by selecting the destination app  
+   * Select a predefined action from the dropdown list. You can add multiple actions.  
+   * Lastly, preview the flow and save changes  
+   Else, choose an existing flow and select `+Add Connection`
+
+Configure the triggers and actions by specifying the app instance (Chargebee or Togai) associated with each step.  
+Now, when a new customer is added in Togai, it is synced in Chargebee as well. To refer to customers in Chargebee or Togai, you can obtain the customer ID and account ID. In Togai, go to Customers, select an account, and find the customer ID and account ID under the `Settings` tab. Use these IDs to reference the customer in Chargebee, or vice versa.
+
+###  Available Flows
+![](docs/integrations/images/20968c8-image.png) 
+1. **Sync accounts created from Chargebee to Togai**  
+   1. When a new customer is created in Chargebee,  
+   2. If a webhook for customer creation exists, Togai listens and automatically creates a corresponding customer in Togai and syncs the customer ID between Togai and Chargebee. You can see this mapping of IDs in the Settings tab for that customer.
+2. **Sync Togai price plan to products in Chargebee**  
+   1. When a Payment goes through and has "succeeded" in Chargebee  
+   2. Togai listens using a webhook and automatically associates the corresponding price plan in Togai to the account, in Togai. In the case of a pre-paid plan with entitlements, the customer is now granted the feature credits they have paid for and can start using them immediately.
+3. **Create an invoice in Chargebee on Togai invoice**  
+   1. Event data is ingested into Togai using Togai APIs.  
+   2. At the end of the billing cycle, an invoice in Togai is automatically generated. You can see this invoice in the ‘Invoices’ section  
+   3. When the ongoing invoice gets converted into a generated invoice, the invoice is synced from Togai to Chargebee for invoice payments.
+
+###  Customer ID and Account ID
+
+To refer to customers in Chargebee or Togai, you can obtain the customer ID and account ID.
+
+* In Togai, go to Customers, select an account, and find the customer ID and account ID under Settings.
+* Use these IDs to reference the customer in Chargebee, or vice versa.
+
+By following this API guide, you can leverage the Togai and Chargebee Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.
