@@ -1,0 +1,95 @@
+---
+title: "Entitlements"
+---
+
+### Introduction:
+
+Entitlements allow businesses to provide their customers with on-demand access to specific features while tailoring feature availability based on different pricing packages. With this highly customizable solution, you can easily implement prepaid usage-based pricing models.
+
+### Overview:
+
+In a pricing plan, entitlements define the specific functionalities or features that a customer has the right to access. They act as a set of permissions that determine what actions a customer can perform within a software application. By utilizing entitlements, you can create customized customer experiences, implement flexible and dynamic pricing models, control resource consumption, and provide opportunities for upselling and cross-selling.
+
+### What does that mean for the end customer?
+
+End customers can check the usage of their entitlements, receive notifications when close to exhausting them, and purchase more units or upgrade their plan.
+
+### Alleviating Challenges of Implementing Entitlements
+
+While entitlements may seem straightforward, there are various complexities to consider:
+
+* Complex coding entitlement logic directly into the software's codebase limits flexibility and makes modifying or updating entitlements challenging. This approach hampers experimentation with pricing models and the introduction of new features.
+* Defining and configuring entitlements accurately is crucial. It involves mapping features to different plans, setting usage limits, and establishing rules for feature availability.
+* Real-time tracking and monitoring of entitlements require a robust infrastructure and precise calculations to provide customers with up-to-date information about their usage.
+* The dynamic nature of entitlements requires the ability to handle changes seamlessly. As customer needs evolve, you must be able to modify entitlements, add new features, adjust pricing tiers, or introduce time-limited promotions.
+
+Togai simplifies entitlements management, allowing businesses to effectively handle these complexities and optimize pricing while enhancing the customer experience. Togai's Entitlements feature ensures real-time usage calculation, allowing customers to have accurate
+
+### Benefits of Entitlements in Prepaid Pricing Models
+
+**Map and Bundle Features** 
+You can map features to different plans or bundle additional features with higher-tier plans, offering diverse pricing options and catering to specific customer segments.
+
+**Control Access to Specific Features (Upcoming)** 
+Feature gate checks enable businesses to tailor feature availability based on the customer's chosen plan or package, providing differentiated feature sets to different customer segments.
+
+**Capping Metered Feature Usage (Upcoming)** 
+By setting usage limits for specific features, you can proactively alert customers when they approach or reach those limits. This prevents overuse, provides transparency, and helps customers make informed decisions about their usage.
+
+### Use-Case: Cloud Hosting Provider
+
+Let's consider a cloud hosting provider as a specific example of a B2B business with a prepaid usage-based pricing model. The cloud hosting provider offers infrastructure-as-a-service (IaaS) solutions to businesses, allowing them to host their applications and websites on scalable and secure cloud servers.
+
+In this use case, the cloud hosting provider can implement and benefit from configuring entitlement price plans for their customers in the following way:
+
+**Basic Plan:** The basic plan offers a limited amount of CPU, memory, and storage resources. Customers on this plan can deploy and manage small-scale applications or websites with moderate traffic.
+
+**Business Plan:** The business plan provides higher resource allocations, including increased CPU, memory, and storage capacity. It caters to medium-sized businesses with larger-scale applications or websites and higher traffic requirements.
+
+**Enterprise Plan:** The enterprise plan offers extensive resources, advanced features, and premium support. It is designed for large enterprises with high-performance applications or websites and demanding traffic needs.
+
+### How to implement Entitlements in Togai?
+
+![](docs/images/56a71e6-image_5.png) 
+
+To set entitlements in Togai, follow the implementation steps below:
+
+1. In the left Navigation bar, click on 'Entitlement Plans' to access the list of existing entitlement plans.
+2. Click on the '+ New Entitlement Plan' button to create a new entitlement plan. Define the plan and the currencies you want to configure the entitlements in.
+3. After clicking 'Proceed,' you will be taken to the screen where you can configure the features and their limits, expiry, and charges that you want to include in the plan.
+4. For the Pricing model, you have 3 options (just like in a usual price plan)  
+   1. Standard - Simple model with a fixed flat/per unit/package price  
+   2. Tiered - The amount to charge varies incrementally as usage increases. Different units may be at different prices depending on the tier they fall into. We also support defining distinct pricing types for each slab.  
+   3. Volume - Similar to the tiered pricing model, except that only one slab is applied at the end of the billing period based on the total usage units.
+5. Now, to map the plan to an account, click on '+ Add to account' located on the top right of the plan screen.
+6. Provide the customer ID, account ID, and the number of entitlements you want to map to the account.
+7. Override Entitlements (Optional): If you want to override feature limits, expiry, and charges for specific accounts, toggle the 'Override Entitlements' button. This allows you to customize the entitlements for individual customers as needed.
+8. Preview the plan details to ensure accuracy. Once you are satisfied, click on 'Add Purchase' to add the plan to the selected account.
+
+By following these implementation steps, you can successfully set entitlements in Togai and configure customized pricing plans for your customers.
+
+#### Recurring Entitlements:
+
+If you want to charge for Entitled features on a recurring basis, click on the "Recurring" option in the Feature Limits Validity section. 
+
+![](docs/images/f2af70c-image.png)
+
+You can select any of the 5 options: 
+
+1. Repeat every month for one year (12 cycles)
+2. Repeat every week for one year (52 cycles)
+3. Repeat every week for one month (4 cycles)
+4. Repeat every quarter for one year (4 cycles)
+5. Custom Cycle: In case of custom cycle, you'll need to provide a few data points.  
+   1. Interval Type: You can choose from three options - Days, weeks and months.  
+   2. You can then provide the number for when it should start (From) and when the cycle ends (To)  
+   3. In this period, you can set the limit for how many feature credits can be used within that period.  
+   4. If you want to roll over unused feature credits, you can turn on the Cascade Grants toggle.  
+   ![](docs/images/58dcfdb-image.png)
+
+Notes: 
+
+* Idempotency checks are enabled for Entitlement events. Within a 10 minute window, if Togai receives 2 requests with same ID, Togai will debit feature credits for only one.
+* Event enrichments are also supported with entitlements. Enriched attributes in events can be used to debit units from entitlement wallet.
+* To create recurring entitlements, go to Price plans, click on **+Feature** button and then select **Recurring** option. If you want to add one-time entitlements you can do that inside Entitlement plans tab or price plans tab.
+* While overriding entitlements in a price plan, you can enter the quantity(number of items) they want to purchase of that price plan.
