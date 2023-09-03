@@ -128,12 +128,13 @@
     {
       "group": "Integrations",
       "pages": [
-        "docs/stripe",
-        "docs/chargebee",
-        "docs/zohobooks",
-        "docs/zuora",
-        "docs/razorpay",
-        "docs/firstpromoter"
+        "docs/integrations/integrations-concepts",
+        "docs/integrations/stripe",
+        "docs/integrations/chargebee",
+        "docs/integrations/zohobooks",
+        "docs/integrations/zuora",
+        "docs/integrations/razorpay",
+        "docs/integrations/firstpromoter"
       ]
     },
     {

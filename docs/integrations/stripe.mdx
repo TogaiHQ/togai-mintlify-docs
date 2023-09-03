@@ -1,0 +1,102 @@
+---
+title: "Stripe"
+---
+
+The **Togai** and **Stripe** Integration supports a bidirectional sync between Togai and Stripe. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between Stripe and Togai requires only a one-time setup. Follow the steps below:
+
+###  Installation of App Instances  
+[](#installation-of-app-instances)  
+   * Navigate to the Integrations section from the left navigation bar in Togai  
+   * Click on `Apps` to access the list of apps with tight integration support  
+   * Locate and select `Stripe` from the available apps  
+   * Click on the `+Add connection` button  
+   * Provide a name for the connection and paste your `Stripe API key` into the appropriate field
+
+**_Repeat the same process for Togai, treating it as a separate App within the integration._**
+
+  
+**Note:** Togai is considered an app in our integration so it is easy for you to configure different keys for different flows. This way you can have specific permissions configured for a specific key, making it more secure. To create a secret key for Togai, go to the Admin Center on the left nav bar. Click on the API tokens tab. Then click on the ‘\`Generate new token\`’ button.
+###  Triggers and Actions
+[](#triggers-and-actions)  
+There are 10 Actions and 3 Triggers available for Stripe currently. The way it works is,
+
+If `{trigger}`, then do `{Action}`
+
+You can pick and choose the trigger and action that you want from the lengthy list available from all the applications. 
+
+You can use these as building blocks to build your own flows.
+
+An example flow would be: On creation of an account in Stripe, create accounts in Togai and ZohoBooks. 
+
+![](docs/integrations/images/a36a1e1-image.png) 
+###  Flows and Automation
+* To enable flows, access the **`Flows`** section within Integrations
+* Select the desired flow from the available options or create a new flow to meet your requirements
+* **To create a new flow:**
+![](docs/integrations/images/d3f89f5-image.png) 
+* Enter the flow name and description
+* Select the flow type from the dropdown  
+**Inbound Flow** \- based on third party events(eg: Stripe), actions are triggered in Togai  
+**Outbound Flow** \- based on events occurring in Togai, changes are made to the connected third party app
+* Define triggers by choosing the source application from where the flow starts
+* Select a predefined trigger from the dropdown list
+* Next, define an action which makes the desired changes by selecting the destination app
+* Select a predefined action from the dropdown list. You can add multiple actions.
+* Lastly, preview the flow and save changes
+* Else, choose an existing flow and select **`+Add Connection`**
+* Configure the triggers and actions by specifying the app instance (Stripe or Togai) associated with each step.
+
+Now, when a new customer is added in Togai, it is synced in Stripe as well. To refer to customers in Stripe or Togai, you can obtain the customer ID and account ID. In Togai, go to Customers, select an account, and find the customer ID and account ID under the Settings tab. Use these IDs to reference the customer in Stripe, or vice versa.
+
+###  Available Flows
+![](docs/integrations/images/54490e0-image.png) 
+
+Here are the out-of-the-box flows that you can use: 
+
+**1\. Sync accounts created from Togai to Stripe**
+
+* A new customer is created in Togai
+* Togai then creates a corresponding customer in Stripe and syncs the customer ID between Togai and Stripe.
+* You can see this mapping of customer IDs in the Settings tab of every customer
+
+**2\. Sync accounts created in Stripe to Togai (for new customers)**
+
+* This is the opposite of the previous flow.
+* When a new customer is created in Stripe, Togai will automatically create a new customer in Togai and syncs customer ID between Togai and Stripe.
+
+**3\. Sync Togai price plan to products in Stripe**
+
+* A price plan is attached to a new customer
+* A product in Stripe with all the configured prices is created
+* A payment link for the product in Stripe is generated.
+
+**4\. Associate price plan on Stripe checkout session**
+
+* Customer signs in to the portal to purchase a subscription.
+* Display a payment link with product details using the Stripe client SDK.
+* The customer completes the purchase using the payment link.
+* Togai listens for the payment completed webhook and attaches the customer to the price plan in Togai.
+
+**5\. Create an invoice in Stripe on Togai invoice**
+
+* Event data is ingested into Togai using Togai APIs.
+* At the end of the billing cycle, an invoice in Togai is automatically generated. You can see this invoice in the ‘Invoices’ section
+* When the ongoing invoice gets converted into a generated invoice, the invoice is synced from Togai to Stripe for invoice payments. An email is sent from Stripe to the customer about the invoice.
+* Togai listens for the payment completed webhook and updates the payment status of the invoice in Togai.
+
+**6: Bulk Import Customers to Togai from Stripe (for existing customers)**
+
+* You can use this to migrate your accounts from Stripe to Togai. Click on the `Trigger now` button and enter `{}` when asked for the payload. This will make the migration happen immediately.
+![](docs/integrations/images/acbe42e-image.png) 
+* All the customers in Stripe will be listed and Togai will check the list with the list of customers in Togai to ensure there's no duplication
+* Togai will then create new customers and accounts in Togai.
+###  Customer ID and Account ID
+
+To refer to customers in Stripe or Togai, you can obtain the customer ID and account ID.
+
+* In Togai, go to Customers, select an account, and find the customer ID and account ID under Settings.
+* Use these IDs to reference the customer in Stripe, or vice versa.
+
+By following this API guide, you can leverage the Togai and Stripe Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.
