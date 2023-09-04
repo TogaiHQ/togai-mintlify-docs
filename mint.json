@@ -33,7 +33,7 @@
   "topbarLinks": [
     {
       "name": "Demo",
-      "url": "demo.togai.com"
+      "url": "https://demo.togai.com"
     },
     {
       "name": "Login",
