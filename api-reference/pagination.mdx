@@ -1,0 +1,9 @@
+---
+title: "Pagination 📄"
+---
+
+All Togai's top-level API resources support for bulk fetches via "list" API method. For instance, you can [list customers](/api-reference/customers/get-a-customer), [list accounts](/api-reference/accounts/get-an-account), [list event schemas](/api-reference/event-schemas/list-event-schemas), [list usage meters](/api-reference/usage-meters/list-usage-meters-for-event-schema), and [list price plans](/api-reference/price-plans/list-price-plans). These list API methods share a common structure, taking at least these two parameters: pageSize and nextToken.
+
+The response of a list API method represents a single page list of objects. If you do not input a nextToken, you will receive the first page of this stream, containing the newest objects. You can specify a nextToken to retrieve the page of older objects occurring immediately after the last object of the latest list.
+
+You can also specify a limit if you would like to limit the results per page in pageSize. Togai supports up to 100 results per API response.

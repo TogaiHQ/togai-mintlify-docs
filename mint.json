@@ -138,6 +138,14 @@
       ]
     },
     {
+      "group": "Introduction",
+      "pages": [
+        "api-reference/getting-started",
+        "api-reference/authentication",
+        "api-reference/pagination"
+      ]
+    },
+    {
       "group": "Entities",
       "pages": [{
         "group": "Customers",
