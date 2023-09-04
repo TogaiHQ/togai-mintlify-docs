@@ -8,7 +8,7 @@
         "inputPrefix": "Bearer <>"
     },
     "playground": {
-      "mode": "show"
+      "mode": "simple"
     }
   },
   "logo": {
