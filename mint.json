@@ -156,7 +156,8 @@
           "api-reference/customers/delete-a-customer",
           "api-reference/customers/update-a-customer"
         ]
-      },{
+      },
+      {
         "group": "Accounts",
         "pages": [
           "api-reference/accounts/list-accounts-of-customer",
@@ -240,7 +241,7 @@
           "api-reference/price-plans/add-currencies-to-a-price-plan",
           "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
         ]
-      },
+      },     
       {
         "group": "Settings",
         "pages": [
@@ -275,6 +276,7 @@
         "group": "Entitlements",
         "pages": [
           "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
+          "api-reference/entitlements/list-feature-credits-entries-of-a-feature-for-an-account",
           "api-reference/entitlements/get-feature-credits-balance"
         ]
       },

@@ -16,6 +16,12 @@ Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview th
 npm i -g mintlify
 ```
 
+Generate Open API reference files using mintlify scrapper
+
+```
+npx @mintlify/scraping@latest openapi-file openapi.yml -o api-reference
+```
+
 Run the following command at the root of your documentation (where mint.json is)
 
 ```

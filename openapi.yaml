@@ -59,7 +59,7 @@ paths:
       tags:
         - Customers
       summary: Create a customer
-      description: This API let's you to create customers and corresponding accounts.
+      description: This API let’s you to create customers and corresponding accounts.
       operationId: createCustomer
       requestBody:
         $ref: '#/components/requestBodies/CreateCustomerRequest'
@@ -130,7 +130,7 @@ paths:
       tags:
         - Customers
       summary: Update a customer
-      description: This API let's you to update a customer's information using customer_id.
+      description: This API let’s you to update a customer’s information using customer_id.
       operationId: updateCustomer
       parameters:
         - $ref: '#/components/parameters/customer_id'
@@ -155,7 +155,7 @@ paths:
       tags:
         - Customers
       summary: Delete a customer
-      description: This API let's you to delete a customer using customer_id.
+      description: This API let’s you to delete a customer using customer_id.
       operationId: deleteCustomer
       parameters:
         - $ref: '#/components/parameters/customer_id'
@@ -179,7 +179,7 @@ paths:
       tags:
         - Accounts
       summary: Create an account
-      description: This API let's you to create an account for a customer using customer_id.
+      description: This API let’s you to create an account for a customer using customer_id.
       operationId: createAccount
       requestBody:
         $ref: '#/components/requestBodies/CreateAccountRequest'
@@ -251,7 +251,7 @@ paths:
       tags:
         - Accounts
       summary: Update an account
-      description: This API let's you to update an account's information using customer_id and account_id.
+      description: This API let’s you to update an account’s information using customer_id and account_id.
       operationId: updateAccount
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -276,7 +276,7 @@ paths:
       tags:
         - Accounts
       summary: Delete an account
-      description: This API let's you to delete a customer using customer_id and account_id.
+      description: This API let’s you to delete a customer using customer_id and account_id.
       operationId: deleteAccount
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -352,7 +352,7 @@ paths:
       tags:
         - Accounts
       summary: Dis/associate a plan from/to an account
-      description: This API let's you to detach/attach a price plan from/to an existing account
+      description: This API let’s you to detach/attach a price plan from/to an existing account
       operationId: updatePricingSchedule
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -378,7 +378,7 @@ paths:
       tags:
         - Accounts
       summary: Initiate a purchase
-      description: This API let's you to initiate a purchase for an account
+      description: This API let’s you to initiate a purchase for an account
       operationId: initiateOneTimeEntitlementPlan
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -451,7 +451,7 @@ paths:
       tags:
         - Accounts
       summary: Propose a purchase of a plan
-      description: This API let's you to create a proposal of a billing/entitlement plan for an account
+      description: This API let’s you to create a proposal of a billing/entitlement plan for an account
       operationId: createProposal
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -524,7 +524,7 @@ paths:
       tags:
         - Accounts
       summary: Edit schedules of an account.
-      description: This API let's you to detach/attach one or more price plans from/to an existing account
+      description: This API let’s you to detach/attach one or more price plans from/to an existing account
       operationId: updatePricingScheduleBatch
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -578,7 +578,7 @@ paths:
       tags:
         - Accounts
       summary: Approve or decline a purchase of a billing plan
-      description: This API let's you to approve or decline a proposal of a billing plan for an account
+      description: This API let’s you to approve or decline a proposal of a billing plan for an account
       operationId: updateProposalStatus
       parameters:
         - $ref: '#/components/parameters/purchase_proposal_id'
@@ -604,7 +604,7 @@ paths:
       tags:
         - InvoiceGroups
       summary: Create an invoice group
-      description: This API let's you to create an invoice group
+      description: This API let’s you to create an invoice group
       operationId: createInvoiceGroup
       requestBody:
         $ref: '#/components/requestBodies/CreateInvoiceGroupRequest'
@@ -627,7 +627,7 @@ paths:
       tags:
         - InvoiceGroups
       summary: List Invoice Groups
-      description: This API let's you to list invoice groups
+      description: This API let’s you to list invoice groups
       operationId: listInvoiceGroups
       responses:
         '200':
@@ -649,7 +649,7 @@ paths:
       tags:
         - InvoiceGroups
       summary: Get information of an invoice group
-      description: This API let's you to get information of an invoice group
+      description: This API let’s you to get information of an invoice group
       operationId: getInvoiceGroup
       parameters:
         - $ref: '#/components/parameters/invoice_group_id'
@@ -673,7 +673,7 @@ paths:
       tags:
         - InvoiceGroups
       summary: Add accounts to an invoice group
-      description: This API let's you to add accounts to an invoice group
+      description: This API let’s you to add accounts to an invoice group
       operationId: AddInvoiceGroupAccounts
       parameters:
         - $ref: '#/components/parameters/invoice_group_id'
@@ -699,7 +699,7 @@ paths:
       tags:
         - InvoiceGroups
       summary: Remove accounts from an invoice group. Removing all accounts will also delete the invoice group
-      description: This API let's you to remove accounts from an invoice group. Removing all accounts will also delete the invoice group
+      description: This API let’s you to remove accounts from an invoice group. Removing all accounts will also delete the invoice group
       operationId: RemoveInvoiceGroupAccounts
       parameters:
         - $ref: '#/components/parameters/invoice_group_id'
@@ -834,7 +834,7 @@ paths:
       tags:
         - Event Schemas
       summary: Delete an event schema
-      description: 'To delete(archive) an event schema, youre required to archive associated active usage meters if any.'
+      description: 'To delete(archive) an event schema, you’re required to archive associated active usage meters if any.'
       operationId: deleteEventSchema
       parameters:
         - $ref: '#/components/parameters/event_schema_name'
@@ -1733,7 +1733,7 @@ paths:
         - Event Ingestion
       summary: Ingest events to Togai
       description: |
-        This API let's you to ingest events to your Togai account.
+        This API let’s you to ingest events to your Togai account.
         Events ingested using this API will be processed via associated usage meters and further via associated price plans to generate final billable value to invoice the customer
         Read more about [Event Ingestion](https://docs.togai.com/docs/event-ingestion)
       operationId: ingest
@@ -1792,7 +1792,7 @@ paths:
         - Event Ingestion
       summary: Ingest events to Togai in batch
       description: |-
-        This API let's you to ingest events in batch upto 1000 events.
+        This API let’s you to ingest events in batch upto 1000 events.
         Ingest large amounts of events up to 1000 in batches in an array using this API.
       operationId: ingestBatch
       requestBody:
@@ -1857,7 +1857,7 @@ paths:
       tags:
         - Event Management
       summary: Get a list of usage events with multiple query options
-      description: This API let's you to fetch a list of events with multiple query parameters
+      description: This API let’s you to fetch a list of events with multiple query parameters
       parameters:
         - $ref: '#/components/parameters/filter_next_page_token'
         - $ref: '#/components/parameters/filter_status'
@@ -2005,7 +2005,7 @@ paths:
       tags:
         - Licenses
       summary: Get a list of licenses updates
-      description: This API let's you to fetch a list of licenses updates with multiple query parameters
+      description: This API let’s you to fetch a list of licenses updates with multiple query parameters
       operationId: getLicenseUpdates
       responses:
         '200':
@@ -2053,7 +2053,7 @@ paths:
       tags:
         - Licenses
       summary: Update a license entry
-      description: This API let's you to add a license entry
+      description: This API let’s you to add a license entry
       operationId: addLicenseUpdateEntry
       requestBody:
         $ref: '#/components/requestBodies/LicenseUpdateRequest'
@@ -2104,7 +2104,7 @@ paths:
       tags:
         - Entitlements
       summary: Ingest event if a user is entitled to a feature
-      description: This API let's you to ingest an event if a user is entitled to a feature
+      description: This API let’s you to ingest an event if a user is entitled to a feature
       operationId: ingestEntitledEvent
       requestBody:
         $ref: '#/components/requestBodies/IngestEventRequest'
@@ -2147,12 +2147,64 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/features/{feature_id}/entries:
+    get:
+      tags:
+        - Entitlements
+      summary: List feature credits entries of a feature for an account
+      description: This API let’s you to list the feature credits entries of a feature for an account
+      operationId: listFeatureCreditEntries
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
+              examples:
+                GetFeatureCreditsResponse:
+                  $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to add a license entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '422':
+          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   '/accounts/{account_id}/features/{feature_id}':
     get:
       tags:
         - Entitlements
       summary: Get Feature credits balance
-      description: This API let's you to get the feature credits balance
+      description: This API let’s you to get the feature credits balance
       operationId: getFeatureCredits
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -2396,7 +2448,7 @@ paths:
         $ref: '#/components/requestBodies/CreateCreditRequest'
       responses:
         '200':
-          $ref: '#/components/responses/CreditResponse'
+          $ref: '#/components/responses/CreateCreditResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -2444,7 +2496,7 @@ paths:
         - $ref: '#/components/parameters/credit_id'
       responses:
         '200':
-          $ref: '#/components/responses/CreditResponse'
+          $ref: '#/components/responses/CreateCreditResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -2859,6 +2911,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreditGrantRateCard'
+        entitlementOverageRateCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntitlementOverageRateCard'
         type:
           $ref: '#/components/schemas/PricePlanType'
     UpdatePricePlanRequest:
@@ -3136,6 +3192,51 @@ components:
                 accountId:
                   type: string
                   minLength: 1
+        entitlementOverageConfig:
+          title: EntitlementOverageConfig
+          description: Configuration for getting the entitlement overages
+          type: object
+          required:
+            - mode
+          properties:
+            mode:
+              type: string
+              enum:
+                - CUSTOM
+                - LOOKUP_CYCLE
+              description: |
+                Mode to get the entitlement overages for the entitlement overage rate cards
+                - CUSTOM: Use the entitlement overages provided in the request
+                - LOOKUP_CYCLE: Use the entitlement overages of a given account for the specified cycle
+            custom:
+              description: 'Quantity of entitlement overages, this will be considered if mode is CUSTOM'
+              type: array
+              items:
+                type: object
+                title: EntitlementOverageEntry
+                required:
+                  - featureId
+                  - quantity
+                properties:
+                  featureId:
+                    type: string
+                    minLength: 1
+                  quantity:
+                    type: number
+            lookupCycle:
+              description: 'Billing cycle of entitlement overages to be looked up, this will be considered if mode is LOOKUP_CYCLE'
+              type: object
+              required:
+                - accountId
+                - billingCycleEndDate
+              properties:
+                billingCycleEndDate:
+                  description: 'Effective date of the cycle, will be used to get the license entries of the cycle'
+                  type: string
+                  format: date-time
+                accountId:
+                  type: string
+                  minLength: 1
     UpdatePricingScheduleRequest:
       description: Request to dis/associate a price plan to an account
       type: object
@@ -3284,6 +3385,23 @@ components:
                   $ref: '#/components/schemas/SlabDetail'
               creditAmount:
                 type: number
+        entitlementOverageRates:
+          description: Rates for entitlement overage rate cards
+          type: array
+          items:
+            title: EntitlementOverageRates
+            type: object
+            required:
+              - id
+              - slabRates
+            properties:
+              id:
+                type: string
+              slabRates:
+                description: List of slab rates
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlabRate'
     CreatePricePlanMigrationRequest:
       description: Request to migrate all account associations of a price plan to another price plan
       type: object
@@ -3441,9 +3559,14 @@ components:
       required:
         - dailyInvoiceConsolidation
         - accountIds
-        - gracePeriod
         - address
+        - name
+        - email
       properties:
+        name:
+          type: string
+        email:
+          type: string
         dailyInvoiceConsolidation:
           type: boolean
         accountIds:
@@ -3452,10 +3575,6 @@ components:
           minItems: 1
           items:
             type: string
-        gracePeriod:
-          type: integer
-          format: int32
-          minimum: 0
         netTermDays:
           type: integer
           format: int32
@@ -3770,6 +3889,8 @@ components:
                 $ref: '#/components/schemas/BillingEntitlementRateCard'
               creditGrantRateCard:
                 $ref: '#/components/schemas/CreditGrantRateCard'
+              entitlementOverageRateCard:
+                $ref: '#/components/schemas/EntitlementOverageRateCard'
               usages:
                 type: object
                 additionalProperties:
@@ -3804,6 +3925,15 @@ components:
               creditGrantRevenueSummary:
                 type: object
                 title: CreditGrantRevenueSummary
+                additionalProperties: false
+                required:
+                  - revenue
+                properties:
+                  revenue:
+                    type: number
+              entitlementOverageRevenueSummary:
+                type: object
+                title: EntitlementOverageRevenueSummary
                 additionalProperties: false
                 required:
                   - revenue
@@ -4674,18 +4804,20 @@ components:
       additionalProperties: false
       required:
         - id
+        - name
+        - email
         - dailyInvoiceConsolidation
-        - gracePeriod
         - invoiceCurrency
         - billingAddress
       properties:
         id:
           type: string
+        name:
+          type: string
+        email:
+          type: string
         dailyInvoiceConsolidation:
           type: boolean
-        gracePeriod:
-          type: integer
-          format: int32
         netTermDays:
           type: integer
           format: int32
@@ -4699,10 +4831,19 @@ components:
         - type: object
           required:
             - accountsCount
+            - createdAt
+            - updatedAt
           properties:
             accountsCount:
               type: integer
               format: int32
+              minimum: 0
+            createdAt:
+              type: string
+              format: date-time
+            updatedAt:
+              type: string
+              format: date-time
     InvoiceGroupPaginatedResponse:
       type: object
       additionalProperties: false
@@ -4840,6 +4981,19 @@ components:
         country:
           description: 'Two letter country code [ISO-3166-1 Alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)'
           type: string
+    BillingConfig:
+      type: object
+      properties:
+        interval:
+          description: Represents the number of pricing cycles after which the rate card will be billed
+          type: integer
+          format: int64
+          example: 3
+        startOffset:
+          description: Represents the offset for pricing cycles after which the rate card will be billed
+          type: integer
+          format: int64
+          example: 5
     BillingEntitlementRateCard:
       allOf:
         - $ref: '#/components/schemas/EntitlementRateCard'
@@ -4898,6 +5052,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillingEntitlementRateCard'
+        entitlementOverageRateCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntitlementOverageRateCard'
         fixedFeeRateCards:
           type: array
           items:
@@ -4995,6 +5153,36 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SlabDetail'
+    EntitlementOverageRateCard:
+      type: object
+      required:
+        - ratePlan
+        - rateValues
+        - displayName
+        - featureId
+      properties:
+        featureId:
+          type: string
+          description: Unique Identifier of the attached Feature
+          maxLength: 50
+        displayName:
+          type: string
+          description: Name to be displayed during invoice
+        tag:
+          type: string
+          description: A tag string to group rate cards
+        maxQuantity:
+          type: number
+          description: 'Maximum quantity allowed for the feature, if not specified, unlimited quantity is allowed'
+        ratePlan:
+          $ref: '#/components/schemas/RatePlan'
+        rateValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/RateValue'
+        billingConfig:
+          $ref: '#/components/schemas/BillingConfig'
+          description: 'Represents the billing config of the entitlement overage rate card. If not specified interval:1 and startOffset:0 is taken as default value'
     EntitlementRateCard:
       description: Entitlement type rate card
       type: object
@@ -5228,6 +5416,10 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/BillingEntitlementRateCard'
+        entitlementOverageRateCards:
+          type: array
+          items:
+            $ref: '#/components/schemas/EntitlementOverageRateCard'
         minimumCommitment:
           $ref: '#/components/schemas/MinimumCommitment'
         rateDetails:
@@ -5742,6 +5934,7 @@ components:
         - featureId
         - granted
         - balance
+        - usedOverage
       properties:
         accountId:
           type: string
@@ -5757,6 +5950,61 @@ components:
         balance:
           type: number
           example: 10
+        overageLimit:
+          type: number
+          example: 15
+        usedOverage:
+          type: number
+          example: 10
+    FeatureCreditEntry:
+      description: Get feature credits response
+      type: object
+      additionalProperties: false
+      required:
+        - sourceId
+        - sourceType
+        - used
+        - effectiveFrom
+        - effectiveUntil
+      properties:
+        sourceId:
+          type: string
+          maxLength: 50
+          example: purchase.20rvWRxQcQK.0ZwPG
+        sourceType:
+          type: string
+          description: Source of the feature credit
+          enum:
+            - ENTITLEMENT
+            - PRICE_PLAN
+            - OVERAGE
+        effectiveFrom:
+          type: string
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+        effectiveUntil:
+          type: string
+          format: date-time
+          example: '2021-05-20T01:00:10Z'
+        granted:
+          type: number
+          example: 15
+        balance:
+          type: number
+          example: 10
+        used:
+          type: number
+          example: 10
+    GetFeatureCreditEntriesPaginatedResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/FeatureCreditEntry'
+        nextToken:
+          type: string
     EventWithStatus:
       description: Raw usage event ingested by the business team and the status of the event ingestion.
       type: object
@@ -6186,6 +6434,17 @@ components:
             type: number
           maxItems: 100
     CreateCreditRequest:
+      type: object
+      description: payload to create credits
+      additionalProperties: false
+      required:
+        - creditRequests
+      properties:
+        creditRequests:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreditRequest'
+    CreditRequest:
       description: Payload to grant Credits
       type: object
       additionalProperties: false
@@ -6377,6 +6636,7 @@ components:
             - UN_COLLECTIBLE
             - INITIATE_REFUND
             - REFUND_COMPLETED
+            - MERGED
           example: DUE
         invoiceClass:
           description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
@@ -6452,9 +6712,6 @@ components:
     InvoiceDetails:
       type: object
       additionalProperties: false
-      required:
-        - customer
-        - account
       properties:
         customer:
           type: object
@@ -6484,9 +6741,41 @@ components:
               type: string
         pricePlanName:
           type: string
+        invoiceGroup:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - name
+            - dailyInvoiceConsolidation
+            - invoiceCurrency
+            - address
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            email:
+              type: string
+            dailyInvoiceConsolidation:
+              type: boolean
+            invoiceCurrency:
+              type: string
+            address:
+              $ref: '#/components/schemas/Address'
+    CreateCreditResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - credits
+      properties:
+        credits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Credit'
     Credit:
       allOf:
-        - $ref: '#/components/schemas/CreateCreditRequest'
+        - $ref: '#/components/schemas/CreditRequest'
         - type: object
           additionalProperties: false
           required:
@@ -6574,7 +6863,12 @@ components:
             type: string
             example: Charge 1
           value:
-            description: Value of the charge
+            description: |
+              Value of the charge
+              Possible values:
+              1. Fixed number [Example: 10]
+              2. Json Logic [Example: {"*": [{"var": "um.lineitem.id"}, 0.1]}]
+                 You can use all line item ids as variables in the json logic
             type: string
             example: 100
   responses:
@@ -6915,15 +7209,15 @@ components:
           examples:
             ListCreditsResponse:
               $ref: '#/components/examples/ListCreditsResponse'
-    CreditResponse:
+    CreateCreditResponse:
       description: Response for List credits request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/Credit'
+            $ref: '#/components/schemas/CreateCreditResponse'
           examples:
             Credit:
-              $ref: '#/components/examples/Credit'
+              $ref: '#/components/examples/CreateCreditResponse'
     CreditDetailsResponse:
       description: Response for Fetch Credit Details request. This contains Credit Transactions
       content:
@@ -6986,9 +7280,9 @@ components:
       name: usage_meter_id
       required: true
       schema:
-            type: string
-            maxLength: 50
-            example: um.1zYnCiM9Bpg.1zYn
+        type: string
+        maxLength: 50
+        example: um.1zYnCiM9Bpg.1zYn
     next_token:
       in: query
       name: nextToken
@@ -7180,15 +7474,15 @@ components:
       name: invoice_id
       required: true
       schema:
-            type: string
-            example: ACC001
+        type: string
+        example: ACC001
     credit_id:
       in: path
       name: credit_id
       required: true
       schema:
-            type: string
-            example: creds.1znQx9jiIXw.r44fc
+        type: string
+        example: creds.1znQx9jiIXw.r44fc
     filter_credit_id:
       in: query
       description: Filter option to filter based on credit id.
@@ -7667,14 +7961,14 @@ components:
     CreateInvoiceGroupRequest:
       value:
         dailyInvoiceConsolidation: true
-        accountId:
+        accountIds:
           - ACC0001
           - ACC0002
         gracePeriod: 3
         netTermDays: 30
     UpdateInvoiceGroupAccounts:
       value:
-        accountId:
+        accountIds:
           - ACC0001
           - ACC0002
     CreateCustomerRequest:
@@ -8001,6 +8295,45 @@ components:
               recurrenceConfig:
                 offset: 0
                 interval: 1
+          entitlementOverageRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
+              maxQuantity: 50
+              billingConfig:
+                interval: 1
+                startOffset: 4
+            - featureId: feature.20uE1xqEudk.MMVH8
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 2
+                      slabRateConfig: null
+              displayName: feature2
+              tag: null
+              maxQuantity: null
+              billingConfig: null
           rateDetails: null
           entitlementRateCards: null
           type: BILLING
@@ -8063,6 +8396,13 @@ components:
           mode: CUSTOM
           usageMap:
             um.1zcgWalbM2y.qaX5j: 100
+        entitlementOverageConfig:
+          mode: CUSTOM
+          custom:
+            - featureId: feature.1122.ahoiud
+              quantity: 5
+            - featureId: feature.3452.abcaf2
+              quantity: 28
     SecondCalculateRevenueRequestExample:
       description: |
         Example request for calculate revenue API on a custom price plan with currency as the invoice currency of a existing account, and existing usage of a account over a time period
@@ -8102,6 +8442,11 @@ components:
             start: {}
             end: {}
             accountId: ACC00001
+        entitlementOverageConfig:
+          mode: LOOKUP_CYCLE
+          lookupCycle:
+            accountId: ACC0001
+            billingCycleEndDate: {}
     ThirdCalculateRevenueRequestExample:
       value:
         currencyConfig:
@@ -8295,6 +8640,7 @@ components:
     InvoiceGroupAccountsPaginatedResponse:
       value:
         id: inv_group.20rvWRxQcQK.0ZwPG
+        name: Invoice Group 1
         dailyInvoiceConsolidation: true
         accountsCount: 2
         accounts:
@@ -9112,6 +9458,27 @@ components:
         featureId: feat.fdjsl.313
         granted: 15
         balance: 10
+        overageLimit: 20
+        usedOverage: 15
+    GetFeatureCreditEntriesPaginatedResponse:
+      summary: example list feature credit entries response
+      value:
+        data:
+          - sourceId: purchase.20rvWRxQcQK.0ZwPG
+            sourceType: PURCHASE
+            granted: 10
+            balance: 5
+            effectiveFrom: '2020-01-01T00:00:00Z'
+            effectiveUntil: '2021-03-04T14:25:10Z'
+          - sourceId: purchase.20rvWRxQcQK.0ZwPG
+            sourceType: PURCHASE
+            granted: 10
+            balance: 5
+            effectiveFrom: '2020-01-01T00:00:00Z'
+            effectiveUntil: '2021-03-04T14:25:10Z'
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+      description: |
+        Examples response of list feature entries API. The source id can either be a 'PURCHASE_ID' incase of entry source being a purchase or 'SCHEDULE_ID#CYCLE_START_DATE' in case of entry source being a price plan rate card to indicate the schedule_id and its start_date that granted the credits
     GetEventsResponse:
       summary: example get batch event response
       value:
@@ -9271,22 +9638,35 @@ components:
             generatedAt: '2020-07-04T12:00:00.000Z'
             updatedAt: '2020-07-04T12:00:00.000Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
-    Credit:
-      summary: A sample Credit
+    CreateCreditResponse:
+      summary: A sample for a Create Credit Response
       value:
-        id: creds.1znQx9jiIXw.r44fc
-        customerId: 7VcRw9xZDIqsC5E
-        accountId: ACC001
-        purpose: Prepaid Credit
-        effectiveFrom: '2020-07-04'
-        effectiveUntil: '2021-07-04'
-        status: ACTIVE
-        creditAmount: 1000
-        creditUnit: USD
-        holdAmount: 500
-        consumedAmount: 400
-        priority: 1
-        createdAt: '2020-07-04T12:00:00.000Z'
+        - id: creds.1znQx9jiIXw.r44fc
+          customerId: 7VcRw9xZDIqsC5E
+          accountId: ACC001
+          purpose: Prepaid Credit
+          effectiveFrom: '2020-07-04'
+          effectiveUntil: '2021-07-04'
+          status: ACTIVE
+          creditAmount: 1000
+          creditUnit: USD
+          holdAmount: 500
+          consumedAmount: 400
+          priority: 1
+          createdAt: '2020-07-04T12:00:00.000Z'
+        - id: creds.1znQ46jiIXw.r24fc
+          customerId: 7VcRw9xZDIqsC5E
+          accountId: ACC001
+          purpose: Prepaid Credit
+          effectiveFrom: '2020-08-04'
+          effectiveUntil: '2021-08-04'
+          status: ACTIVE
+          creditAmount: 1000
+          creditUnit: USD
+          holdAmount: 500
+          consumedAmount: 400
+          priority: 1
+          createdAt: '2020-08-04T12:00:00.000Z'
     ListCreditsResponse:
       summary: A sample Credits List
       value:
@@ -9316,12 +9696,13 @@ components:
     CreateCreditRequest:
       summary: A sample for CreateCreditRequest
       value:
-        accountId: ACC001
-        purpose: Prepaid Credit
-        effectiveFrom: '2023-02-04'
-        effectiveUntil: '2024-02-04'
-        creditAmount: 1000
-        priority: 1
+        creditRequests:
+          - accountId: ACC001
+            purpose: Prepaid Credit
+            effectiveFrom: '2023-02-04'
+            effectiveUntil: '2024-02-04'
+            creditAmount: 1000
+            priority: 1
     ManageMiscellaneousChargesRequest:
       summary: A sample for ManageMiscellaneousChargesRequest
       value:
@@ -9330,6 +9711,8 @@ components:
             value: '100'
           - name: charge 2
             value: '200'
+          - name: json logic charge
+            value: '{"var": "um.linitem.id"}'
     InvoicePaymentsRequest:
       summary: A sample for InvoicePaymentsRequest
       value:
