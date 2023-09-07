@@ -146,7 +146,7 @@
       ]
     },
     {
-      "group": "Entities",
+      "group": "APIs",
       "pages": [{
         "group": "Customers",
         "pages": [
@@ -179,16 +179,6 @@
         ]
       },
       {
-        "group": "InvoiceGroups",
-        "pages": [
-          "api-reference/invoicegroups/list-invoice-groups",
-          "api-reference/invoicegroups/create-an-invoice-group",
-          "api-reference/invoicegroups/get-information-of-an-invoice-group",
-          "api-reference/invoicegroups/add-accounts-to-an-invoice-group",
-          "api-reference/invoicegroups/remove-accounts-from-an-invoice-group-removing-all-accounts-will-also-delete-the-invoice-group"
-        ]
-      },
-      {
         "group": "Event Schemas",
         "pages": [
           "api-reference/event-schemas/list-event-schemas",
@@ -214,18 +204,6 @@
         ]
       },
       {
-        "group": "Price Plans",
-        "pages": [
-          "api-reference/price-plans/list-price-plans",
-          "api-reference/price-plans/create-a-price-plan",
-          "api-reference/price-plans/get-a-price-plan",
-          "api-reference/price-plans/update-a-price-plan",
-          "api-reference/price-plans/activate-a-price-plan",
-          "api-reference/price-plans/add-currencies-to-a-price-plan",
-          "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
-        ]
-      },
-      {
         "group": "AddOns",
         "pages": [
           "api-reference/addons/list-addons",
@@ -236,12 +214,31 @@
         ]
       },
       {
+        "group": "Licenses",
+        "pages": [
+          "api-reference/licenses/get-a-list-of-licenses-updates",
+          "api-reference/licenses/update-a-license-entry"
+        ]
+      },
+      {
         "group": "Feature",
         "pages": [
           "api-reference/feature/list-feature",
           "api-reference/feature/create-a-feature-and-optionally-associate-with-one-or-more-event_schemas",
           "api-reference/feature/get-a-feature",
           "api-reference/feature/update-a-feature"
+        ]
+      },
+      {
+        "group": "Price Plans",
+        "pages": [
+          "api-reference/price-plans/list-price-plans",
+          "api-reference/price-plans/create-a-price-plan",
+          "api-reference/price-plans/get-a-price-plan",
+          "api-reference/price-plans/update-a-price-plan",
+          "api-reference/price-plans/activate-a-price-plan",
+          "api-reference/price-plans/add-currencies-to-a-price-plan",
+          "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
         ]
       },
       {
@@ -275,6 +272,13 @@
         ]
       },
       {
+        "group": "Entitlements",
+        "pages": [
+          "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
+          "api-reference/entitlements/get-feature-credits-balance"
+        ]
+      },
+      {
         "group": "Event Management",
         "pages": [
           "api-reference/event-management/get-a-list-of-usage-events-with-multiple-query-options",
@@ -288,17 +292,13 @@
         ]
       },
       {
-        "group": "Licenses",
+        "group": "Credits",
         "pages": [
-          "api-reference/licenses/get-a-list-of-licenses-updates",
-          "api-reference/licenses/update-a-license-entry"
-        ]
-      },
-      {
-        "group": "Entitlements",
-        "pages": [
-          "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
-          "api-reference/entitlements/get-feature-credits-balance"
+          "api-reference/credits/list-credits",
+          "api-reference/credits/grant-credit",
+          "api-reference/credits/get-credit-details",
+          "api-reference/credits/void-credit",
+          "api-reference/credits/credit-balance-for-account"
         ]
       },
       {
@@ -312,13 +312,13 @@
         ]
       },
       {
-        "group": "Credits",
+        "group": "InvoiceGroups",
         "pages": [
-          "api-reference/credits/list-credits",
-          "api-reference/credits/grant-credit",
-          "api-reference/credits/get-credit-details",
-          "api-reference/credits/void-credit",
-          "api-reference/credits/credit-balance-for-account"
+          "api-reference/invoicegroups/list-invoice-groups",
+          "api-reference/invoicegroups/create-an-invoice-group",
+          "api-reference/invoicegroups/get-information-of-an-invoice-group",
+          "api-reference/invoicegroups/add-accounts-to-an-invoice-group",
+          "api-reference/invoicegroups/remove-accounts-from-an-invoice-group-removing-all-accounts-will-also-delete-the-invoice-group"
         ]
       }]
     },
