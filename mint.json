@@ -9,8 +9,10 @@
     },
     "playground": {
       "mode": "simple"
-    }
+    },
+    "maintainOrder": true
   },
+  "feedback":{"suggestEdit": true, "raiseIssue": true},
   "logo": {
     "dark": "/images/togai-dark.svg",
     "light": "/images/togai-light.png"
@@ -71,6 +73,7 @@
       "url": "https://www.togai.com/blog"
     }
   ],
+  "versions": ["v1"],
   "navigation": [
     {
       "group": "Introduction",
@@ -147,6 +150,7 @@
     },
     {
       "group": "APIs",
+      "version": "v1",
       "pages": [{
         "group": "Customers",
         "pages": [
@@ -330,6 +334,7 @@
     }
   ],
   "footerSocials": {
+    "website": "https://togai.com",
     "twitter": "https://twitter.com/togaiHQ",
     "github": "https://github.com/TogaiHQ/",
     "linkedin": "https://www.linkedin.com/company/togai"
