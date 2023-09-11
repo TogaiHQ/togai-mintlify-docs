@@ -2,21 +2,81 @@
 title: "Change Log"
 icon: clipboard
 ---
+This Change Log provides a consolidated list of features and enhancements to Togai's metering and billing platform on an ongoing basis. This Change Log will be updated weekly to reflect the pace of new features and changes that are being taken live within Togai. If you have any feature asks, please send a mail to engg@togai.com and we will accommodate it in our roadmap.
 
-## August 11th 2023:
+## September 2023
 
+### Septemeber 10th 2023
+
+- New type of rate card - to support overages for entitlement rate cards
+- Accept custom formula using jsonLogic for custom charges at invoice or account settings
+- New API added for listing feature level entries
+- Entitlement credits purchase and usage logs (across entitlement rate card, overage rate card & entitlement plan purchase)
+- Support country dropdown and email fields in invoice group billing address.
+- Custom charge (additional fees or discount) based on percentage of line-items
+- SQL server integration to pull usage data from directly
+- Hubspot integration to sync customer data with the CRM
+- Avoid syncing free trial ($0) invoices to payment gateways
+- Support for an invoice group to collect payments via payment gateways
+
+
+### Septemeber 3rd 2023
+
+- Weekly pricing cycle
+- Create an invoice group to consolidate invoices from multiple accounts into a single invoice
+- Support for pro-ration for In Advance license based rate cards when the number of licenses are reduced (handled by providing it as a credit)
+- Bulk import usage based rate cards in price plan through csv
+
+
+## August 2023
+
+### August 25th 2023
+
+- New UI design
+- Overdue status for invoices
+- Allow purchasing a billing price plan
+- Pull usage data from VictoriaMetrics and Prometheus integration automatically by writing custom queries
+- Automatically link the default flows for supported apps and auto-register webhooks programatically where supported
+
+### August 18th 2023
+
+- Configure due date for an invoice at an organization level or a customer level
+- Support creating proposals for entitlement purchases
+- Purchase plan creation for one-time purchases (that are not cyclical)
+- Credit grant rate card in purchase plan
+- Conditional worflow management (using IF) in no-code center making it a true 'Zapier for billing'
+- Support for orders list in invoice section
+- Table view support for usage insights
+- Quickbooks integration
+- Automatically configure a payment gateway based on the customer's country
+
+### August 11th 2023
+
+- License rate cards support 'In Advance' invoicing
+- Create credit grant rate cards as part of a price plan
+- Apply credit grants for individual rate cards or a group of rate cards
+- Credits do not net-off other credits by default
 - You can now clone existing price plans and make edits thereafter
-- Roles and Permissions
+- Role based access control for the Togai dashboard
+- Allow negative values in event ingestion
+- Allow negative values for fixed fee rate card
+- Paystack integration is live
 
-## August 9th 2023:
+### August 9th 2023
 
 - Rate card level quantities when purchasing plans (support as a new type of plan: Purchase plan. entitlement plans will be deprecated)
 - Ability to create proposals which upon accepting becomes a purchase
 - Ability to purchase a recurring plan (an association) via proposal in prepaid and postpaid modes.
 - Accepting billing address as granular sections (line 1, 2, city, state, zip) for better integration with 3rd party apps
 - Entitlement rate cards and credit grant rate cards now support recurrence interval
+- Docusign integration
+- Togai app installed by default in the no-code center
+- Support for OAuth based authentication for new apps in the no-code center
+- Billing address fields updated
 
-## July 28th 2023:
+## July 2023
+
+### July 28th 2023
 
 - Credit grant rate card: Ability to configure recurring credit grants as part of price plan for a price.
 - Orders: Initiating entitlement plan purchases will now create orders instead of invoices. Togai creates an invoice (convert order into invoice) once the payment is received against the order.
@@ -25,89 +85,90 @@ icon: clipboard
     0$ invoices will automatically be marked as paid there by auto confirming the purchases and granting corresponding entitlements.
     Invoice status revamp. We are moving to unified invoice statuses from having invoice status and payment status earlier.
 
-## July 20th 2023:
+### July 20th 2023
 
 - Togai now gives you the ability to migrate accounts from one price plan to another. You have 8 possible options to choose from.
 
 
-## July 7th 2023:
+### July 7th 2023
 
 -  Add and delete rate cards during overrides: You can now not only edit but also add or delete fixed fee and license rate cards while overriding a customer's price plan.
 
+## Past changes
 
-## Line Item Level Promotional Credits
+### Line Item Level Promotional Credits
 
 - The Line Item Level Promotional Credits provide more flexibility in how credits are applied. Apply credits to individual entities (like a specific usage meter, a specific add-on, fixed fee etc), and not just broadly to the entire invoice.
 
-## Credits
+### Credits
 
 - Your customers can now purchase credits upfront which entitles them to some usage of your product. So if you're thinking of discounts, reimbursements, promotions and so on - togai can handle it all for you.
 
-## License pricing/ Seat based Subscription
+### License pricing/ Seat based Subscription
 
 - Togai now has extensive support for license/seat based pricing models.
 
-## Proration of Fixed fees
+### Proration of Fixed fees
 
 - Togai now supports fixed fee proration. Users will have to pay only for the number of days they are on the plan, rather than entire pricing cycle. This means that the fixed fee will get reflected in revenue on a day to day manner. 
 
 
-## Add custom charges to invoices
+### Add custom charges to invoices
 
 - You can now add miscellaneous charges to an upcoming (one-off) or ongoing invoice.
 
-## Private Apps & Flows
+### Private Apps & Flows
 
 - All users can create apps for their own flows. This particular app/flow will be visible only to that user.
 
-## Price plan Versioning
+### Price plan Versioning
 
 - Create newer versions of your existing live price plans using versioning. You can decide if you want to move all customers in the current version to the new one, only particular segments or none of them.
 
-## Price Plan Scheduling
+### Price Plan Scheduling
 
 - Togai now allows you to schedule (in the future) the association of a price plan to an account.
 
-## Stripe integration
+### Stripe integration
 
 - The Togai and Stripe Integration supports a bidirectional sync between Togai and Stripe.
 Here are some flows that are possible today:
 Some Available Flows:
 Here are some examples of flows that you can utilize:
 
-## Support for multiple currencies
+### Support for multiple currencies
 
 - Selling internationally and handling payments in different currencies? Do you have different pricing models and strategies for different regions and currencies? We're all set to handle them for you.
 
-## Add minimum commitment fees
+### Add minimum commitment fees
 
 - As a part of your contract, if you'd like to have a minimum fee that's chargeable from your customer if their projected usage target isn't met, you can now set that up in togai with just 2 clicks.
 
-## Price plan overrides
+### Price plan overrides
 
 - On an account level, if you want to edit the configurations of a price plan (like adding a new fee, changing rate etc), you can do so using price plan overrides for an upcoming or ongoing cycles.
 
-## Automated Invoice Generation
+### Automated Invoice Generation
 
 - Based on your price plans, invoices are now automatically generated for your customers in real time. These can then be published to your accounting (Quickbooks, Zoho books) and payment (Chargebee, Paddle, Stripe etc) systems via our APIs.
 
-## Add-ons/fixed fees
+### Add-ons/fixed fees
 
 - Togai now supports recurring flat fees. So if you monthly subscription fee or platform fee components, we got you.
 
 
-## Sandbox environment
+### Sandbox environment
 
 - Take a tour of Togai using our no-login public sandbox. The whole experience is tailored to your role and industry and can give you an idea about what you can achieve with Togai
 
-## Settings for orgs, customers and accounts
+### Settings for orgs, customers and accounts
 
 - With Togai, you can create data fields on 3 levels: customer, account and organization level. You can then use the data in these fields for custom transformations and much more.
 
-## Enriched values
+### Enriched values
 
 - Enrich events with extra metadata from other sources and price your products based on that. Provide customer level price customization, experiment with different pricing logic and much more with zero code changes.
 
-## CSV Import of events, accounts and customers
+### CSV Import of events, accounts and customers
 
 - Get started in minutes without developer effort by importing all your product's events, customers and accounts to Togai as a .csv file.
