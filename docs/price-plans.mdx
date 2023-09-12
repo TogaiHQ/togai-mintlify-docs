@@ -163,6 +163,21 @@ To view a list of all price plans, access the price plans view from the side men
 
 _You can also create and manage Price Plans using our [API](/api-reference/price-plans/create-a-price-plan)._
 
+### Price Plan Versioning
+
+You can use Togai to manage different versions of your price plan. We understand that as your business evolves, you will need to keep updating your pricing in line with the value your business provides. When you change your pricing, you are faced with many challenges - 
+
+- How to inform customers prior to making the changes?
+- How to schedule changes upfront?
+- How to handle existing customers?
+- How to keep track of the changes?
+- How to manage different segments of customers?
+- How to grandfather pricing for a select group of people?
+
+To handle all of the above questions, Togai supports creating multiple versions of the same price plan. You will be able to create, manage and keep track of the different versions of your price plan as your pricing evolves to meet business needs. You can use our [API](/api-reference/price-plans/update-a-price-plan) to update an existing price plan and create a new version. You can also use the Togai dashboard to add a new version to a price plan as shown in the image below. The next section explains how to migrate customers from old price plan versions to new ones seamlessly.
+
+![2282](/docs/images/e600df2-Screenshot_2023-03-07_at_7.02.32_PM.png "Price plan in a configured state")
+
 ### Price Plan Migration
 
 This is currently available only via our API (the no-code frontend interface will be released shortly). 
@@ -172,3 +187,4 @@ Togai now gives you the ability to migrate accounts from one price plan to anoth
 * **Overrides**: Skip accounts with overrides and migrate the rest or ignore existing overrides and migrate them too
 * **Migrate accounts to new plan** : Migrate immediately or from the next billing cycle
 * Migrate accounts associated to only a particular version of a plan to another plan or version
+
