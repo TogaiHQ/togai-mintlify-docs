@@ -2133,6 +2133,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '409':
+          description: Duplicate id  
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
           content:
