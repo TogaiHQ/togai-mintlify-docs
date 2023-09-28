@@ -27,7 +27,7 @@ Here's how you'll create a usage meter via the interface:
   
 Here's an example of how to go about creating usage meters that shows when to use which aggregation type. Let's take the example of **Stripe Payments**. This is what their pricing looks like: 
 
-![](docs/images/stripe-pricing.png) 
+![](/docs/images/stripe-pricing.png) 
 
 Let's model their Standard Plan: **`2.9% + 30¢`** per successful card charge. 
 
@@ -35,7 +35,7 @@ To model this 2-part pricing of Stripe, you'll need to create **two usage meters
 
 1. **Attribute:** Transaction\_amount (Unit as USD)
 2. **Payment Mode**: This is incase Stripe wants to charge differently or just segment users based on the Payment mode (Debit card, ACH etc).
-![](docs/images/stripe-create-event-schema.png)   
+![](/docs/images/stripe-create-event-schema.png)   
 
 #### Usage meter 1:
 
@@ -45,13 +45,13 @@ This is to model the first part of the pricing: `**2.9% of transaction amount**`
 
 Clearly, this requires us to use the sum function and so we set the aggregation type to `Sum`. 
 
-![](docs/images/8d7a154-image.png)
+![](/docs/images/8d7a154-image.png)
 
-![](docs/images/9aa8d35-image.png)
+![](/docs/images/9aa8d35-image.png)
 
 If you want to create a usage meter to aggregate only the transactions done using Debit cards and then charge them differently, you can use the **Dimension**: `Payment Mode` as a filter condition. 
 
-![](docs/images/5f60741-image.png) 
+![](/docs/images/5f60741-image.png) 
 
 #### Usage meter 2:
 
@@ -61,7 +61,7 @@ In this case, for every unique transaction done by a user we need to increase th
 
 Clearly, this requires us to use the count function and so we set the aggregation type to `Count`.
 
-![](docs/images/706a845-image.png)
+![](/docs/images/706a845-image.png)
 
 <Card title="Create usage meter API" icon="lightbulb" iconType="duotone" color="#2853C2" href="/api-reference/usage-meters/create-an-usage-meter">
   [You can also create usage meters using our API](/api-reference/usage-meters/create-an-usage-meter)
