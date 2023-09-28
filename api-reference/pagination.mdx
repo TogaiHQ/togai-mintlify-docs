@@ -2,8 +2,69 @@
 title: "Pagination 📄"
 ---
 
-All Togai's top-level API resources support for bulk fetches via "list" API method. For instance, you can [list customers](/api-reference/customers/get-a-customer), [list accounts](/api-reference/accounts/get-an-account), [list event schemas](/api-reference/event-schemas/list-event-schemas), [list usage meters](/api-reference/usage-meters/list-usage-meters-for-event-schema), and [list price plans](/api-reference/price-plans/list-price-plans). These list API methods share a common structure, taking at least these two parameters: pageSize and nextToken.
+Togai's top-level API resources offer robust support for bulk fetching via the "list" API method. This method is applicable across various resource types including [customers](/api-reference/customers/get-a-customer), [accounts](/api-reference/accounts/get-an-account), [event schemas](/api-reference/event-schemas/list-event-schemas), [usage meters](/api-reference/usage-meters/list-usage-meters-for-event-schema), and [price plans](/api-reference/price-plans/list-price-plans). Regardless of the resource, these list APIs follow a common structure.
 
-The response of a list API method represents a single page list of objects. If you do not input a nextToken, you will receive the first page of this stream, containing the newest objects. You can specify a nextToken to retrieve the page of older objects occurring immediately after the last object of the latest list.
+## Pagination Query Parameters
 
-You can also specify a limit if you would like to limit the results per page in pageSize. Togai supports up to 100 results per API response.
+- **pageSize**: This parameter determines the number of results per page. Togai supports up to 100 results per page.
+- **nextToken**: By providing a `nextToken`, you can retrieve a page of objects occurring immediately after the last object from the latest list.
+
+<Note>
+These list APIs accept few other query parameters to support Filtering, Searching and Sorting. Refer [Filtering, searching and sorting](/api-reference/filter-search-sort) page for more information on that topic.
+</Note>
+
+## Retrieving Results
+
+The response from a list API represents a single page list of objects. If you do not input a `nextToken`, you will receive the first page of this stream.
+The result contains `data` which is a list of requested entity objects and  `nxetToken`
+
+```json
+{
+    "data": [
+        {...},
+        {...},
+        ...
+    ],
+    "nextToken": "eyJwYXlsb2FkIjp7ImlkIjoiY3VzdG9tZXIxMjMifSwicGFnZVNpemUiOjIwLCJxdWVyeUNvbnRleHQiOnsiZmlsdGVyQnkiOltbeyJmaXJzdCI6InN0YXR1cyIsInNlY29uZCI6eyJ0eXBlIjoiRVEifX0sWyJBQ1RJVkUiXV1dLCJzb3J0QnkiOnsiaWQiOiJBU0MifSwic2VhcmNoT24iOm51bGx9LCJ0b2tlblR5cGUiOiJORVhUIn0="
+}
+```
+
+## Example Usages
+
+### Retrieving first page of results
+
+To list customers, make a GET request to the following endpoint:
+
+```http
+GET /customers
+```
+
+This request will return the first page consisting 20 of the customers along with a `nextToken`. If this is a last page, `nextToken` will be `null`.
+
+<Note>
+At times, the last page can return a non-null `nextToken`. This means, you will make one extra API call to receive an empty list with a `nextToken` as `null` to ascertain that you have read all of the results.
+</Note>
+
+### Limiting Results
+
+If you'd like to limit the number of results per page, you can specify a `pageSize`. For example, to get only 10 results per page:
+
+```http
+GET /customers?pageSize=10
+```
+
+This request will return the first page of the customer list, with each page containing up to 10 customers.
+
+### Retrieving next pages
+
+To retrieve the next page of customers, you would include the `nextToken` obtained from the previous response:
+
+```http
+GET /customers?nextToken=eyJwYXlsb2FkIjp7ImlkIjoiY3VzdG9tZXIxMjMifSwicGFnZVNpemUiOjIwLCJxdWVyeUNvbnRleHQiOnsiZmlsdGVyQnkiOltbeyJmaXJzdCI6InN0YXR1cyIsInNlY29uZCI6eyJ0eXBlIjoiRVEifX0sWyJBQ1RJVkUiXV1dLCJzb3J0QnkiOnsiaWQiOiJBU0MifSwic2VhcmNoT24iOm51bGx9LCJ0b2tlblR5cGUiOiJORVhUIn0=
+```
+
+This request will retrieve the next page of customers after the last one from the first page.
+
+<Note>
+`pageSize` and other parameters passed to fetch the first page are not required to be passed in consecutive requests as this information is available within the `nextToken` and will be conidered when returning next pages.
+</Note>
