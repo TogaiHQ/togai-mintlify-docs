@@ -142,6 +142,7 @@
     },
     {
       "group": "Introduction",
+      "version": "v1",
       "pages": [
         "api-reference/getting-started",
         "api-reference/authentication",
@@ -152,6 +153,11 @@
       "group": "APIs",
       "version": "v1",
       "pages": [{
+        "group": "Authentication",
+        "pages": [
+          "api-reference/authentication/get-bearer-token"
+        ]
+      },{
         "group": "Customers",
         "pages": [
           "api-reference/customers/list-customers",
