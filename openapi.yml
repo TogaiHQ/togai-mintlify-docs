@@ -2167,6 +2167,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/filter_page_size'
+        - $ref: '#/components/parameters/filter_next_page_token'
       responses:
         '200':
           description: Success response
@@ -2197,6 +2199,116 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}':
+    patch:
+      tags:
+        - Entitlements
+      summary: Update a feature credits entry of a feature for an account
+      description: |
+        This API let’s you to update expiry date-time[effectiveUntil] and granted units the feature credits entries of a feature for an account.
+        This API expects expiry date-time to be in future. For past dated requests, it throws Bad Request[400].
+        This API expects granted units to always be greater than the existing usage (previous granted - current balance) of the feature credit, else Bad Request[400] is thrown.
+        The examples below depict the incremental/decremental updates of granted units
+        Example: Initial: granted: 100, balance: 20
+        Example-1: Update granted to 120 units
+          Adjustment value: 120 - 100(previous granted) = 20
+          Updated balance: 20 + 20 = 40
+        Example-2: update granted to 70
+          Adjustment value: 70 - 100 = -30
+          Updated balance: 20 + (-30) = -10 -> 400 Bad Request
+        In example 2, the decrement of 30 units in the granted units can't be done as the available units is 20[less than the decremental value]
+      operationId: UpdateFeatureCreditEntry
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/wallet_entry_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
+              examples:
+                GetFeatureCreditsResponse:
+                  $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to update a feature credit entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}/void':
+    post:
+      tags:
+        - Entitlements
+      summary: Void a feature credits entry of a feature for an account
+      description: This API let’s you to void the feature credits entries of a feature for an account
+      operationId: VoidFeatureCreditEntry
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/wallet_entry_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
+              examples:
+                GetFeatureCreditsResponse:
+                  $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to void a feature credit entry.
           content:
             application/json:
               schema:
@@ -6039,6 +6151,7 @@ components:
       required:
         - sourceId
         - sourceType
+        - status
         - used
         - effectiveFrom
         - effectiveUntil
@@ -6054,6 +6167,13 @@ components:
             - ENTITLEMENT
             - PRICE_PLAN
             - OVERAGE
+        status:
+          type: string
+          description: Status of the feature credit entry
+          enum:
+            - ACTIVE
+            - EXPIRED
+            - VOIDED
         effectiveFrom:
           type: string
           format: date-time
@@ -6476,6 +6596,16 @@ components:
                 items:
                   type: string
                   example: account#1
+    UpdateFeatureCreditsRequest:
+      type: object
+      properties:
+        effectiveUntil:
+          type: string
+          format: date-time
+          description: Expiry date-time for a feature credits entry
+        grantedUnits:
+          type: number
+          description: Granted units for a feature credits entry
     GetMetricsResponse:
       type: object
       description: Response to GetMetrics Request
@@ -7665,6 +7795,15 @@ components:
           value: PROCESSED
         in_progress:
           value: IN_PROGRESS
+    wallet_entry_id:
+      in: path
+      description: Entry id corresponding to a particular entitlement/overage grant
+      name: entry_id
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        example: purchase.21HbazIT3JQ.D90jC$1
     invoice_id:
       in: path
       name: invoice_id
@@ -8573,6 +8712,27 @@ components:
                     - order: 1
                       rate: 1
               displayName: feature1
+          fixedFeeRateCards:
+            - id: addon.20sidL2HJ7o.vvzDT
+              rateValues:
+                - currency: USD
+                  rate: 50
+              enableProration: false
+              displayName: normal
+              tag: '1'
+              invoiceTiming: null
+              type: null
+              recurrenceConfig: null
+            - id: addon.20sidQxYRjs.4oBSU
+              rateValues:
+                - currency: USD
+                  rate: 10
+              enableProration: false
+              displayName: anotherNormal
+              tag: '2'
+              invoiceTiming: null
+              type: ONE_TIME
+              recurrenceConfig: null
           supportedCurrencies:
             - USD
     UpdatePricePlanRequest:
@@ -9686,12 +9846,14 @@ components:
         data:
           - sourceId: purchase.20rvWRxQcQK.0ZwPG
             sourceType: PURCHASE
+            status: ACTIVE
             granted: 10
             balance: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
             effectiveUntil: '2021-03-04T14:25:10Z'
           - sourceId: purchase.20rvWRxQcQK.0ZwPG
             sourceType: PURCHASE
+            status: ACTIVE
             granted: 10
             balance: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
@@ -10280,6 +10442,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/IngestEventRequest'
+    UpdateFeatureCreditsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFeatureCreditsRequest'
+          examples:
+            UpdateFeatureCreditsRequest:
+              value:
+                effectiveUntil: '2023-02-23T14:25:10Z'
+                grantedUnits: 200
     LicenseUpdateRequest:
       content:
         application/json:
