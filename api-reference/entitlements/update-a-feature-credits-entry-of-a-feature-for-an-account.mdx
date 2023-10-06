@@ -1,3 +1,62 @@
 ---
 openapi: patch /accounts/{account_id}/features/{feature_id}/entries/{entry_id}
 ---
+
+<AccordionGroup>
+<Accordion title="Example: Increase grantedUnits">
+  **Initial**:
+  ```
+  {
+    "sourceId": "<source_id>",
+    "sourceType": PURCHASE",
+    "accountId": "acc.fdjsl.313",
+    "featureId": "feat.fdjsl.313",
+    "granted": 100,
+    "balance": 20
+  }
+  ```
+  **Action**: Update grantedUnits to 120 units 
+
+  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<source_id>`
+  ```
+  {
+    "granted": 120
+  }
+  ```
+
+  **Output**
+
+  Adjustment units = new grantedUnits - previous grantedUnits  $(120 - 100 = 20)$
+
+  New balance = current balance + adjustment units $(20 + 20 = 40)$
+
+</Accordion>
+<Accordion title="Example: Reduce grantedUnits">
+  **Initial**:
+  ```
+  {
+    "sourceId": "<source_id>",
+    "sourceType": PURCHASE",
+    "accountId": "acc.fdjsl.313",
+    "featureId": "feat.fdjsl.313",
+    "granted": 100,
+    "balance": 20
+  }
+  ```
+  **Action**: Update grantedUnits to 70 units 
+
+  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<source_id>`
+  ```
+  {
+    "granted": 70
+  }
+  ```
+
+  **Output**
+
+  Adjustment units = new grantedUnits - previous grantedUnits  $(70 - 100 = -30)$
+
+  New balance = current balance + adjustment units $(20 + (-30) = -10)$ -> **`400 Bad Request`**
+
+</Accordion>
+</AccordionGroup>

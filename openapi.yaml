@@ -2220,25 +2220,8 @@ paths:
         #### This API let's you to update "expiry date-time" (effectiveUntil) and "granted units" of the feature credits entries.
 
         - **effectiveUntil**: must be in future. Throws Bad Request (HTTP 400) if the privided date is in the past.
-        - **granted**: must be greater than the existing usage (previous granted - current balance). Else, returns Bad Request (HTTP 400)
+        - **grantedUnits**: must be greater than the existing usage (previous granted - current balance). Else, returns Bad Request (HTTP 400)
 
-        **Examples:**
-
-        **Initial**: granted: 100, balance: 20
-
-        **Example-1**: Update granted to 120 units
-
-          Adjustment value: 120 - 100(previous granted) = 20
-
-          Updated balance: 20 + 20 = 40
-
-        **Example-2**: update granted to 70
-
-          Adjustment value: 70 - 100 = -30
-
-          Updated balance: 20 + (-30) = -10 -> 400 Bad Request
-
-        The decrement of 30 units in the granted units can't be done as the available units is 20[less than the decremental value]
       operationId: UpdateFeatureCreditEntry
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -2293,8 +2276,6 @@ paths:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
         - $ref: '#/components/parameters/wallet_entry_id'
-      requestBody:
-        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
       responses:
         '200':
           description: Success response
