@@ -286,8 +286,10 @@
         "group": "Entitlements",
         "pages": [
           "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
+          "api-reference/entitlements/get-feature-credits-balance",
           "api-reference/entitlements/list-feature-credits-entries-of-a-feature-for-an-account",
-          "api-reference/entitlements/get-feature-credits-balance"
+          "api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account",
+          "api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account"
         ]
       },
       {
