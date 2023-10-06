@@ -35,6 +35,8 @@ tags:
     description: Price Experimentation apis
   - name: InvoiceGroups
     description: Invoice Group level calls
+  - name: Organizations
+    description: Organization level calls
   - name: Event Management
     description: APIs for getting events ingested in Togai
     externalDocs:
@@ -53,6 +55,8 @@ tags:
     description: Invoices API
   - name: Credits
     description: Credits API
+  - name: Authentication
+    description: Authentication API
 paths:
   /customers:
     post:
@@ -2134,7 +2138,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '409':
-          description: Duplicate id  
+          description: Duplicate Id
           content:
             application/json:
               schema:
@@ -2153,7 +2157,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /accounts/{account_id}/features/{feature_id}/entries:
+  '/accounts/{account_id}/features/{feature_id}/entries':
     get:
       tags:
         - Entitlements
@@ -2163,6 +2167,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/filter_page_size'
+        - $ref: '#/components/parameters/filter_next_page_token'
       responses:
         '200':
           description: Success response
@@ -2193,6 +2199,126 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}':
+    patch:
+      tags:
+        - Entitlements
+      summary: Update a feature credits entry of a feature for an account
+      description: |
+        #### This API let's you to update "expiry date-time" (effectiveUntil) and "granted units" of the feature credits entries.
+
+        - **effectiveUntil**: must be in future. Throws Bad Request (HTTP 400) if the privided date is in the past.
+        - **granted**: must be greater than the existing usage (previous granted - current balance). Else, returns Bad Request (HTTP 400)
+
+        **Examples:**
+
+        **Initial**: granted: 100, balance: 20
+
+        **Example-1**: Update granted to 120 units
+
+          Adjustment value: 120 - 100(previous granted) = 20
+
+          Updated balance: 20 + 20 = 40
+
+        **Example-2**: update granted to 70
+
+          Adjustment value: 70 - 100 = -30
+
+          Updated balance: 20 + (-30) = -10 -> 400 Bad Request
+
+        The decrement of 30 units in the granted units can't be done as the available units is 20[less than the decremental value]
+      operationId: UpdateFeatureCreditEntry
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/wallet_entry_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
+              examples:
+                GetFeatureCreditsResponse:
+                  $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to update a feature credit entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}/void':
+    post:
+      tags:
+        - Entitlements
+      summary: Void a feature credits entry of a feature for an account
+      description: This API let’s you to void the feature credits entries of a feature for an account
+      operationId: VoidFeatureCreditEntry
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+        - $ref: '#/components/parameters/wallet_entry_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
+              examples:
+                GetFeatureCreditsResponse:
+                  $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to void a feature credit entry.
           content:
             application/json:
               schema:
@@ -2539,6 +2665,32 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /authenticate:
+    post:
+      tags:
+        - Authentication
+      summary: Generate short lived bearer token
+      description: |
+        Generates and returns a bearer token. Behavior of this API differs on the basis of the auth mechanism used to make the request.
+          - For API key auth, this API generates a JWT token whcih is valid for 24 hours and returns it.
+          - For JWT bearer auth, returns the same JWT token in response
+        For information on how to generate API token, refer [Generating New API Keys](https://docs.togai.com/api-reference/authentication#generating-new-api-keys) section of docs.
+      operationId: authenticate
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+      security:
+        - bearerAuth: []
 components:
   schemas:
     CreateCustomerRequest:
@@ -4287,6 +4439,8 @@ components:
           $ref: '#/components/schemas/FeatureDetails'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        eventLevelRevenue:
+          type: boolean
         createdAt:
           type: string
           format: date-time
@@ -5836,7 +5990,7 @@ components:
           minLength: 1
           maxLength: 50
         id:
-          description: 'Togai restricts users to ingest events with same id within a period of **45 days**. This restriction is  common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature),  [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and   [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch).  i.e, an `id` used on `/ingest` API will not be allowed on `/ingestBatch` or `/entitled` APIs'
+          description: 'Togai restricts users to ingest events with same id within a period of *45 days*. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs'
           type: string
           maxLength: 512
           example: c0b1306d-f506-43a6-856b-69221efaee6b
@@ -6007,6 +6161,7 @@ components:
       required:
         - sourceId
         - sourceType
+        - status
         - used
         - effectiveFrom
         - effectiveUntil
@@ -6022,6 +6177,13 @@ components:
             - ENTITLEMENT
             - PRICE_PLAN
             - OVERAGE
+        status:
+          type: string
+          description: Status of the feature credit entry
+          enum:
+            - ACTIVE
+            - EXPIRED
+            - VOIDED
         effectiveFrom:
           type: string
           format: date-time
@@ -6261,6 +6423,23 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/EnrichmentDependency'
+        revenueDetails:
+          type: array
+          items:
+            title: EventPipelineInfoRevenueDetails
+            type: object
+            additionalProperties: false
+            required:
+              - usageMeterId
+              - revenueBaseCurrency
+              - revenueInvoiceCurrency
+            properties:
+              usageMeterId:
+                type: string
+              revenueBaseCurrency:
+                type: number
+              revenueInvoiceCurrency:
+                type: number
     EnrichedField:
       readOnly: true
       description: enriched field
@@ -6312,10 +6491,12 @@ components:
         startTime:
           type: string
           format: date-time
+          description: Start date time of the query (inclusive)
           example: '2017-07-21T00:00:00Z'
         endTime:
           type: string
           format: date-time
+          description: End date time of the query (exclusive)
           example: '2017-07-21T00:00:00Z'
         metricQueries:
           type: array
@@ -6427,6 +6608,16 @@ components:
                 items:
                   type: string
                   example: account#1
+    UpdateFeatureCreditsRequest:
+      type: object
+      properties:
+        effectiveUntil:
+          type: string
+          format: date-time
+          description: Expiry date-time for a feature credits entry
+        grantedUnits:
+          type: number
+          description: Granted units for a feature credits entry
     GetMetricsResponse:
       type: object
       description: Response to GetMetrics Request
@@ -6744,7 +6935,6 @@ components:
       required:
         - description
         - type
-        - lineItems
         - value
         - units
       properties:
@@ -6786,12 +6976,35 @@ components:
             - CUSTOM_TAG
           description: |
             Type of the line item
+            - GRAND_TOTAL_AMOUNT: Sum of all total amount of individual invoices in a grouped(composite) invoice
+            - TOTAL_AMOUNT: Total revenue of the invoice
+            - NET_AMOUNT: Net revenue of the invoice ( Gross revenue - Discounts )
+            - GROSS_AMOUNT: Gross revenue of the invoice 
+            - PRICE_PLAN_AMOUNT: SUB_TOTAL_AMOUNT + true up amount
+            - SUB_TOTAL_AMOUNT: Sum of all rate card revenues
+            - TRUE_UP_AMOUNT: Minimum commitment - SUB_TOTAL_AMOUNT (Always positive)
             - TOTAL_USAGE: List of all the usage meter usages
-            - USAGE_METER_USAGE: A single usage meter usage
-            - NET_REVENUE: Net revenue of the invoice ( Gross revenue - Discounts )
-            - GROSS_REVENUE: Gross revenue of the invoice 
-            - USAGE_RATE_CARD_REVENUE: Revenue generated from usage rate card
-            - USAGE_RATE_CARD_SLAB_REVENUE: Revenue generated from usage rate card slab
+            - USAGE_METER_USAGE: Usage of an usage meter
+            - USAGE_RATE_CARD_AMOUNT: Revenue generated from usage rate card
+            - USAGE_RATE_CARD_SLAB_AMOUNT: Revenue generated from usage rate card slab
+            - FIXED_FEE_RATE_CARD_AMOUNT: Revenue generated from fixed fee rate card
+            - CREDIT_GRANT_RATE_CARD_AMOUNT: : Revenue generated from credit grant rate card
+            - BILLING_ENTITLEMENT_RATE_CARD_AMOUNT: Revenue generated from billing entitlement rate card
+            - ENTITLEMENT_OVERAGE_RATE_CARD_AMOUNT: : Revenue generated from entitlement overage rate card
+            - ENTITLEMENT_OVERAGE_RATE_CARD_SLAB_AMOUNT: Revenue generated from entitlement overage rate card slab
+            - LICENSE_RATE_CARD_AMOUNT: Revenue generated from license rate card
+            - TOTAL_CREDITS: Sum of all credit amounts
+            - SUB_CREDITS: Granted credit value
+            - TOTAL_ADVANCED_FEES: Sum of all advanced fee revenue
+            - ADVANCED_FIXED_FEE: Revenue generated from advanced fixed fee rate card
+            - ADVANCED_LICENSE_RATE_CARD_AMOUNT: Revenue generated from advanced license rate card
+            - ADVANCED_BILLING_ENTITLEMENT_RATE_CARD_AMOUNT: Revenue generated from advanced billing entitlement rate card
+            - ADVANCED_CREDIT_GRANT_RATE_CARD_AMOUNT: Revenue generated from advanced credit grant rate card
+            - TOTAL_MISCELLANEOUS_CHARGES: Net revenue of all MISCELLANEOUS_CHARGE
+            - MISCELLANEOUS_CHARGE: Custom amount added to a DRAFT invoice
+            - TOTAL_PURCHASE_AMOUNT: Net revenue all rate cards in a purchase plan
+            - CUSTOM_AMOUNT: Custom amount added a DRAFT invoice
+            - CUSTOM_TAG: User defined tags given to each rate card
         valuePerQuantity:
           type: number
         quantity:
@@ -6803,12 +7016,6 @@ components:
         metadata:
           type: object
           additionalProperties: true
-        lineItems:
-          type: array
-          minItems: 1
-          maxItems: 50
-          items:
-            type: string
     InvoiceDetails:
       type: object
       additionalProperties: false
@@ -6982,6 +7189,13 @@ components:
             type: boolean
             default: false
             example: true
+    TokenResponse:
+      type: object
+      required:
+        - token
+      properties:
+        token:
+          type: string
   responses:
     BaseSuccessResponse:
       description: OK
@@ -7353,6 +7567,19 @@ components:
           examples:
             MiscellaneousChargesResponse:
               $ref: '#/components/examples/MiscellaneousChargesResponse'
+    TokenResponse:
+      description: Response with token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenResponse'
+          examples:
+            TokenResponse:
+              $ref: '#/components/examples/TokenResponse'
+        text/plain:
+          schema:
+            type: string
+          example: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
   parameters:
     customer_id:
       in: path
@@ -7580,6 +7807,15 @@ components:
           value: PROCESSED
         in_progress:
           value: IN_PROGRESS
+    wallet_entry_id:
+      in: path
+      description: Entry id corresponding to a particular entitlement/overage grant
+      name: entry_id
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        example: purchase.21HbazIT3JQ.D90jC$1
     invoice_id:
       in: path
       name: invoice_id
@@ -8488,6 +8724,27 @@ components:
                     - order: 1
                       rate: 1
               displayName: feature1
+          fixedFeeRateCards:
+            - id: addon.20sidL2HJ7o.vvzDT
+              rateValues:
+                - currency: USD
+                  rate: 50
+              enableProration: false
+              displayName: normal
+              tag: '1'
+              invoiceTiming: null
+              type: null
+              recurrenceConfig: null
+            - id: addon.20sidQxYRjs.4oBSU
+              rateValues:
+                - currency: USD
+                  rate: 10
+              enableProration: false
+              displayName: anotherNormal
+              tag: '2'
+              invoiceTiming: null
+              type: ONE_TIME
+              recurrenceConfig: null
           supportedCurrencies:
             - USD
     UpdatePricePlanRequest:
@@ -8906,6 +9163,7 @@ components:
         featureDetails:
           featureId: feature.1122.ahoiud
           attributeName: distance
+        eventLevelRevenue: false
     EventSchemaVersionsResponse:
       summary: A sample event schema versions response
       value:
@@ -9600,12 +9858,14 @@ components:
         data:
           - sourceId: purchase.20rvWRxQcQK.0ZwPG
             sourceType: PURCHASE
+            status: ACTIVE
             granted: 10
             balance: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
             effectiveUntil: '2021-03-04T14:25:10Z'
           - sourceId: purchase.20rvWRxQcQK.0ZwPG
             sourceType: PURCHASE
+            status: ACTIVE
             granted: 10
             balance: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
@@ -9859,6 +10119,9 @@ components:
         runningBalance: 700
         inapplicableCredits: 100
         units: USD
+    TokenResponse:
+      value:
+        token: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
   requestBodies:
     CreatePurchaseRequest:
       description: Payload to initiate a purchase
@@ -10191,6 +10454,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/IngestEventRequest'
+    UpdateFeatureCreditsRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateFeatureCreditsRequest'
+          examples:
+            UpdateFeatureCreditsRequest:
+              value:
+                effectiveUntil: '2023-02-23T14:25:10Z'
+                grantedUnits: 200
     LicenseUpdateRequest:
       content:
         application/json:
