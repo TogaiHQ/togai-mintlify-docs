@@ -7,26 +7,26 @@ openapi: patch /accounts/{account_id}/features/{feature_id}/entries/{entry_id}
   **Initial**:
   ```
   {
-    "sourceId": "<source_id>",
-    "sourceType": PURCHASE",
+    "id": "<entry_id>",
+    "source": PURCHASE",
     "accountId": "acc.fdjsl.313",
     "featureId": "feat.fdjsl.313",
     "granted": 100,
     "balance": 20
   }
   ```
-  **Action**: Update grantedUnits to 120 units 
+  **Action**: Update granted units to 120 units 
 
-  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<source_id>`
+  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<entry_id>`
   ```
   {
-    "granted": 120
+    "grantedUnits": 120
   }
   ```
 
   **Output**
 
-  Adjustment units = new grantedUnits - previous grantedUnits  $(120 - 100 = 20)$
+  Adjustment units = new granted units - previous granted units  $(120 - 100 = 20)$
 
   New balance = current balance + adjustment units $(20 + 20 = 40)$
 
@@ -35,17 +35,17 @@ openapi: patch /accounts/{account_id}/features/{feature_id}/entries/{entry_id}
   **Initial**:
   ```
   {
-    "sourceId": "<source_id>",
-    "sourceType": PURCHASE",
+    "id": "<entry_id>",
+    "source": PURCHASE",
     "accountId": "acc.fdjsl.313",
     "featureId": "feat.fdjsl.313",
     "granted": 100,
     "balance": 20
   }
   ```
-  **Action**: Update grantedUnits to 70 units 
+  **Action**: Update granted units to 70 units 
 
-  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<source_id>`
+  **POST** `/accounts/acc.fdjsl.313/features/feat.fdjsl.313/entries/<entry_id>`
   ```
   {
     "granted": 70
@@ -54,7 +54,7 @@ openapi: patch /accounts/{account_id}/features/{feature_id}/entries/{entry_id}
 
   **Output**
 
-  Adjustment units = new grantedUnits - previous grantedUnits  $(70 - 100 = -30)$
+  Adjustment units = new granted units - previous granted units  $(70 - 100 = -30)$
 
   New balance = current balance + adjustment units $(20 + (-30) = -10)$ -> **`400 Bad Request`**
 

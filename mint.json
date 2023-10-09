@@ -12,6 +12,10 @@
     },
     "maintainOrder": true
   },
+  "analytics": {
+    "gtm": { "tagId": "GTM-TS4BK7Z" },
+    "ga4": { "measurementId": "G-Q0BLXR7WX5" }
+  },
   "feedback":{"suggestEdit": true, "raiseIssue": true},
   "logo": {
     "dark": "/images/togai-dark.svg",
