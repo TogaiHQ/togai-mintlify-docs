@@ -2217,16 +2217,15 @@ paths:
         - Entitlements
       summary: Update a feature credits entry of a feature for an account
       description: |
-        #### This API let's you to update "expiry date-time" (effectiveUntil) and "granted units" of the feature credits entries.
+        #### This API let's you to update `effectiveUntil` and `grantedUnits` of the feature credits entries.
 
-        - **effectiveUntil**: must be in future. Throws Bad Request (HTTP 400) if the privided date is in the past.
+        - **effectiveUntil**: must be in future. Throws Bad Request (HTTP 400) if the provided date is in the past.
         - **grantedUnits**: must be greater than the existing usage (previous granted - current balance). Else, returns Bad Request (HTTP 400)
-
       operationId: UpdateFeatureCreditEntry
       parameters:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
-        - $ref: '#/components/parameters/wallet_entry_id'
+        - $ref: '#/components/parameters/entry_id'
       requestBody:
         $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
       responses:
@@ -2275,7 +2274,9 @@ paths:
       parameters:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
-        - $ref: '#/components/parameters/wallet_entry_id'
+        - $ref: '#/components/parameters/entry_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
       responses:
         '200':
           description: Success response
@@ -6137,18 +6138,18 @@ components:
       type: object
       additionalProperties: false
       required:
-        - sourceId
-        - sourceType
+        - id
+        - source
         - status
         - used
         - effectiveFrom
         - effectiveUntil
       properties:
-        sourceId:
+        id:
           type: string
           maxLength: 50
-          example: purchase.20rvWRxQcQK.0ZwPG
-        sourceType:
+          example: purchase.20rvWRxQcQK.0ZwPG$1
+        source:
           type: string
           description: Source of the feature credit
           enum:
@@ -7765,6 +7766,21 @@ components:
       schema:
         type: integer
         example: 10
+    entry_id:
+      in: path
+      description: |
+        `sourceId` corresponding to a particular entitlement/overage grant entry
+
+        Formats:
+        1. If source of entry is an entitlement grant rate card in price plan: `schedule_id#pricing_cycle_start_date$PRICE_PLAN`
+        2. If source of entry is an entitlement overage rate card in price plan: `schedule_id#pricing_cycle_start_date$OVERAGE`
+        3. If source of entry is a purchase: `purchase_id#int_index$PURCHASE`
+      name: entry_id
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        example: purchase.21HbazIT3JQ.D90jC#1$PURCHASE
     filter_account_id:
       in: query
       description: Filter option to filter based on account id.
@@ -7785,15 +7801,6 @@ components:
           value: PROCESSED
         in_progress:
           value: IN_PROGRESS
-    wallet_entry_id:
-      in: path
-      description: Entry id corresponding to a particular entitlement/overage grant
-      name: entry_id
-      required: true
-      schema:
-        type: string
-        maxLength: 50
-        example: purchase.21HbazIT3JQ.D90jC$1
     invoice_id:
       in: path
       name: invoice_id
@@ -9833,6 +9840,8 @@ components:
     FeatureCreditEntry:
       summary: example update feature credits response
       value:
+        id: purchase.20rvWRxQcQK.0ZwPG$1
+        source: PURCHASE
         accountId: acc.fdjsl.313
         featureId: feat.fdjsl.313
         granted: 15
@@ -9843,15 +9852,15 @@ components:
       summary: example list feature credit entries response
       value:
         data:
-          - sourceId: purchase.20rvWRxQcQK.0ZwPG
-            sourceType: PURCHASE
+          - id: purchase.20rvWRxQcQK.0ZwPG
+            source: PURCHASE
             status: ACTIVE
             granted: 10
             balance: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
             effectiveUntil: '2021-03-04T14:25:10Z'
-          - sourceId: purchase.20rvWRxQcQK.0ZwPG
-            sourceType: PURCHASE
+          - id: purchase.20rvWRxQcQK.0ZwPG
+            source: PURCHASE
             status: ACTIVE
             granted: 10
             balance: 5
