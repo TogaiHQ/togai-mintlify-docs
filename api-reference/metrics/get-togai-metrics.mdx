@@ -2,30 +2,81 @@
 openapi: post /metrics
 ---
 
-## MetricQuery.configs
+## MetricQuery: Allowed field combinations
+
+<AccordionGroup>
+<Accordion title="MetricQuery.configs">
+
 | Metric Name       | Config Key | Allowed Values  | Default value |              Description          |
 |-------------------|------------|-----------------|---------------|-----------------------------------|
-| REVENUE           | CURRENCY   | BASE or INVOICE | BASE          | currency to return the revenue in |
-| REVENUE_FOR_CYCLE | CURRENCY   | BASE or INVOICE | BASE          | currency to return the revenue in |
+| `REVENUE`           | `CURRENCY`   | `BASE` or `INVOICE` | `BASE`          | currency to return the revenue in |
+| `REVENUE_FOR_CYCLE` | `CURRENCY`   | `BASE` or `INVOICE` | `BASE`          | currency to return the revenue in |
 
-## MetricQuery.filters
+</Accordion>
+<Accordion title="MetricQuery.filters">
 
-| Metric Name       | FilterEntry Name |    Allowed groupBy fields                 |      Default Values      |                 Allowed Values                  |
-|-------------------|------------------|-------------------------------------------|--------------------------|-------------------------------------------------|
-| EVENTS            | ACCOUNT_ID       | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<one or more valid account IDs>               |
-| EVENTS            | CUSTOMER_ID      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<one or more valid customer IDs>              |
-| EVENTS            | SCHEMA_NAME      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<at most one valid schema names>              |
-| EVENTS            | EVENT_STATUS     | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | [PROCESSED, UNPROCESSED] | oneOrMoreOf PROCESSED, UNPROCESSED, IN_PROGRESS |
-| USAGE             | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-| USAGE             | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-| USAGE             | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-| REVENUE           | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-| REVENUE           | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-| REVENUE           | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-| USAGE_FOR_CYCLE   | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-| USAGE_FOR_CYCLE   | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-| USAGE_FOR_CYCLE   | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-| REVENUE_FOR_CYCLE | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-| REVENUE_FOR_CYCLE | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-| REVENUE_FOR_CYCLE | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-            
+| Metric Name         | FilterEntry Name |    Allowed groupBy fields                 |      Default Values      |                 Allowed Values                  |
+|---------------------|------------------|-------------------------------------------|--------------------------|-------------------------------------------------|
+| `EVENTS`            | `ACCOUNT_ID`       | `ACCOUNT_ID`, `EVENT_STATUS`, `SCHEMA_NAME`,    | None                     | *\<one or more valid account IDs>               |
+| `EVENTS`            | `CUSTOMER_ID`      | `ACCOUNT_ID`, `EVENT_STATUS`, `SCHEMA_NAME`,    | None                     | *\<one or more valid customer IDs>              |
+| `EVENTS`            | `SCHEMA_NAME`      | `ACCOUNT_ID`, `EVENT_STATUS`, `SCHEMA_NAME`,    | None                     | *\<at most one valid schema names>              |
+| `EVENTS`            | `EVENT_STATUS`     | `ACCOUNT_ID`, `EVENT_STATUS`, `SCHEMA_NAME`,    | [`PROCESSED`, `UNPROCESSED`] | oneOrMoreOf `PROCESSED`, `UNPROCESSED`, `IN_PROGRESS` |
+| `USAGE`             | `ACCOUNT_ID`       | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid account IDs>               |
+| `USAGE`             | `CUSTOMER_ID`      | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid customer IDs>              |
+| `USAGE`             | `USAGE_METER_ID`   | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid usage meter name>          |
+| `REVENUE`           | `ACCOUNT_ID`       | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid account IDs>               |
+| `REVENUE`           | `CUSTOMER_ID`      | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid customer IDs>              |
+| `REVENUE`           | `USAGE_METER_ID`   | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid usage meter name>          |
+| `USAGE_FOR_CYCLE`   | `ACCOUNT_ID`       | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid account IDs>               |
+| `USAGE_FOR_CYCLE`   | `CUSTOMER_ID`      | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid customer IDs>              |
+| `USAGE_FOR_CYCLE`   | `USAGE_METER_ID`   | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid usage meter name>          |
+| `REVENUE_FOR_CYCLE` | `ACCOUNT_ID`       | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid account IDs>               |
+| `REVENUE_FOR_CYCLE` | `CUSTOMER_ID`      | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid customer IDs>              |
+| `REVENUE_FOR_CYCLE` | `USAGE_METER_ID`   | `ACCOUNT_ID`, `USAGE_METER_ID`, `CUSTOMER_ID`   | None                     | *\<one or more valid usage meter name>          |
+
+</Accordion>
+</AccordionGroup>
+---
+<Accordion title="Notes on `USAGE_FOR_CYCLE` and `REVENUE_FOR_CYCLE`" >
+
+#### Storage
+
+The `*_FOR_CYCLE` metrics in Togai are stored against the pricing cycle start date of accounts based on their pricing schedules.
+
+For instance, metrics of an account having a `MONTHLY` pricing cycle configued to invoice on 5th of every month, metrics are stored as follows.
+
+| PricingCycleStartDate  | Usage/RevenueForCycle |
+|------------------------|-----------------------|
+| `2020-01-05T00:00:00Z` | 1000                  |
+| `2020-02-05T00:00:00Z` | 1200                  |
+| `2020-03-05T00:00:00Z` | 1200                  |
+
+In case of changes to the plan, e.g, a different monthly plan which is configured to invoice on 1st of every month is associated to account from `2020-03-15`, metrics are stored as follows.
+
+| PricingCycleStartDate  | Usage/RevenueForCycle |
+|------------------------|-----------------------|
+| `2020-01-05T00:00:00Z` | 1000                  |
+| `2020-02-05T00:00:00Z` | 1200                  |
+| `2020-03-05T00:00:00Z` | 1250                  |
+| `2020-03-15T00:00:00Z` | 600                   |
+| `2020-04-01T00:00:00Z` | 1300                  |
+| `2020-05-01T00:00:00Z` | 1300                  |
+
+#### Querying
+
+Now, in order to query the `*_FOR_CYCLE` metrics for any pricing cycle, make sure that the `PricingCycleStartDate` lies within `startTime` (inclusive) and `endTime` (exclusive).
+
+Example, for metrics query with startTime as `2020-02-15T00:00:00Z` and endTime as `2020-04-01T00:00:00Z` results contain the data from below records.
+
+| PricingCycleStartDate  | Usage/RevenueForCycle |
+|------------------------|-----------------------|
+| `2020-03-05T00:00:00Z` | 1250                  |
+| `2020-03-15T00:00:00Z` | 600                   |
+
+and not data from `2020-02-15T00:00:00Z` or from `2020-04-01T00:00:00Z`
+
+
+
+</Accordion>
+
+
