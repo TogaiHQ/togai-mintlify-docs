@@ -1911,6 +1911,137 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags:
+        - Event Management
+      summary: Undo ingested events. This replenishes the feature credits and draws down the usages and revenue contribution of the events matching the filter.
+      description: |
+        #### This API lets you to revert the changes caused by events
+
+        - **Usages**: Reduction of all usages associated with this event
+        - **Revenue**: Reduction of all revenues associated with this event
+        - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
+      operationId: eventCorrection
+      parameters:
+        - $ref: '#/components/parameters/filter_account_id'
+        - $ref: '#/components/parameters/filter_event_id'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EventsCorrectionResponse'
+              example:
+                EventsCorrectionResponse:
+                  summary: Example event correction response
+                  value:
+                    data:
+                      - eventPayload:
+                          timestamp: '2023-02-23T14:25:10Z'
+                          schemaName: travelCompletedEvent
+                          id: c0b1306d-f506-43a6-856b-69221efaee6b
+                          accountId: '1'
+                          attributes:
+                            - name: distanceTravelled
+                              value: 50
+                              unit: Miles
+                            - name: timeSpent
+                              value: 60
+                              unit: Minutes
+                          dimensions:
+                            location: Seattle
+                            costCenterCode: 1234
+                            travelType: Business
+                        eventPipelineInfo:
+                          eventSchema:
+                            name: Rides
+                            version: 1
+                          usageMeters:
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: rides_distance
+                              version: 1
+                              status: PROCESSED_UNITS_COMPUTED
+                              units: 10.42
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: rides_time
+                              version: 1
+                              status: PROCESSED_FILTERED_OUT
+                          pricePlans:
+                            - name: pro-plan
+                              id: 68551191-982b-4663-92fa-38a6f8313e91
+                              scheduleId: c0b1306d-f506-43a6-856b-69221efaee6b
+                              cycleStart: 04-03-2022
+                              cycleEnd: 04-04-2022
+                          account:
+                            id: acme-prod
+                          customer:
+                            id: acme_inc
+                        ingestionStatus:
+                          status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+                          statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+                        status: REVERTED
+                        reason: Event Reverted
+                      - eventPayload:
+                          timestamp: '2023-02-23T14:25:10Z'
+                          schemaName: smsSentEvent
+                          id: sdvb325j-f506-43a6-856b-69221efaee6b
+                          accountId: '1'
+                          attributes:
+                            - name: smsCount
+                              value: 50
+                              unit: count
+                        eventPipelineInfo:
+                          eventSchema:
+                            name: SMS
+                            version: 1
+                          usageMeters:
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: SMS_COUNT
+                              version: 1
+                              status: PROCESSED_UNITS_COMPUTED
+                              units: 10.42
+                          pricePlans:
+                            - name: pro-plan
+                              id: 68551191-982b-4663-92fa-38a6f8313e91
+                              scheduleId: c0b1306d-f506-43a6-856b-69221efaee6b
+                              cycleStart: 04-03-2022
+                              cycleEnd: 04-04-2022
+                          account:
+                            id: acme-prod
+                          customer:
+                            id: acme_inc
+                        ingestionStatus:
+                          status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+                          statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+                        status: FAILED
+                        reason: Event was ingested in past pricing cycle
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to get events.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   '/events/{event_id}':
     get:
       tags:
@@ -2011,6 +2142,12 @@ paths:
       summary: Get a list of licenses updates
       description: This API let’s you to fetch a list of licenses updates with multiple query parameters
       operationId: getLicenseUpdates
+      parameters:
+        - $ref: '#/components/parameters/filter_next_page_token'
+        - $ref: '#/components/parameters/filter_account_id'
+        - $ref: '#/components/parameters/filter_page_size'
+        - $ref: '#/components/parameters/filter_license_id'
+        - $ref: '#/components/parameters/filter_effective_from'
       responses:
         '200':
           description: Success response
@@ -2215,12 +2352,12 @@ paths:
     patch:
       tags:
         - Entitlements
-      summary: Update a feature credits entry of a feature for an account
+      summary: Update a feature credits entry
       description: |
-        #### This API let's you to update `effectiveUntil` and `grantedUnits` of the feature credits entries.
+        #### This API let's you to update the following attributes: `effectiveUntil` and `granted`
 
-        - **effectiveUntil**: must be in future. Throws Bad Request (HTTP 400) if the provided date is in the past.
-        - **grantedUnits**: must be greater than the existing usage (previous granted - current balance). Else, returns Bad Request (HTTP 400)
+        - **effectiveUntil**: must be in future
+        - **granted**: must be greater than the existing usage (previous granted - current balance)
       operationId: UpdateFeatureCreditEntry
       parameters:
         - $ref: '#/components/parameters/account_id'
@@ -2256,6 +2393,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Entry not found. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
         '429':
           description: Request throttled. Please check the response message on the failure details.
           content:
@@ -2275,8 +2418,6 @@ paths:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/feature_id'
         - $ref: '#/components/parameters/entry_id'
-      requestBody:
-        $ref: '#/components/requestBodies/UpdateFeatureCreditsRequest'
       responses:
         '200':
           description: Success response
@@ -2298,6 +2439,12 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '403':
           description: Credential does not have access to void a feature credit entry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Entry not found. Please check the response message for failure details.
           content:
             application/json:
               schema:
@@ -2372,7 +2519,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/filter_next_page_token'
         - $ref: '#/components/parameters/filter_status'
-        - $ref: '#/components/parameters/filter_account_id'
+        - $ref: '#/components/parameters/filter_owner_id'
         - $ref: '#/components/parameters/filter_customer_id'
         - $ref: '#/components/parameters/filter_page_size'
         - $ref: '#/components/parameters/filter_start_time'
@@ -5276,7 +5423,6 @@ components:
       enum:
         - ONE_TIME
         - RECURRING
-      default: RECURRING
       description: Credit grant applies either for a one-time occurrence or for each cycle.
     CreditRateDetails:
       type: object
@@ -5426,7 +5572,6 @@ components:
       enum:
         - ONE_TIME
         - RECURRING
-      default: RECURRING
       description: Fixed fee applies either for a one-time occurrence or for each cycle.
     GrantDetails:
       description: Grant details of Credit Grant Rate Card
@@ -6020,6 +6165,19 @@ components:
           type: string
           maxLength: 500
           example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
+    EventsCorrectionResponse:
+      description: Events Correction response
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/EventCorrectionInfo'
     LicenseUpdateRequest:
       description: License update request
       type: object
@@ -6195,10 +6353,14 @@ components:
       type: object
       additionalProperties: false
       required:
+        - referenceId
         - eventPayload
         - ingestionStatus
         - createdAt
       properties:
+        referenceId:
+          type: string
+          description: Unique id generated by Togai to identify an event uniquely
         eventPayload:
           $ref: '#/components/schemas/Event'
         ingestionStatus:
@@ -6225,6 +6387,24 @@ components:
           properties:
             EventPipelineInfo:
               $ref: '#/components/schemas/EventPipelineInfo'
+    EventCorrectionInfo:
+      allOf:
+        - $ref: '#/components/schemas/EventWithStatus'
+        - type: object
+          additionalProperties: false
+          required:
+            - status
+            - reason
+          properties:
+            status:
+              type: string
+              description: Status of the event requested for correction
+              enum:
+                - REVERTED
+                - FAILED
+            reason:
+              type: string
+              description: Status description of the event requested for correction
     IngestionStatus:
       description: Status about the event ingestion.
       type: object
@@ -6247,6 +6427,7 @@ components:
             - INGESTION_FAILED_PAST_GRACE_PERIOD
             - INGESTION_FAILED_ACCOUNT_NOT_FOUND
             - INGESTION_FAILED_DUPLICATE_EVENT
+            - REVERTED
             - UNKNOWN
           example: INGESTION_COMPLETED
         statusDescription:
@@ -6419,6 +6600,8 @@ components:
                 type: number
               revenueInvoiceCurrency:
                 type: number
+        statusBeforeReverting:
+          type: string
     EnrichedField:
       readOnly: true
       description: enriched field
@@ -6594,7 +6777,7 @@ components:
           type: string
           format: date-time
           description: Expiry date-time for a feature credits entry
-        grantedUnits:
+        granted:
           type: number
           description: Granted units for a feature credits entry
     GetMetricsResponse:
@@ -7766,10 +7949,27 @@ components:
       schema:
         type: integer
         example: 10
+    filter_license_id:
+      in: query
+      description: License Id to filter
+      name: licenseId
+      required: false
+      schema:
+        type: string
+        example: addon.1zYnCiM9Bpg.1zYn
+    filter_effective_from:
+      in: query
+      description: effectiveFrom to filter
+      name: effectiveFrom
+      required: false
+      schema:
+        type: string
+        format: date-time
+        example: '2021-03-04T14:25:10Z'
     entry_id:
       in: path
       description: |
-        `sourceId` corresponding to a particular entitlement/overage grant entry
+        `entryId` corresponding to a particular entitlement/overage grant entry
 
         Formats:
         1. If source of entry is an entitlement grant rate card in price plan: `schedule_id#pricing_cycle_start_date$PRICE_PLAN`
@@ -7789,6 +7989,15 @@ components:
       schema:
         type: string
         example: '1234'
+    filter_event_id:
+      in: query
+      description: event_id corresponding to an event
+      name: event_id
+      required: false
+      schema:
+        type: string
+        maxLength: 50
+        example: event-123
     filter_status:
       in: query
       description: Filter option to filter by status.
@@ -7849,6 +8058,14 @@ components:
         type: integer
         format: int64
         example: 1650110402000
+    filter_owner_id:
+      in: query
+      description: Filter option to filter based on owner id.
+      name: owner_id
+      required: false
+      schema:
+        type: string
+        example: ACC001
   examples:
     CreateFeatureRequest:
       value:
@@ -10459,7 +10676,7 @@ components:
             UpdateFeatureCreditsRequest:
               value:
                 effectiveUntil: '2023-02-23T14:25:10Z'
-                grantedUnits: 200
+                granted: 200
     LicenseUpdateRequest:
       content:
         application/json:
