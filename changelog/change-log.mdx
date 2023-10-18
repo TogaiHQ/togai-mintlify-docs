@@ -6,13 +6,23 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## October 2023
 
-### October 9th 2023
+### October 15th 2023
 
-- Fixed Fees are now supported in Purchase plan
+- Support for In-advance pro-rated fixed fees
+- Support for deletion for events
+- Edit entitlement grants in the dashboard
+
+### October 8th 2023
+
+- Fixed Fees are now supported in One-time price plans (Plan type: PURCHASE)
+- Entitlement quantities can now be used for Purchase plan too (entitlement quantity is used as the quantity of all the rate cards in Purchase plan)
 - Proration of fixed fees are now supported in `in-advance` timing mode.
-- Feature credit entries can now be [updated](/api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account) as well as [voided](http://localhost:3000/api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account). 
+- Feature credit (Entitlement grants) entries can now be [updated](/api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account) as well as [voided](http://localhost:3000/api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account). 
 - [Metrics API](http://localhost:3000/api-reference/metrics/get-togai-metrics) fix - endTime made exclusive
 - Improved filters and visualizations in 🎛️ [Insights](https://demo.togai.com/dashboard) section of Togai app.
+- Stripe tax integration
+- Disable Stripe auto-debit for customers even if they have a payment method
+- Enable multiple flow-links for a single flow 
 
 ### October 1st 2023
 
