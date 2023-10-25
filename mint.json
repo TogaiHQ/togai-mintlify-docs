@@ -300,7 +300,8 @@
         "group": "Event Management",
         "pages": [
           "api-reference/event-management/get-a-list-of-usage-events-with-multiple-query-options",
-          "api-reference/event-management/get-an-usage-event-using-event-id"
+          "api-reference/event-management/get-an-usage-event-using-event-id",
+          "api-reference/event-management/undo-ingested-events"
         ]
       },
       {
