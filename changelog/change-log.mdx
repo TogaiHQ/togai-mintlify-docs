@@ -6,6 +6,22 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## October 2023
 
+### October 29th 2023
+- You can now configure alerts for your entitlement grants based on how much balance your customer has consumed.
+- Purchase plans are now associated asynchronously for handling scale.
+- We now support idempotency for license updates.
+- You can now remove a user from your organization in the Togai dashboard settings. 
+- You can now grant licenses while associating a price plan itself. 
+- Download invoices in pdf format from the dashboard.
+- Purchase orders can now be synced to payment gateways (Eg: Stripe) and payment flows for orders can be automated. 
+- Salesforce integration to sync customer accounts and quotes to price plans automatically.
+
+
+### October 22nd 2023
+- Now you can void an event and re-send it using the same id. This [API](/api-reference/event-management/undo-ingested-events#openapi-delete-events) allows you to correct old events with new attributes and dimensions that can then be used for metering, rating and billing.
+- We now provide the ability to search for any entity (eg: Usage meter, add-on, features, price plans, customers, accounts) using its ID
+- You can now have a customized theme for your dashboard and match the user-experience you provide to your customers through your product.
+
 ### October 15th 2023
 
 - Support for In-advance pro-rated fixed fees
@@ -17,8 +33,8 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Fixed Fees are now supported in One-time price plans (Plan type: PURCHASE)
 - Entitlement quantities can now be used for Purchase plan too (entitlement quantity is used as the quantity of all the rate cards in Purchase plan)
 - Proration of fixed fees are now supported in `in-advance` timing mode.
-- Feature credit (Entitlement grants) entries can now be [updated](/api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account) as well as [voided](http://localhost:3000/api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account). 
-- [Metrics API](http://localhost:3000/api-reference/metrics/get-togai-metrics) fix - endTime made exclusive
+- Feature credit (Entitlement grants) entries can now be [updated](/api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account) as well as [voided](/api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account). 
+- [Metrics API](/api-reference/metrics/get-togai-metrics) fix - endTime made exclusive
 - Improved filters and visualizations in 🎛️ [Insights](https://demo.togai.com/dashboard) section of Togai app.
 - Stripe tax integration
 - Disable Stripe auto-debit for customers even if they have a payment method
