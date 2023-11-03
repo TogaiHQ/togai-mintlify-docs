@@ -1914,14 +1914,17 @@ paths:
     delete:
       tags:
         - Event Management
-      summary: Undo ingested events.
+      summary: Undo ingested events. This replenishes the feature credits and draws down the usages and revenue contribution of the events matching the filter.
       description: |
-        #### This API lets you to revert the changes caused by events.
+        #### This API lets you to revert the changes caused by events
 
         - **Usages**: Reduction of all usages associated with this event
         - **Revenue**: Reduction of all revenues associated with this event
         - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
       operationId: eventCorrection
+      parameters:
+        - $ref: '#/components/parameters/filter_account_id'
+        - $ref: '#/components/parameters/filter_event_id'
       responses:
         '200':
           description: Success response
@@ -1929,9 +1932,90 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EventsCorrectionResponse'
-              examples:
+              example:
                 EventsCorrectionResponse:
-                  $ref: '#/components/examples/EventsCorrectionResponse'
+                  summary: Example event correction response
+                  value:
+                    data:
+                      - eventPayload:
+                          timestamp: '2023-02-23T14:25:10Z'
+                          schemaName: travelCompletedEvent
+                          id: c0b1306d-f506-43a6-856b-69221efaee6b
+                          accountId: '1'
+                          attributes:
+                            - name: distanceTravelled
+                              value: 50
+                              unit: Miles
+                            - name: timeSpent
+                              value: 60
+                              unit: Minutes
+                          dimensions:
+                            location: Seattle
+                            costCenterCode: 1234
+                            travelType: Business
+                        eventPipelineInfo:
+                          eventSchema:
+                            name: Rides
+                            version: 1
+                          usageMeters:
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: rides_distance
+                              version: 1
+                              status: PROCESSED_UNITS_COMPUTED
+                              units: 10.42
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: rides_time
+                              version: 1
+                              status: PROCESSED_FILTERED_OUT
+                          pricePlans:
+                            - name: pro-plan
+                              id: 68551191-982b-4663-92fa-38a6f8313e91
+                              scheduleId: c0b1306d-f506-43a6-856b-69221efaee6b
+                              cycleStart: 04-03-2022
+                              cycleEnd: 04-04-2022
+                          account:
+                            id: acme-prod
+                          customer:
+                            id: acme_inc
+                        ingestionStatus:
+                          status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+                          statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+                        status: REVERTED
+                        reason: Event Reverted
+                      - eventPayload:
+                          timestamp: '2023-02-23T14:25:10Z'
+                          schemaName: smsSentEvent
+                          id: sdvb325j-f506-43a6-856b-69221efaee6b
+                          accountId: '1'
+                          attributes:
+                            - name: smsCount
+                              value: 50
+                              unit: count
+                        eventPipelineInfo:
+                          eventSchema:
+                            name: SMS
+                            version: 1
+                          usageMeters:
+                            - id: 23bh55ZZdifACTAV9WEV
+                              name: SMS_COUNT
+                              version: 1
+                              status: PROCESSED_UNITS_COMPUTED
+                              units: 10.42
+                          pricePlans:
+                            - name: pro-plan
+                              id: 68551191-982b-4663-92fa-38a6f8313e91
+                              scheduleId: c0b1306d-f506-43a6-856b-69221efaee6b
+                              cycleStart: 04-03-2022
+                              cycleEnd: 04-04-2022
+                          account:
+                            id: acme-prod
+                          customer:
+                            id: acme_inc
+                        ingestionStatus:
+                          status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+                          statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+                        status: FAILED
+                        reason: Event was ingested in past pricing cycle
         '400':
           description: Bad request. Please check the response message for failure details.
           content:
@@ -6004,13 +6088,12 @@ components:
     Dimensions:
       description: Dimensions are tags/labels associated with the events.
       type: object
-      example:  { Country: India }
       additionalProperties:
         type: string
         minLength: 1
         maxLength: 50
-        example: |
-          "Country: India"
+        example:
+          Country: India
     Event:
       description: Contents of the event
       type: object
@@ -6030,7 +6113,6 @@ components:
           type: string
           minLength: 1
           maxLength: 50
-          example: travelCompletedEvent
         id:
           description: 'Togai restricts users to ingest events with same id within a period of *45 days*. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs'
           type: string
@@ -6045,7 +6127,7 @@ components:
           description: The event will be associated with the provided account
           type: string
           maxLength: 512
-          example: ACC0001
+          example: 1
         attributes:
           description: Attributes are numeric values. It can be usage metric which you push to Togai
           type: array
@@ -6279,7 +6361,6 @@ components:
         referenceId:
           type: string
           description: Unique id generated by Togai to identify an event uniquely
-          example: event.21OpEx4DHQu.CZlyh
         eventPayload:
           $ref: '#/components/schemas/Event'
         ingestionStatus:
@@ -6288,7 +6369,7 @@ components:
           description: The associated account belongs to this customer
           type: string
           maxLength: 50
-          example: 'CUS0001'
+          example: '1'
         source:
           $ref: '#/components/schemas/EventSource'
         createdAt:
@@ -6365,12 +6446,10 @@ components:
           type: string
           description: Unique identifier representing the source
           maxLength: 100
-          example: ENTITLED
         type:
           type: string
           description: Type of source
           maxLength: 100
-          example: ENTITLED
     EventPipelineInfo:
       description: Information related to ingestion of an event
       type: object
@@ -9949,57 +10028,6 @@ components:
             ingestionStatus:
               status: INGESTION_COMPLETED_EVENT_NOT_BILLED
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
-    EventsCorrectionResponse:
-      summary: Example event correction response
-      value:
-        data:
-          - referenceId: event.21OpEx4DHQu.CZlyh
-            eventPayload:
-              timestamp: '2023-02-23T14:25:10Z'
-              schemaName: travelCompletedEvent
-              id: c0b1306d-f506-43a6-856b-69221efaee6b
-              accountId: '1'
-              attributes:
-                - name: distanceTravelled
-                  value: 50
-                  unit: Miles
-                - name: timeSpent
-                  value: 60
-                  unit: Minutes
-              dimensions:
-                location: Seattle
-                costCenterCode: 1234
-                travelType: Business
-            ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
-              statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
-            customerId: CUS0001
-            source:
-              id: ENTITLED
-              type: ENTITLED
-            createdAt: '2023-02-23T14:25:10Z'
-            status: REVERTED
-            reason: Event Reverted
-          - referenceId: event.23OrTx4FGQu.XVpzf
-            eventPayload:
-              timestamp: '2023-02-23T14:25:10Z'
-              schemaName: smsSentEvent
-              id: sdvb325j-f506-43a6-856b-69221efaee6b
-              accountId: '1'
-              attributes:
-                - name: smsCount
-                  value: 50
-                  unit: count
-            ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
-              statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
-            customerId: CUS0001
-            source:
-              id: ""
-              type: ""
-            createdAt: '2023-01-01T14:25:10Z'
-            status: FAILED
-            reason: Event was ingested in past pricing cycle
     GetLicenseUpdatesResponse:
       summary: example get license updates response
       value:
