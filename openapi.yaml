@@ -35,8 +35,10 @@ tags:
     description: Price Experimentation apis
   - name: InvoiceGroups
     description: Invoice Group level calls
-  - name: Organizations
+  - name: Organization
     description: Organization level calls
+  - name: FileStorage
+    description: File Storage level calls
   - name: Event Management
     description: APIs for getting events ingested in Togai
     externalDocs:
@@ -355,13 +357,13 @@ paths:
     post:
       tags:
         - Accounts
-      summary: Dis/associate a plan from/to an account
-      description: This API let’s you to detach/attach a price plan from/to an existing account
+      summary: Dissociate or associate a price plan with an account
+      description: This API let’s you to detach or attach a price plan with an existing account
       operationId: updatePricingSchedule
       parameters:
         - $ref: '#/components/parameters/account_id'
       requestBody:
-        $ref: '#/components/requestBodies/UpdatePricingScheduleRequest'
+        $ref: '#/components/requestBodies/UpdatePricingScheduleRequestWithActions'
       responses:
         '200':
           $ref: '#/components/responses/UpdatePricingScheduleResponse'
@@ -1731,6 +1733,59 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  '/files/{file_id}':
+    get:
+      tags:
+        - File Storage
+      summary: Get a file
+      description: Get a file
+      operationId: getFile
+      parameters:
+        - $ref: '#/components/parameters/file_id'
+      responses:
+        '302':
+          description: Redirects to the file url
+          headers:
+            Location:
+              schema:
+                type: string
+                format: uri
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/files/{file_id}/download_url':
+    get:
+      tags:
+        - File Storage
+      summary: Get a download url for a file
+      description: Get a download url for a file
+      operationId: getDownloadUrl
+      parameters:
+        - $ref: '#/components/parameters/file_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/FileDownloadUrlResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /ingest:
     post:
       tags:
@@ -2843,67 +2898,27 @@ components:
           type: integer
           format: int32
           example: 45
+        metadata:
+          description: |
+            Additional information associated with the account.
+            Example: GSTN, VATN
+          type: object
+          additionalProperties:
+            type: string
     CreateAccountRequest:
       description: Payload to create account
-      type: object
-      additionalProperties: false
-      required:
-        - name
-        - id
-        - customerId
-      properties:
-        id:
-          description: Identifier of the account
-          type: string
-          maxLength: 50
-          example: ACC00001
-        name:
-          description: Name of the Account
-          type: string
-          maxLength: 255
-          minLength: 3
-          example: Primary Account
-        invoiceCurrency:
-          description: |
-            Use [ISO 4217](https://en.wikipedia.org/wiki/ISO_4217) currency code in which the account must be invoiced.  
-            For example: AED is the currency code for United Arab Emirates dirham.
-          type: string
-          minLength: 3
-          maxLength: 3
-        aliases:
-          description: Aliases are tags that are associated with an account. Multiple aliases are allowed for a single account.
-          type: array
-          maxItems: 10
-          minItems: 0
-          items:
-            type: string
-            maxLength: 50
-            minLength: 3
-          example: acme_primary
-        address:
-          $ref: '#/components/schemas/Address'
-        primaryEmail:
-          description: Primary email of the account
-          type: string
-          maxLength: 255
-          example: admin@example.com
-        settings:
-          type: array
-          maxItems: 10
-          minItems: 0
-          items:
-            $ref: '#/components/schemas/CreateEntitySetting'
-        customerId:
-          description: Customer Identifier for whom the account is being created
-          type: string
-          maxLength: 255
-          minLength: 1
-          example: C1234ewf
-        netTermDays:
-          description: Net term for the invoices of the account
-          type: integer
-          format: int32
-          example: 45
+      allOf:
+        - $ref: '#/components/schemas/CreateAccountRequestWithoutCustomerId'
+        - type: object
+          required:
+            - customerId
+          properties:
+            customerId:
+              description: Customer Identifier for whom the account is being created
+              type: string
+              maxLength: 255
+              minLength: 1
+              example: C1234ewf
     UpdateAccountRequest:
       description: Payload to update account
       type: object
@@ -2922,6 +2937,15 @@ components:
           example: admin@example.com
         address:
           $ref: '#/components/schemas/Address'
+        metadata:
+          description: |
+            Additional information associated with the account.
+            Example: GSTN, VATN
+            NOTE: This replaces the existing metadata if the metadata in the request is not null. 
+            To remove all existing metadata, use empty object
+          type: object
+          additionalProperties:
+            type: string
     AddAccountAliasesRequest:
       description: Payload to add aliases from account
       type: object
@@ -3012,12 +3036,16 @@ components:
         - eventSchemaName
       properties:
         name:
-          description: Name of the event. Must be unique for an organization.
+          description: Name of the usage meter. Must be unique for an organization.
           type: string
           maxLength: 50
           pattern: '^[\sa-zA-Z0-9_-]*$'
+        billableName:
+          description: Billable name of usage meter. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
         description:
-          description: Description of the event
+          description: Description of the usage meter
           type: string
           maxLength: 255
         type:
@@ -3043,8 +3071,16 @@ components:
       type: object
       additionalProperties: false
       properties:
+        name:
+          description: Name of usage meter.
+          type: string
+          maxLength: 255
+        billableName:
+          description: Billable name of usage meter. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
         description:
-          description: Description of the event
+          description: Description of the usage meter
           type: string
           maxLength: 255
         type:
@@ -3459,8 +3495,41 @@ components:
                 accountId:
                   type: string
                   minLength: 1
+    UpdatePricingScheduleRequestWithActions:
+      description: Request to associate or disassociate a price plan to an account with actions
+      allOf:
+        - $ref: '#/components/schemas/UpdatePricingScheduleRequest'
+        - type: object
+          properties:
+            preActions:
+              description: Pre actions to be performed before association or disassociation
+              type: array
+              items:
+                $ref: '#/components/schemas/PreAction'
+    PreAction:
+      type: object
+      title: PreAction
+      description: Pre action to be performed before association or disassociation
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - GRANT_LICENSE
+          description: Type of pre action to be performed
+        config:
+          type: object
+          description: |
+            Configuration required for performing pre action
+            - `GRANT_LICENSE`: grant one time licenses to an account before association
+              - `licenseId` [Required]: Id of the license to be granted
+              - `updateType` [Required]: Type of update to be performed on the license (RELATIVE or ABSOLUTE)
+              - `quantity` [Required]: Quantity of license to be granted
+              - `effectiveFrom` [Optional]: Effective date from which the license will be granted
+          additionalProperties:
+            type: string
     UpdatePricingScheduleRequest:
-      description: Request to dis/associate a price plan to an account
       type: object
       additionalProperties: false
       required:
@@ -3490,6 +3559,22 @@ components:
             - Expected only if effectiveFrom is present.
         pricePlanDetailsOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
+        retainStartOffsets:
+          type: boolean
+          description: |
+            If this flag is true, current pricing cycle of the account on the date of association will continue rather 
+            than the configurations of the newly associated price plan. Pricing cycle overrides specified  using 
+            `pricePlanDetailsOverride` will take precedence over precedence over the pricing cycle configurations of 
+            the new price plan that the account needs to migrate to. PricingCycleInterval of the existing plan and 
+            the new plan must be same for this to work. We'll return a `400 BadRequest` otherwise.
+            Examples:
+              - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
+                New association (15th Oct to 15th Nov) of different price plan with retainStartOffsets option true 
+                will use the same pricing cycle configuration {dayOffset: 1, monthOffset: NIL} rather than using the
+                pricing cycle configuration of the new price plan that the account needs to migrate to.
+              - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
+                New association (1st Nov to 30th Nov) of different price plan with retainStartOffsets option true will
+                throw a `400 BadRequest` as no existing price plan configuration found on date of association 
     EditPricingScheduleRequest:
       description: Request to dis/associate one or more schedules to an account
       type: object
@@ -3658,6 +3743,22 @@ components:
             - IMMEDIATE_IGNORE_OVERRIDE
             - NEXT_CYCLE
             - NEXT_CYCLE_IGNORE_OVERRIDE
+        retainStartOffsets:
+          type: boolean
+          description: |
+            If this flag is true, current pricing cycle of the account on the date of association will continue rather 
+            than the configurations of the newly associated price plan. Pricing cycle overrides specified  using 
+            `pricePlanDetailsOverride` will take precedence over precedence over the pricing cycle configurations of 
+            the new price plan that the account needs to migrate to. PricingCycleInterval of the existing plan and 
+            the new plan must be same for this to work. We'll return a `400 BadRequest` otherwise.
+            Examples:
+              - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
+                New association (15th Oct to 15th Nov) of different price plan with retainStartOffsets option true 
+                will use the same pricing cycle configuration {dayOffset: 1, monthOffset: NIL} rather than using the
+                pricing cycle configuration of the new price plan that the account needs to migrate to.
+              - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
+                New association (1st Nov to 30th Nov) of different price plan with retainStartOffsets option true will
+                throw a `400 BadRequest` as no existing price plan configuration found on date of association 
     UpdateAddOnRequest:
       description: Request to update an addon
       type: object
@@ -3665,6 +3766,10 @@ components:
       properties:
         name:
           description: Name of addon
+          type: string
+          maxLength: 255
+        billableName:
+          description: Billable name of addon. Billable name takes precedence over name to display in invoice.
           type: string
           maxLength: 255
     UpdateSettingRequest:
@@ -3684,6 +3789,7 @@ components:
         - SUCCESS
         - FAILURE
         - PENDING
+        - IN_PROGRESS
         - PROPOSAL_ACTIVE
         - PROPOSAL_APPROVED
         - PROPOSAL_DECLINED
@@ -3824,19 +3930,28 @@ components:
         - schemaAssociations
       properties:
         name:
+          description: Name of the feature
           type: string
+          maxLength: 255
+        billableName:
+          description: Billable name of feature. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
         schemaAssociations:
           $ref: '#/components/schemas/SchemaFeature'
     UpdateFeatureRequest:
       description: Update a Feature properties
       type: object
       additionalProperties: false
-      required:
-        - name
-        - schemaAssociations
       properties:
         name:
+          description: Name of the feature
           type: string
+          maxLength: 255
+        billableName:
+          description: Billable name of addon. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
         schemaAssociations:
           $ref: '#/components/schemas/SchemaFeature'
     SchemaFeature:
@@ -4334,6 +4449,13 @@ components:
             $ref: '#/components/schemas/CreateEntitySetting'
         invoiceGroupDetails:
           $ref: '#/components/schemas/InvoiceGroupDetails'
+        metadata:
+          description: |
+            Additional information associated with the account.
+            Example: GSTN, VATN
+          type: object
+          additionalProperties:
+            type: string
     EventSchemaVersionsResponse:
       description: Response for event schema versions
       type: object
@@ -4610,6 +4732,11 @@ components:
           maxLength: 50
           pattern: '^[\sa-zA-Z0-9_-]*$'
           example: rides-usage
+        billableName:
+          description: Billable name of addon. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
+          example: Rides Usage
         description:
           type: string
           maxLength: 255
@@ -5112,6 +5239,9 @@ components:
           type: string
         name:
           type: string
+        billableName:
+          type: string
+          maxLength: 255
         schemaAssociations:
           $ref: '#/components/schemas/SchemaFeature'
         createdAt:
@@ -5134,6 +5264,9 @@ components:
           type: string
         name:
           type: string
+        billableName:
+          type: string
+          maxLength: 255
         schemaCount:
           type: integer
           format: int32
@@ -5155,6 +5288,14 @@ components:
           type: string
         context:
           $ref: '#/components/schemas/PaginationOptions'
+    FileDownloadUrlResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - downloadUrl
+      properties:
+        downloadUrl:
+          type: string
     AddOn:
       allOf:
         - $ref: '#/components/schemas/CreateAddOnRequest'
@@ -5194,6 +5335,9 @@ components:
       type: object
       additionalProperties: false
       properties:
+        phoneNumber:
+          description: Contact number
+          type: string
         line1:
           description: 'Address line 1 (eg. Street, PO Box, Company Name)'
           type: string
@@ -5264,6 +5408,10 @@ components:
           maxLength: 255
         type:
           $ref: '#/components/schemas/AddOnType'
+        billableName:
+          description: Billable name of addon. Billable name takes precedence over name to display in invoice.
+          type: string
+          maxLength: 255
     CreatePricePlanDetailsOverride:
       type: object
       properties:
@@ -5388,7 +5536,6 @@ components:
       required:
         - ratePlan
         - rateValues
-        - displayName
         - featureId
       properties:
         featureId:
@@ -5563,6 +5710,15 @@ components:
           type: integer
           format: int64
           example: 100
+        maxQuantityBreachAction:
+          $ref: '#/components/schemas/MaxQuantityBreachAction'
+    MaxQuantityBreachAction:
+      type: string
+      enum:
+        - DO_NOTHING
+      description: |
+        Action to be taken when the license maxQuantity is breached: 
+        - `DO_NOTHING`: Refrain from granting any new licenses.
     MinimumCommitment:
       title: MinimumCommitment
       type: object
@@ -5694,7 +5850,6 @@ components:
       description: Represents configurations related to pricing cycle
       required:
         - interval
-        - startOffset
         - gracePeriod
       properties:
         interval:
@@ -5760,6 +5915,36 @@ components:
             For example: Pricing cycle is Monthly from 1st to 30th and gracePeriod is 5 days which next month 1 to 5th date, you can ingest past dated events during this grace period.
           format: int32
           example: 3
+        anniversaryCycle:
+          type: boolean
+          description: |
+            Togai calculates the startOffsets based on the date of association instead of requiring from the user and 
+            these offsets will be applied as an override if this flag is enabled.
+            Examples:
+            WEEKLY -
+              - 23/10/2023 (Monday) - {dayOffset: 1, monthOffset: NIL} 
+              - 25/10/2023 (Wednesday) - {dayOffset: 3, monthOffset: NIL} 
+              - 29/10/2023 (Sunday) - {dayOffset: 7, monthOffset: NIL}
+            MONTHLY -
+              - 1st Oct - {dayOffset: 1, monthOffset: NIL}
+              - 12th Oct - {dayOffset: 12, monthOffset: NIL}
+              - 28th Oct - {dayOffset: 28, monthOffset: NIL}
+              - 30th Oct - {dayOffset: 30, monthOffset: NIL}
+              - 31th Oct - {dayOffset: 31, monthOffset: NIL}
+            QUARTERLY
+              - 15th Jan, 15th Apr, 15th Jul and 15th Oct - {dayOffset: 15, monthOffset: 1}
+              - 15th Feb, 15th May, 15th Aug and 15th Nov - {dayOffset: 15, monthOffset: 2} 
+              - 15th Mar, 15th Jun, 15th Sep and 15th Dec - {dayOffset: 15, monthOffset: 3}
+            HALF_YEARLY
+              - 15th Jan and 15th Jul - {dayOffset: 15, monthOffset: 1} 
+              - 15th Apr and 15th Oct - {dayOffset: 15, monthOffset: 4} 
+              - 15th Jun and 15th Dec - {dayOffset: 15, monthOffset: 6}
+            ANNUALLY
+              - 15th Jan - {dayOffset: 15, monthOffset: 1}
+              - 29th Feb on Leap year  - {dayOffset: 29, monthOffset: 2}
+              - 28th Feb  - {dayOffset: 28, monthOffset: 2}
+              - 15th Aug - {dayOffset: 15, monthOffset: 8}
+              - 15th Dec - {dayOffset: 15, monthOffset: 12}
     PricingModel:
       type: string
       description: |
@@ -5917,7 +6102,6 @@ components:
     UsageRateCard:
       type: object
       required:
-        - displayName
         - usageMeterId
         - ratePlan
         - rateValues
@@ -6004,13 +6188,12 @@ components:
     Dimensions:
       description: Dimensions are tags/labels associated with the events.
       type: object
-      example:  { Country: India }
       additionalProperties:
         type: string
         minLength: 1
         maxLength: 50
-        example: |
-          "Country: India"
+        example:
+          Country: India
     Event:
       description: Contents of the event
       type: object
@@ -6030,7 +6213,6 @@ components:
           type: string
           minLength: 1
           maxLength: 50
-          example: travelCompletedEvent
         id:
           description: 'Togai restricts users to ingest events with same id within a period of *45 days*. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs'
           type: string
@@ -6045,7 +6227,7 @@ components:
           description: The event will be associated with the provided account
           type: string
           maxLength: 512
-          example: ACC0001
+          example: 1
         attributes:
           description: Attributes are numeric values. It can be usage metric which you push to Togai
           type: array
@@ -6108,23 +6290,32 @@ components:
       properties:
         licenseId:
           type: string
+          description: The license id for which the update is requested
           maxLength: 50
           example: lic.fdjsl.313
         accountId:
           type: string
+          description: The account id for which the license is being updated
           maxLength: 50
           example: acc.fdjsl.313
         updateType:
           type: string
+          description: The type of update to be performed
           enum:
             - RELATIVE
             - ABSOLUTE
         quantity:
           type: integer
+          description: The quantity to be updated
         effectiveFrom:
           type: string
+          description: The effective from date for the update
           format: date-time
           example: '2021-03-04T14:25:10Z'
+        idempotencyKey:
+          type: string
+          description: The idempotency key for uniqueness of the license update request
+          example: idempotencyKey#1
     GetLicenseUpdatesResponse:
       description: Get license updates response
       type: object
@@ -6232,6 +6423,7 @@ components:
             - ENTITLEMENT
             - PRICE_PLAN
             - OVERAGE
+            - REFUND
         status:
           type: string
           description: Status of the feature credit entry
@@ -6279,7 +6471,6 @@ components:
         referenceId:
           type: string
           description: Unique id generated by Togai to identify an event uniquely
-          example: event.21OpEx4DHQu.CZlyh
         eventPayload:
           $ref: '#/components/schemas/Event'
         ingestionStatus:
@@ -6288,7 +6479,7 @@ components:
           description: The associated account belongs to this customer
           type: string
           maxLength: 50
-          example: 'CUS0001'
+          example: '1'
         source:
           $ref: '#/components/schemas/EventSource'
         createdAt:
@@ -6365,12 +6556,10 @@ components:
           type: string
           description: Unique identifier representing the source
           maxLength: 100
-          example: ENTITLED
         type:
           type: string
           description: Type of source
           maxLength: 100
-          example: ENTITLED
     EventPipelineInfo:
       description: Information related to ingestion of an event
       type: object
@@ -7159,6 +7348,24 @@ components:
               type: string
             address:
               $ref: '#/components/schemas/Address'
+        organization:
+          type: object
+          additionalProperties: false
+          required:
+            - businessName
+            - address
+            - primaryEmail
+          properties:
+            businessName:
+              type: string
+            address:
+              $ref: '#/components/schemas/Address'
+            primaryEmail:
+              type: string
+            metadata:
+              type: object
+              additionalProperties:
+                type: string
     CreateCreditResponse:
       type: object
       additionalProperties: false
@@ -7599,6 +7806,15 @@ components:
           examples:
             FeaturePaginatedResponse:
               $ref: '#/components/examples/FeaturePaginatedResponse'
+    FileDownloadUrlResponse:
+      description: Response for getting a download url for a file
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileDownloadUrlResponse'
+          examples:
+            FileDownloadUrlResponse:
+              $ref: '#/components/examples/FileDownloadUrlResponse'
     InvoiceResponse:
       description: Response for Get invoice requests
       content:
@@ -7817,6 +8033,13 @@ components:
       schema:
         type: string
         example: mig.20aUyEZSuYq.SoGbS
+    file_id:
+      in: path
+      name: file_id
+      required: true
+      schema:
+        type: string
+        example: file.20aUyEZSuYq.SoGbS
     account_id:
       in: path
       description: account_id corresponding to an account
@@ -7910,15 +8133,6 @@ components:
       schema:
         type: string
         example: '1234'
-    filter_event_id:
-      in: query
-      description: event_id corresponding to an event
-      name: event_id
-      required: false
-      schema:
-        type: string
-        maxLength: 50
-        example: event-123
     filter_status:
       in: query
       description: Filter option to filter by status.
@@ -8447,6 +8661,7 @@ components:
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -8477,6 +8692,7 @@ components:
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -8492,6 +8708,7 @@ components:
           - acme_primary
           - acme_1
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -8511,6 +8728,7 @@ components:
         name: New Account Name
         primaryEmail: admin@example.com
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9019,6 +9237,7 @@ components:
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9034,6 +9253,7 @@ components:
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9067,6 +9287,7 @@ components:
             name: ACME Enterprise
             primaryEmail: admin@example.com
             address:
+              phoneNumber: '+919876543210'
               line1: 2281 Broadway Street
               line2: G-31
               postalCode: '29501'
@@ -9120,6 +9341,7 @@ components:
         netTermDays: 45
         invoiceCurrency: USD
         billingAddress:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9136,6 +9358,7 @@ components:
             netTermDays: 45
             invoiceCurrency: USD
             billingAddress:
+              phoneNumber: '+919876543210'
               line1: 2281 Broadway Street
               line2: G-31
               postalCode: '29501'
@@ -9156,6 +9379,7 @@ components:
         netTermDays: 45
         invoiceCurrency: USD
         billingAddress:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9257,6 +9481,7 @@ components:
         name: ACME Enterprise - Account2
         invoiceCurrency: USD
         address:
+          phoneNumber: '+919876543210'
           line1: 2281 Broadway Street
           line2: G-31
           postalCode: '29501'
@@ -9849,6 +10074,9 @@ components:
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
+    FileDownloadUrlResponse:
+      value:
+        downloadUrl: 'https://s3.amazonaws.com/...'
     IngestEventRequest:
       summary: example event ingestion request
       value:
@@ -9995,8 +10223,8 @@ components:
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
             customerId: CUS0001
             source:
-              id: ""
-              type: ""
+              id: ''
+              type: ''
             createdAt: '2023-01-01T14:25:10Z'
             status: FAILED
             reason: Event was ingested in past pricing cycle
@@ -10461,13 +10689,13 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateUsageMeterRequest'
-    UpdatePricingScheduleRequest:
-      description: Payload to dis/associate a price plan to an account
+    UpdatePricingScheduleRequestWithActions:
+      description: Payload to associate or dissociate a price plan to an account with actions
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/UpdatePricingScheduleRequest'
+            $ref: '#/components/schemas/UpdatePricingScheduleRequestWithActions'
           examples:
             UpdatePricingScheduleAssociateRequest:
               $ref: '#/components/examples/UpdatePricingScheduleAssociateRequest'
@@ -10657,16 +10885,30 @@ components:
           examples:
             AbsoluteLicenseUpdateRequest:
               value:
-                licenseId: license#1
+                licenseId: addon.21LdC76myzw.uiSWm
                 accountId: account#1
                 updateType: ABSOLUTE
                 quantity: 10
             RelativeLicenseUpdateRequest:
               value:
-                licenseId: license#2
+                licenseId: addon.21JwBhBzM76.9mzoA
                 accountId: account#2
                 updateType: RELATIVE
                 quantity: -5
+            AbsoluteLicenseUpdateRequestWithIdempotencyKey:
+              value:
+                licenseId: addon.21LdC76myzw.uiSWm
+                accountId: account#1
+                updateType: ABSOLUTE
+                quantity: 10
+                idempotencyKey: idempotencyKey#1
+            RelativeLicenseUpdateRequestWithIdempotencyKey:
+              value:
+                licenseId: addon.21JwBhBzM76.9mzoA
+                accountId: account#2
+                updateType: RELATIVE
+                quantity: -5
+                idempotencyKey: idempotencyKey#2
     CreateCreditRequest:
       description: Payload to grant credits
       content:
