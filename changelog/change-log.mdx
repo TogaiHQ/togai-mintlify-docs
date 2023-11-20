@@ -4,6 +4,38 @@ icon: clipboard
 ---
 This Change Log provides a consolidated list of features and enhancements to Togai's metering and billing platform on an ongoing basis. This Change Log will be updated weekly to reflect the pace of new features and changes that are being taken live within Togai. If you have any feature asks, please send a mail to engg@togai.com and we will accommodate it in our roadmap.
 
+## November 2023
+
+
+### November 19th 2023
+- Signup or Login with Microsoft account credentials (SSO via Microsoft)
+- Create custom invoice with line items (In DRAFT, DUE and PAID state) [DRAFT invoices will become due on the said date]
+- PDFs for invoices are created when an invoice becomes DUE
+- Added display name in Add-on API response
+- Tally integration
+- Support conditional triggers which can help to trigger flows only if certain conditions are met.
+
+### November 12th 2023
+- Download schedules list in csv format
+- Download schedule details in xlsx format (in account summary & schedules list pages)
+- Update phone number and other details (GSTN, VATN, etc...) at account level
+- Get organization level billing details (address, ph number, GSTN, VATN, etc.)
+- Add/edit currency in new price plan view
+
+### November 5th 2023
+- Invoice line items is decimal adjusted according to the currencies. For example - YEN has 0 decimals, INR has 2 and so on
+- Async purchase takes no additional time to update status to SUCCESS once the purchase is granted
+- Anniversary price plan can now be created (Start Offsets are auto-calculated based on the association date)
+- Retain start offsets (Available during association/migration of price plan). It retains the same pricing cycle configuration found on the date of association overriding the pricing cycle config of the new plan to be associated
+- Get billable name for billable items to display in invoice line item
+- Usage rate cards, entitlement rate cards can now be added and deleted while versioning of PP as well as in override
+- Copy curl command right from the Event ingestion screen in the Togai dashboard
+- Grant licenses via dashboard while attaching ongoing price-plans
+- Delete Users in Admin Center in the dashboard
+- Support for adding tags to all entities in the no-code center (app, flow, app/flow links) and search based on tags
+
+
+
 ## October 2023
 
 ### October 29th 2023
