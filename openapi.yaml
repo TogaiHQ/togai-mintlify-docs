@@ -39,6 +39,8 @@ tags:
     description: Organization level calls
   - name: FileStorage
     description: File Storage level calls
+  - name: Aliases
+    description: Alias level calls
   - name: Event Management
     description: APIs for getting events ingested in Togai
     externalDocs:
@@ -57,6 +59,8 @@ tags:
     description: Invoices API
   - name: Credits
     description: Credits API
+  - name: InvoiceTemplates
+    description: InvoiceTemplates API
   - name: Authentication
     description: Authentication API
 paths:
@@ -237,6 +241,7 @@ paths:
       operationId: getAccount
       parameters:
         - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/effectiveOn'
         - $ref: '#/components/parameters/includeGroupDetails'
       responses:
         '200':
@@ -325,6 +330,20 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/account_aliases':
+    get:
+      tags:
+        - Accounts
+      summary: Get all aliases of an account
+      description: Get all aliases of an account using account_id
+      operationId: listAccountAliases
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountAliasesPaginatedResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
   '/accounts/{account_id}/remove_aliases':
@@ -426,6 +445,61 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /aliases:
+    get:
+      tags:
+        - Aliases
+      summary: List all aliases
+      description: Returns a list of aliases with pagination and sort.
+      operationId: listAliases
+      parameters:
+        - $ref: '#/components/parameters/next_token'
+        - $ref: '#/components/parameters/page_size'
+      responses:
+        '200':
+          $ref: '#/components/responses/AliasPaginatedResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - Aliases
+      summary: Create an alias
+      description: This API let’s you to create an alias
+      operationId: createAlias
+      requestBody:
+        $ref: '#/components/requestBodies/CreateAliasRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/AliasResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/aliases/{alias}':
+    get:
+      tags:
+        - Aliases
+      summary: Get an alias
+      description: Get alias information using alias.
+      operationId: getAlias
+      parameters:
+        - $ref: '#/components/parameters/alias'
+      responses:
+        '200':
+          $ref: '#/components/responses/AliasResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags:
+        - Aliases
+      summary: Delete an alias
+      description: This API let’s you to delete an alias using alias.
+      operationId: deleteAlias
+      parameters:
+        - $ref: '#/components/parameters/alias'
+      responses:
+        '200':
+          $ref: '#/components/responses/BaseSuccessResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
   '/purchases/{purchase_id}':
@@ -2480,6 +2554,63 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/entitlements/{feature_id}':
+    get:
+      tags:
+        - Entitlements
+      summary: Get entitlement value for a account
+      description: This API let’s you to get the entitlement value for a account
+      operationId: getEntitlementValue
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEntitlementValuesResponse'
+              examples:
+                GetEntitlementValuesResponse:
+                  $ref: '#/components/examples/GetEntitlementValuesResponse'
+    post:
+      tags:
+        - Entitlements
+      summary: Check entitlement value for a account
+      description: This API let’s you to validate the entitlement value for a account
+      operationId: validateEntitlementValue
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/feature_id'
+      requestBody:
+        $ref: '#/components/requestBodies/ValidateEntitlementValueRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BaseSuccessResponse'
+  '/accounts/{account_id}/entitlements':
+    get:
+      tags:
+        - Entitlements
+      summary: Get entitlements for a account
+      description: This API let’s you to get the entitlements for a account
+      operationId: getEntitlements
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetEntitlementValuesResponse'
+              examples:
+                GetEntitlementsResponse:
+                  $ref: '#/components/examples/GetEntitlementValuesResponse'
   /invoices:
     get:
       tags:
@@ -2537,6 +2668,29 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - Invoices
+      summary: Create a custom invoice for an account
+      description: Create a custom invoice for an account.
+      operationId: createCustomInvoice
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCustomInvoiceRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/InvoiceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   '/invoices/{invoice_id}':
     get:
       tags:
@@ -2551,6 +2705,27 @@ paths:
           $ref: '#/components/responses/InvoiceResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    delete:
+      tags:
+        - Invoices
+      summary: Delete a custom invoice in DRAFT state
+      description: Delete a custom invoice in DRAFT state.
+      operationId: deleteCustomInvoice
+      parameters:
+        - $ref: '#/components/parameters/invoice_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/InvoiceResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
         '403':
@@ -2613,6 +2788,30 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /ui/invoice_templates_metadata:
+    put:
+      tags:
+        - InvoiceTemplates
+      summary: Create/Update template metadata based on which the customizations are applied to the base Togai's invoice template
+      description: Create/Update template metadata based on which the customizations are applied to the base Togai's invoice template
+      operationId: upsertInvoiceTemplateMetadata
+      requestBody:
+        $ref: '#/components/requestBodies/ManageInvoiceTemplateMetadataRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/InvoiceTemplateMetadataResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   '/accounts/{account_id}/miscellaneous_charges':
     put:
       tags:
@@ -2627,6 +2826,51 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/MiscellaneousChargesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /ui/invoice_sequence:
+    put:
+      tags:
+        - Invoices
+      summary: Add/Update invoice sequence for the organization
+      description: Add/Update invoice sequence for the organization
+      operationId: manageInvoiceSequence
+      requestBody:
+        $ref: '#/components/requestBodies/ManageInvoiceSequenceRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/InvoiceSequenceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Invoices
+      summary: Get invoice sequence for the organization
+      description: Get invoice sequence for the organization
+      operationId: getInvoiceSequence
+      responses:
+        '200':
+          $ref: '#/components/responses/InvoiceSequenceResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -2946,10 +3190,61 @@ components:
           type: object
           additionalProperties:
             type: string
+    AccountAlias:
+      description: Account Alias
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - value
+        - effectiveFrom
+        - effectiveUntil
+        - createdAt
+      properties:
+        id:
+          description: Alias identifier (UUID)
+          type: string
+        value:
+          description: Alias value
+          type: string
+          maxLength: 50
+          minLength: 3
+        effectiveFrom:
+          description: Effective from date
+          type: string
+          format: date-time
+        effectiveUntil:
+          description: Effective until date
+          type: string
+          format: date-time
+        createdAt:
+          description: Alias creation date
+          type: string
+          format: date-time
+        updatedAt:
+          description: Alias update date
+          type: string
+          format: date-time
+    AccountAliasesPaginatedResponse:
+      description: Paginated response for account aliases
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccountAlias'
+        nextToken:
+          type: string
+          example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
     AddAccountAliasesRequest:
       description: Payload to add aliases from account
       type: object
       additionalProperties: false
+      required:
+        - aliases
       properties:
         aliases:
           description: List of aliases to add
@@ -2957,23 +3252,35 @@ components:
           maxItems: 10
           minItems: 1
           items:
-            type: string
-            maxLength: 50
-            minLength: 3
+            type: object
+            additionalProperties: false
+            required:
+              - value
+            properties:
+              value:
+                type: string
+                maxLength: 50
+                minLength: 1
+              effectiveFrom:
+                type: string
+                format: date-time
+              effectiveUntil:
+                type: string
+                format: date-time
     RemoveAccountAliasesRequest:
-      description: Payload to remove aliases from account
+      description: Payload to remove account aliases
       type: object
       additionalProperties: false
       properties:
         aliases:
-          description: List of aliases to remove
           type: array
-          maxItems: 10
-          minItems: 1
           items:
             type: string
-            maxLength: 50
-            minLength: 3
+        accountAliases:
+          type: array
+          items:
+            type: string
+            description: Account Alias identifier (UUID)
     CreateEventSchemaRequest:
       description: Request to create event schema
       type: object
@@ -3175,6 +3482,8 @@ components:
             $ref: '#/components/schemas/EntitlementOverageRateCard'
         type:
           $ref: '#/components/schemas/PricePlanType'
+        deferredRevenue:
+          type: boolean
     UpdatePricePlanRequest:
       description: Request to update a price plan
       type: object
@@ -3564,7 +3873,7 @@ components:
           description: |
             If this flag is true, current pricing cycle of the account on the date of association will continue rather 
             than the configurations of the newly associated price plan. Pricing cycle overrides specified  using 
-            `pricePlanDetailsOverride` will take precedence over precedence over the pricing cycle configurations of 
+            `pricePlanDetailsOverride` will take precedence over the pricing cycle configurations of 
             the new price plan that the account needs to migrate to. PricingCycleInterval of the existing plan and 
             the new plan must be same for this to work. We'll return a `400 BadRequest` otherwise.
             Examples:
@@ -3748,7 +4057,7 @@ components:
           description: |
             If this flag is true, current pricing cycle of the account on the date of association will continue rather 
             than the configurations of the newly associated price plan. Pricing cycle overrides specified  using 
-            `pricePlanDetailsOverride` will take precedence over precedence over the pricing cycle configurations of 
+            `pricePlanDetailsOverride` will take precedence over the pricing cycle configurations of 
             the new price plan that the account needs to migrate to. PricingCycleInterval of the existing plan and 
             the new plan must be same for this to work. We'll return a `400 BadRequest` otherwise.
             Examples:
@@ -3973,6 +4282,16 @@ components:
           pattern: '^[\sa-zA-Z0-9_-]*$'
         attributeName:
           type: string
+    CreateAliasRequest:
+      description: Create an alias
+      type: object
+      additionalProperties: false
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          maxLength: 255
     BaseSuccessResponse:
       type: object
       additionalProperties: false
@@ -4422,11 +4741,6 @@ components:
               alias:
                 type: string
                 maxLength: 50
-              status:
-                type: string
-                enum:
-                  - ACTIVE
-                  - ARCHIVED
         address:
           $ref: '#/components/schemas/Address'
         primaryEmail:
@@ -4719,6 +5033,7 @@ components:
       required:
         - id
         - name
+        - displayName
         - type
         - aggregation
       properties:
@@ -4737,6 +5052,12 @@ components:
           type: string
           maxLength: 255
           example: Rides Usage
+        displayName:
+          description: |
+            Display name of usage meter. This is an auto-generated field which contains billableName of usage meter.
+            If billableName is not provided, name will be used as display name.
+          type: string
+          maxLength: 255
         description:
           type: string
           maxLength: 255
@@ -5232,6 +5553,7 @@ components:
       required:
         - id
         - name
+        - displayName
         - schemaAssociations
         - createdAt
       properties:
@@ -5240,6 +5562,12 @@ components:
         name:
           type: string
         billableName:
+          type: string
+          maxLength: 255
+        displayName:
+          description: |
+            Display name of feature. This is an auto-generated field which contains billableName of feature.
+            If billableName is not provided, name will be used as display name.
           type: string
           maxLength: 255
         schemaAssociations:
@@ -5257,6 +5585,7 @@ components:
       required:
         - id
         - name
+        - displayName
         - createdAt
         - schemaCount
       properties:
@@ -5265,6 +5594,12 @@ components:
         name:
           type: string
         billableName:
+          type: string
+          maxLength: 255
+        displayName:
+          description: |
+            Display name of feature. This is an auto-generated field which contains billableName of feature.
+            If billableName is not provided, name will be used as display name.
           type: string
           maxLength: 255
         schemaCount:
@@ -5296,6 +5631,30 @@ components:
       properties:
         downloadUrl:
           type: string
+    Alias:
+      type: object
+      description: Represents an Alias
+      additionalProperties: false
+      required:
+        - value
+        - createdAt
+      properties:
+        value:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    AliasPaginatedResponse:
+      type: object
+      description: Represents for list response of alias
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alias'
+        nextToken:
+          type: string
     AddOn:
       allOf:
         - $ref: '#/components/schemas/CreateAddOnRequest'
@@ -5304,6 +5663,7 @@ components:
             - id
             - createdAt
             - status
+            - displayName
           properties:
             id:
               description: Id of addon
@@ -5320,6 +5680,11 @@ components:
                 - ACTIVE
                 - ARCHIVED
               example: ACTIVE
+            displayName:
+              description: |
+                Display name of addon. This is an auto-generated field which contains billableName of addon.
+                If billableName is not provided, name will be used as display name.
+              type: string
     AddOnType:
       type: string
       enum:
@@ -5822,6 +6187,8 @@ components:
             $ref: '#/components/schemas/CreditGrantRateCard'
         type:
           $ref: '#/components/schemas/PricePlanType'
+        deferredRevenue:
+          type: boolean
     PricePlanDetailsOverride:
       allOf:
         - $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
@@ -5930,7 +6297,7 @@ components:
               - 12th Oct - {dayOffset: 12, monthOffset: NIL}
               - 28th Oct - {dayOffset: 28, monthOffset: NIL}
               - 30th Oct - {dayOffset: 30, monthOffset: NIL}
-              - 31th Oct - {dayOffset: 31, monthOffset: NIL}
+              - 31th Oct - {dayOffset: LAST, monthOffset: NIL}
             QUARTERLY
               - 15th Jan, 15th Apr, 15th Jul and 15th Oct - {dayOffset: 15, monthOffset: 1}
               - 15th Feb, 15th May, 15th Aug and 15th Nov - {dayOffset: 15, monthOffset: 2} 
@@ -5941,8 +6308,8 @@ components:
               - 15th Jun and 15th Dec - {dayOffset: 15, monthOffset: 6}
             ANNUALLY
               - 15th Jan - {dayOffset: 15, monthOffset: 1}
-              - 29th Feb on Leap year  - {dayOffset: 29, monthOffset: 2}
-              - 28th Feb  - {dayOffset: 28, monthOffset: 2}
+              - 29th Feb on Leap year  - {dayOffset: LAST, monthOffset: 2}
+              - 28th Feb  - {dayOffset: LAST, monthOffset: 2}
               - 15th Aug - {dayOffset: 15, monthOffset: 8}
               - 15th Dec - {dayOffset: 15, monthOffset: 12}
     PricingModel:
@@ -6947,6 +7314,36 @@ components:
           items:
             type: number
           maxItems: 100
+    ValidateEntitlementValueRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          description: Value of the entitlement
+    GetEntitlementValuesResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - featureId
+              - value
+            properties:
+              featureId:
+                type: string
+                description: Feature ID
+              value:
+                type: string
+                description: Value of the feature
     CreateCreditRequest:
       type: object
       description: payload to create credits
@@ -6965,7 +7362,6 @@ components:
       required:
         - accountId
         - effectiveFrom
-        - creditAmount
         - priority
         - purpose
       properties:
@@ -7015,6 +7411,35 @@ components:
       properties:
         items:
           $ref: '#/components/schemas/MiscellaneousCharges'
+    ManageInvoiceTemplateMetadataRequest:
+      description: Payload to upsert invoice template metadata
+      type: object
+      additionalProperties: false
+      required:
+        - templateType
+      properties:
+        templateType:
+          type: string
+          enum:
+            - DEFAULT
+            - CUSTOM
+        customTemplateName:
+          type: string
+        customTemplateVersion:
+          type: number
+        customTemplateFileId:
+          type: string
+        defaultTemplateCustomizations:
+          $ref: '#/components/schemas/InvoiceTemplateMetadata'
+    ManageInvoiceSequenceRequest:
+      description: Payload to add/update invoice sequence
+      type: object
+      additionalProperties: false
+      properties:
+        template:
+          type: string
+        number:
+          type: integer
     InvoicePaymentsRequest:
       description: Payload to update payment information of invoice
       type: object
@@ -7032,6 +7457,41 @@ components:
             - INITIATE_REFUND
             - REFUND_COMPLETED
           example: PAID
+    CreateCustomInvoiceRequest:
+      description: Payload to create invoice
+      type: object
+      additionalProperties: false
+      required:
+        - accountId
+        - invoiceTime
+        - status
+        - lineItems
+      properties:
+        accountId:
+          type: string
+          example: ACC001
+        invoiceTime:
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        idempotencyKey:
+          type: string
+          example: '1234567890'
+        status:
+          title: CreateInvoiceStatus
+          description: Status to create an invoice in.
+          type: string
+          enum:
+            - DRAFT
+            - DUE
+            - PAID
+          example: DUE
+        lineItems:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/CustomInvoiceLineItem'
     MiscellaneousChargesResponse:
       description: Miscellaneous charges response
       type: object
@@ -7041,6 +7501,38 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/MiscellaneousCharges'
+    InvoiceTemplateMetadataResponse:
+      description: Response to upsert invoice template metadata request
+      type: object
+      additionalProperties: false
+      required:
+        - templateType
+      properties:
+        templateType:
+          type: string
+          enum:
+            - DEFAULT
+            - CUSTOM
+        customTemplateName:
+          type: string
+        customTemplateVersion:
+          type: number
+        customTemplateFileId:
+          type: string
+        defaultTemplateCustomizations:
+          $ref: '#/components/schemas/InvoiceTemplateMetadata'
+    InvoiceSequenceResponse:
+      description: Response to upsert invoice sequence request
+      type: object
+      additionalProperties: false
+      required:
+        - template
+        - number
+      properties:
+        template:
+          type: string
+        number:
+          type: integer
     ListInvoicesResponse:
       description: List invoices response
       type: object
@@ -7126,7 +7618,7 @@ components:
         - invoiceType
       properties:
         id:
-          description: Identifier of customer
+          description: Identifier of invoice
           type: string
           maxLength: 50
         customerId:
@@ -7201,6 +7693,27 @@ components:
         metadata:
           type: object
           additionalProperties: true
+        info:
+          type: array
+          items:
+            type: object
+            additionalProperties: false
+            required:
+              - type
+              - value
+            properties:
+              type:
+                type: string
+                description: Type of the information
+              value:
+                type: string
+                description: Value of the information
+        sequenceId:
+          type: string
+          description: Sequence id of the invoice
+        pdfUrl:
+          description: Download URL of the pdf file corresponding to the invoice
+          type: string
     InvoiceLineItem:
       type: object
       additionalProperties: false
@@ -7208,7 +7721,6 @@ components:
         - description
         - type
         - value
-        - units
       properties:
         id:
           type: string
@@ -7288,6 +7800,137 @@ components:
         metadata:
           type: object
           additionalProperties: true
+    CustomInvoiceLineItem:
+      type: object
+      description: |
+        Custom line item. Either `value` or `quantity` + `valuePerQuantity` is required.
+        In case `quantity` and `valuePerQuantity` are provided, `value` is computed as (`quantity` X `valuePerQuantity`)
+      additionalProperties: false
+      required:
+        - description
+      properties:
+        id:
+          type: string
+        description:
+          type: string
+        valuePerQuantity:
+          type: number
+        quantity:
+          type: number
+        value:
+          type: number
+    InvoiceTemplateMetadata:
+      type: object
+      additionalProperties: false
+      properties:
+        headerLeft:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        headerRight:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block1:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block2:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block3:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block4:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block5:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block6:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block7:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block8:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block9:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block10:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block11:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        block12:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        footerLeft:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        footerRight:
+          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
+        lineItemView:
+          type: string
+          enum:
+            - DETAIL
+            - COMPACT
+            - NONE
+        primaryTheme:
+          type: string
+        fontSize:
+          type: number
+          minimum: 10
+          maximum: 16
+        fontFamily:
+          type: string
+        primaryFontColor:
+          type: string
+        secondaryFontColor:
+          type: string
+        hidePageBorder:
+          type: boolean
+        hidePrimaryThemeLine:
+          type: boolean
+        hideTableHeader:
+          type: boolean
+        hideQuantityColumn:
+          type: boolean
+        hidePriceColumn:
+          type: boolean
+        headerHeight:
+          type: number
+        headerBackgroundColor:
+          type: string
+        footerHeight:
+          type: number
+        footerBackgroundColor:
+          type: string
+    InvoiceTemplateMetadataBlocks:
+      type: object
+      additionalProperties: false
+      required:
+        - content
+      properties:
+        content:
+          type: string
+          enum:
+            - TITLE
+            - LOGO
+            - BILLED_BY
+            - BILLED_TO
+            - TOTAL_AMOUNT
+            - INVOICE_DETAILS
+            - LINE_ITEMS
+            - SETTING
+            - TEXT
+            - PAGE_NUMBER
+        settingId:
+          type: string
+        text:
+          type: string
+        alignment:
+          type: string
+          enum:
+            - LEFT
+            - RIGHT
+            - CENTER
+        fontSize:
+          type: number
+          minimum: 10
+          maximum: 16
+        fontWeight:
+          type: string
+          enum:
+            - NORMAL
+            - BOLD
+        forceMaxBlockWidth:
+          type: boolean
     InvoiceDetails:
       type: object
       additionalProperties: false
@@ -7366,6 +8009,8 @@ components:
               type: object
               additionalProperties:
                 type: string
+        logoUrl:
+          type: string
     CreateCreditResponse:
       type: object
       additionalProperties: false
@@ -7815,6 +8460,33 @@ components:
           examples:
             FileDownloadUrlResponse:
               $ref: '#/components/examples/FileDownloadUrlResponse'
+    AliasResponse:
+      description: Response for adding or removing aliases
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Alias'
+          examples:
+            AliasResponse:
+              $ref: '#/components/examples/AliasResponse'
+    AliasPaginatedResponse:
+      description: Response for list aliases request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AliasPaginatedResponse'
+          examples:
+            AliasPaginatedResponse:
+              $ref: '#/components/examples/AliasPaginatedResponse'
+    AccountAliasesPaginatedResponse:
+      description: Response for list account aliases request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AccountAliasesPaginatedResponse'
+          examples:
+            AccountAliasesPaginatedResponse:
+              $ref: '#/components/examples/AccountAliasesPaginatedResponse'
     InvoiceResponse:
       description: Response for Get invoice requests
       content:
@@ -7866,6 +8538,24 @@ components:
           examples:
             MiscellaneousChargesResponse:
               $ref: '#/components/examples/MiscellaneousChargesResponse'
+    InvoiceTemplateMetadataResponse:
+      description: Response for upsert invoice template metadata request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvoiceTemplateMetadataResponse'
+          examples:
+            InvoiceTemplateMetadataResponse:
+              $ref: '#/components/examples/InvoiceTemplateMetadataResponse'
+    InvoiceSequenceResponse:
+      description: Response for Invoice Sequence request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InvoiceSequenceResponse'
+          examples:
+            InvoiceSequenceResponse:
+              $ref: '#/components/examples/InvoiceSequenceResponse'
     TokenResponse:
       description: Response with token
       content:
@@ -7934,6 +8624,13 @@ components:
       schema:
         type: boolean
         example: true
+    effectiveOn:
+      in: query
+      name: effectiveOn
+      required: false
+      schema:
+        type: string
+        example: '2023-03-30T10:41:10.088499'
     start_date:
       in: query
       name: start_date
@@ -8040,6 +8737,13 @@ components:
       schema:
         type: string
         example: file.20aUyEZSuYq.SoGbS
+    alias:
+      in: path
+      name: alias
+      required: true
+      schema:
+        type: string
+        example: custom_value
     account_id:
       in: path
       description: account_id corresponding to an account
@@ -8463,6 +9167,7 @@ components:
               dayOffset: '1'
               monthOffset: NIL
             gracePeriod: 1
+            anniversaryCycle: false
           usageRateCards:
             - displayName: rr1
               usageMeterId: um.20Ms65CtgMy.nwFP0
@@ -8734,16 +9439,26 @@ components:
           postalCode: '29501'
           city: Florence
           state: South Carolina
+    AccountAliasesPaginatedResponse:
+      value:
+        data:
+          - id: abcd-12345-uids
+            value: hello
+            effectiveFrom: '2022-06-04T00:00:00Z'
+            effectiveUntil: '2022-06-05T00:00:00Z'
+            createdAt: '2022-06-04T00:00:00Z'
+            updatedAt: '2022-06-04T00:00:00Z'
+        nextToken: fdsjhklfhdslhfjdklsahfkjdsa...
     AddAccountAliasesRequest:
       value:
         aliases:
-          - account2@acme.com
-          - '+1234567890'
+          - value: hello
+            effectiveFrom: '2022-06-04T00:00:00Z'
     RemoveAccountAliasesRequest:
       value:
         aliases:
-          - account2@acme.com
-          - '+1234567890'
+          - abcd-12345-uids
+          - efgh-12345-uids
     CreateEventSchemaRequest:
       summary: Create event schema request payload
       value:
@@ -8820,7 +9535,7 @@ components:
               '*':
                 - var: attributes.distance
                 - 0.4
-    CreateBillingPricePlanRequest:
+    CreateNonAnniversaryBillingPricePlanRequest:
       value:
         name: grantCheck
         type: BILLING
@@ -8834,6 +9549,227 @@ components:
               dayOffset: '1'
               monthOffset: NIL
             gracePeriod: 1
+            anniversaryCycle: false
+          usageRateCards:
+            - displayName: rr1
+              usageMeterId: um.20Ms65CtgMy.nwFP0
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: FLAT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 10
+                      slabRateConfig: {}
+              tag: '1'
+          fixedFeeRateCards:
+            - id: addon.20sidL2HJ7o.vvzDT
+              rateValues:
+                - currency: USD
+                  rate: 50
+              enableProration: false
+              displayName: normal
+              tag: '1'
+              invoiceTiming: IN_ARREARS
+              type: RECURRING
+            - id: addon.20sidQxYRjs.4oBSU
+              rateValues:
+                - currency: USD
+                  rate: 10
+              enableProration: false
+              displayName: anotherNormal
+              tag: '2'
+              invoiceTiming: IN_ARREARS
+              type: RECURRING
+            - id: addon.20sidzySWoa.Bzrcc
+              rateValues:
+                - currency: USD
+                  rate: 40
+              enableProration: false
+              displayName: inadvance
+              tag: '1'
+              invoiceTiming: IN_ADVANCE
+              type: RECURRING
+          licenseRateCards:
+            - id: addon.20rzlEPp6no.1BYez
+              enableProration: false
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: FLAT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 15
+                      slabRateConfig: {}
+              displayName: license
+              tag: '2'
+              config: null
+          billingEntitlementRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              featureConfigs:
+                - featureCreditLimit: 100
+                  effectiveUntil: P20D
+              invoiceTiming: IN_ADVANCE
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
+            - featureId: feature.20uE1xqEudk.MMVH8
+              featureConfigs:
+                - featureCreditLimit: 200
+                  effectiveUntil: P20D
+              invoiceTiming: IN_ADVANCE
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 2
+                      slabRateConfig: null
+              displayName: feature2
+              tag: null
+          minimumCommitment:
+            displayName: Minimum Commitment
+            rateValues:
+              - currency: USD
+                rate: 0
+          creditGrantRateCards:
+            - id: addon.20ufMNoJoAC.TUzRi
+              type: RECURRING
+              displayName: Credit2
+              rateDetails:
+                pricingModel: TIERED
+                currencySlabRateDetails:
+                  - currency: USD
+                    creditAmount: 100
+                    slabDetails:
+                      - startAfter: 0
+                        priceType: FLAT
+                        rate: 10
+              grantDetails:
+                priority: 1
+                expiryType: PRICING_CYCLE
+                applicableEntityIds: []
+              invoiceTiming: IN_ARREARS
+              recurrenceConfig:
+                offset: 0
+                interval: 1
+            - id: addon.20ufMNoJoAC.TUzRi
+              type: RECURRING
+              displayName: Credit2
+              rateDetails:
+                pricingModel: TIERED
+                currencySlabRateDetails:
+                  - currency: USD
+                    slabDetails:
+                      - rate: 11
+                        endAt: null
+                        priceType: FLAT
+                        startAfter: 0
+                        slabConfig: {}
+                        slabRateConfig: {}
+                    creditAmount: 11
+                  - currency: INR
+                    slabDetails:
+                      - rate: 11
+                        endAt: null
+                        priceType: FLAT
+                        startAfter: 0
+                        slabConfig: {}
+                        slabRateConfig: {}
+                    creditAmount: 11
+              grantDetails:
+                priority: 1
+                expiryType: PRICING_CYCLE
+                expiryDuration: null
+                applicableEntityIds: []
+              invoiceTiming: IN_ARREARS
+              recurrenceConfig:
+                offset: 0
+                interval: 1
+          entitlementOverageRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
+              maxQuantity: 50
+              billingConfig:
+                interval: 1
+                startOffset: 4
+            - featureId: feature.20uE1xqEudk.MMVH8
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 2
+                      slabRateConfig: null
+              displayName: feature2
+              tag: null
+              maxQuantity: null
+              billingConfig: null
+          rateDetails: null
+          entitlementRateCards: null
+          type: BILLING
+        description: null
+    CreateAnniversaryBillingPricePlanRequest:
+      value:
+        name: grantCheck
+        type: BILLING
+        pricePlanDetails:
+          supportedCurrencies:
+            - USD
+          activeCurrencies: []
+          pricingCycleConfig:
+            interval: MONTHLY
+            startOffset: null
+            gracePeriod: 1
+            anniversaryCycle: true
           usageRateCards:
             - displayName: rr1
               usageMeterId: um.20Ms65CtgMy.nwFP0
@@ -9098,6 +10034,7 @@ components:
               dayOffset: '6'
               monthOffset: NIL
             gracePeriod: 3
+            anniversaryCycle: true
         mode: IMMEDIATE_IGNORE_OVERRIDE
     ActivatePricePlanRequest:
       value:
@@ -9146,6 +10083,7 @@ components:
                 dayOffset: '4'
                 monthOffset: '1'
               gracePeriod: 3
+              anniversaryCycle: false
             usageRateCards:
               - displayName: Local Rides
                 usageMeterId: um.1zYnCiM9Bpg.1zYn
@@ -9230,6 +10168,9 @@ components:
         targetId: pp.2zYnCiM9Bpg.bfeu2
         targetVersion: 2
         migrationMode: IMMEDIATE
+    CreateAliasRequest:
+      value:
+        value: primary_number
     Customer:
       summary: A sample Customer
       value:
@@ -9328,6 +10269,7 @@ components:
               dayOffset: 2
               monthOffset: NIL
             gracePeriod: 3
+            anniversaryCycle: false
         updatedAt: {}
         effectiveFrom: {}
         effectiveUntil: {}
@@ -9530,6 +10472,7 @@ components:
       value:
         id: um.1zlQTBWlkeO.lB7fh
         name: Rides
+        displayName: Rides
         description: Cab rides
         type: COUNTER
         aggregation: COUNT
@@ -9568,6 +10511,7 @@ components:
                   dayOffset: '1'
                   monthOffset: NIL
                 gracePeriod: 1
+                anniversaryCycle: false
               usageRateCards:
                 - displayName: rr1
                   usageMeterId: um.20Ms65CtgMy.nwFP0
@@ -9763,6 +10707,7 @@ components:
                   dayOffset: '4'
                   monthOffset: NIL
                 gracePeriod: 3
+                anniversaryCycle: false
               usageRateCards:
                 - displayName: Local Rides
                   pricingModel: TIERED
@@ -9801,6 +10746,7 @@ components:
                   dayOffset: '4'
                   monthOffset: NIL
                 gracePeriod: 3
+                anniversaryCycle: false
               usageRateCards:
                 - displayName: Local Rides
                   usageMeterId: um.1zYnCiM9Bpg.1zYn
@@ -10054,6 +11000,7 @@ components:
       value:
         id: feature.1zYnCiM9Bpg.lv25y
         name: DiscountCredits
+        displayName: DiscountCredits
         description: Discount Credits Feature
         schemaAssociations:
           - event_schema1
@@ -10065,6 +11012,7 @@ components:
         data:
           - id: feature.1zYnCiM9Bpg.lv25y
             name: DiscountCredits
+            displayName: DiscountCredits
             description: Discount Credits Feature
             schemaAssociations:
               - event_schema1
@@ -10077,6 +11025,15 @@ components:
     FileDownloadUrlResponse:
       value:
         downloadUrl: 'https://s3.amazonaws.com/...'
+    AliasResponse:
+      value:
+        value: acme_primary
+        createAt: '2020-01-01T00:00:00Z'
+    AliasPaginatedResponse:
+      value:
+        data:
+          - value: acme_primary
+            createAt: '2020-01-01T00:00:00Z'
     IngestEventRequest:
       summary: example event ingestion request
       value:
@@ -10348,6 +11305,13 @@ components:
                 - '2017-07-01T00:00:00Z'
               metricValues:
                 - 123.45
+    GetEntitlementValuesResponse:
+      value:
+        data:
+          - featureId: feat.fdjsl.313
+            value: true
+          - featureId: feat.fdjsl.314
+            value: custom
     Invoice:
       summary: A sample Invoice
       value:
@@ -10500,6 +11464,77 @@ components:
             value: '100'
           - name: charge 2
             value: '200'
+    InvoiceSequenceResponse:
+      summary: A sample for InvoiceSequenceResponse
+      value:
+        template: 'YYYY-MM-{number}'
+        number: 500
+    ManageInvoiceTemplateMetadataRequest:
+      summary: A sample for ManageInvoiceTemplateMetadataRequest
+      value:
+        templateType: DEFAULT
+        customTemplateName: null
+        customTemplateVersion: null
+        defaultTemplateCustomizations:
+          block1:
+            content: TITLE
+            settingId: null
+            text: null
+            alignment: LEFT
+          block2:
+            content: BILLED_BY
+            settingId: null
+            text: null
+            alignment: RIGHT
+          block3:
+            content: TEXT
+            settingId: null
+            text: This is a custom text to be displayed in invoice
+            alignment: LEFT
+          block4:
+            content: TOTAL_AMOUNT
+            settingId: null
+            text: null
+            alignment: null
+          lineItemView: DETAIL
+          primaryTheme: '#FF0077'
+          primaryFontColor: '#FF6700'
+          forceMaxBlockWidth: true
+    InvoiceTemplateMetadataResponse:
+      summary: A sample for InvoiceTemplateMetadataResponse
+      value:
+        templateType: DEFAULT
+        customTemplateName: null
+        customTemplateVersion: null
+        defaultTemplateCustomizations:
+          block1:
+            content: TITLE
+            settingId: null
+            text: null
+            alignment: LEFT
+          block2:
+            content: BILLED_BY
+            settingId: null
+            text: null
+            alignment: RIGHT
+          block3:
+            content: TEXT
+            settingId: null
+            text: This is a custom text to be displayed in invoice
+            alignment: LEFT
+          block4:
+            content: TOTAL_AMOUNT
+            settingId: null
+            text: null
+            alignment: null
+          block5: null
+          block6: null
+          block7: null
+          lineItemView: DETAIL
+          primaryTheme: '#FF0077'
+          primaryFontColor: '#FF6700'
+          secondaryFontColor: null
+          forceMaxBlockWidth: true
     CreateCreditRequest:
       summary: A sample for CreateCreditRequest
       value:
@@ -10520,6 +11555,11 @@ components:
             value: '200'
           - name: json logic charge
             value: '{"var": "um.linitem.id"}'
+    ManageInvoiceSequenceRequest:
+      summary: A sample for ManageInvoiceSequenceRequest
+      value:
+        template: 'YYYY-MM-{number}'
+        number: 500
     InvoicePaymentsRequest:
       summary: A sample for InvoicePaymentsRequest
       value:
@@ -10532,6 +11572,19 @@ components:
         runningBalance: 700
         inapplicableCredits: 100
         units: USD
+    CreateCustomInvoiceRequest:
+      summary: A sample for CreateCustomInvoiceRequest
+      value:
+        accountId: ACC001
+        invoiceDate: '2020-07-04T12:00:00.000Z'
+        idempotencyKey: '1234567890'
+        status: DRAFT
+        lineItems:
+          - description: Payout IMPS
+            type: CUSTOM_AMOUNT
+            valuePerQuantity: 0.001
+            quantity: 32109
+            units: USD
     TokenResponse:
       value:
         token: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
@@ -10719,8 +11772,10 @@ components:
           schema:
             $ref: '#/components/schemas/CreatePricePlanRequest'
           examples:
-            CreateBillingPricePlanRequest:
-              $ref: '#/components/examples/CreateBillingPricePlanRequest'
+            CreateNonAnniversaryBillingPricePlanRequest:
+              $ref: '#/components/examples/CreateNonAnniversaryBillingPricePlanRequest'
+            CreateAnniversaryBillingPricePlanRequest:
+              $ref: '#/components/examples/CreateAnniversaryBillingPricePlanRequest'
             CreatePurchasePricePlanRequest:
               $ref: '#/components/examples/CreatePurchasePricePlanRequest'
     UpdatePricePlanRequest:
@@ -10831,6 +11886,16 @@ components:
           examples:
             UpdateFeatureRequest:
               $ref: '#/components/examples/UpdateFeatureRequest'
+    CreateAliasRequest:
+      description: Payload to create alias
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateAliasRequest'
+          examples:
+            CreateAliasRequest:
+              $ref: '#/components/examples/CreateAliasRequest'
     GetMetricsRequest:
       content:
         application/json:
@@ -10909,6 +11974,15 @@ components:
                 updateType: RELATIVE
                 quantity: -5
                 idempotencyKey: idempotencyKey#2
+    ValidateEntitlementValueRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ValidateEntitlementValueRequest'
+          examples:
+            ValidateEntitlementValueRequest:
+              value:
+                value: enum1
     CreateCreditRequest:
       description: Payload to grant credits
       content:
@@ -10927,6 +12001,24 @@ components:
           examples:
             ManageMiscellaneousChargesRequest:
               $ref: '#/components/examples/ManageMiscellaneousChargesRequest'
+    ManageInvoiceTemplateMetadataRequest:
+      description: Payload to upsert invoice template metadata
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ManageInvoiceTemplateMetadataRequest'
+          examples:
+            ManageInvoiceTemplateMetadataRequest:
+              $ref: '#/components/examples/ManageInvoiceTemplateMetadataRequest'
+    ManageInvoiceSequenceRequest:
+      description: Payload to add/update invoice sequence
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ManageInvoiceSequenceRequest'
+          examples:
+            ManageInvoiceSequenceRequest:
+              $ref: '#/components/examples/ManageInvoiceSequenceRequest'
     InvoicePaymentsRequest:
       description: Payload to update payments of invoice
       required: true
@@ -10937,6 +12029,15 @@ components:
           examples:
             InvoicePaymentsRequest:
               $ref: '#/components/examples/InvoicePaymentsRequest'
+    CreateCustomInvoiceRequest:
+      description: Payload to create invoice
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCustomInvoiceRequest'
+          examples:
+            CreateCustomInvoiceRequest:
+              $ref: '#/components/examples/CreateCustomInvoiceRequest'
   securitySchemes:
     bearerAuth:
       type: http
