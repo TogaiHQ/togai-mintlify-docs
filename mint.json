@@ -181,6 +181,11 @@
           "api-reference/accounts/update-an-account",
           "api-reference/accounts/add-aliases-to-account",
           "api-reference/accounts/remove-aliases-to-account",
+          "api-reference/accounts/create-an-alias",
+          "api-reference/accounts/get-an-alias",
+          "api-reference/accounts/get-all-aliases-of-an-account",
+          "api-reference/accounts/list-all-aliases",
+          "api-reference/accounts/delete-an-alias",
           "api-reference/accounts/disassociate-a-plan-fromto-an-account",
           "api-reference/accounts/get-all-purchases-for-an-account",
           "api-reference/accounts/initiate-a-purchase",
@@ -293,7 +298,10 @@
           "api-reference/entitlements/get-feature-credits-balance",
           "api-reference/entitlements/list-feature-credits-entries-of-a-feature-for-an-account",
           "api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account",
-          "api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account"
+          "api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account",
+          "api-reference/entitlements/get-entitlements-for-a-account",
+          "api-reference/entitlements/check-entitlement-value-for-a-account",
+          "api-reference/entitlements/get-entitlement-value-for-a-account"
         ]
       },
       {
@@ -327,7 +335,9 @@
           "api-reference/invoices/get-an-invoice",
           "api-reference/invoices/add-or-update-miscellaneous-charges-in-invoice",
           "api-reference/invoices/update-payment-status-in-invoice",
-          "api-reference/invoices/add-or-update-miscellaneous-charges-in-upcoming-invoice-for-a-account"
+          "api-reference/invoices/add-or-update-miscellaneous-charges-in-upcoming-invoice-for-a-account",
+          "api-reference/invoices/create-a-custom-invoice-for-an-account",
+          "api-reference/invoices/delete-a-custom-invoice-in-draft-state"
         ]
       },
       {
