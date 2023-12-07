@@ -61,6 +61,8 @@ tags:
     description: Credits API
   - name: InvoiceTemplates
     description: InvoiceTemplates API
+  - name: Payments
+    description: Payments API
   - name: Authentication
     description: Authentication API
 paths:
@@ -3006,6 +3008,130 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /payments:
+    get:
+      tags:
+        - Payments
+      summary: List all payments
+      description: List all payments
+      operationId: listPayments
+      parameters:
+        - $ref: '#/components/parameters/filter_next_page_token'
+        - $ref: '#/components/parameters/filter_page_size'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPaymentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    post:
+      tags:
+        - Payments
+      summary: create payments
+      description: create payments
+      operationId: createPayments
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePaymentRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/PaymentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/payments/{payment_id}':
+    put:
+      tags:
+        - Payments
+      summary: update payments
+      description: update payments
+      operationId: updatePayments
+      parameters:
+        - $ref: '#/components/parameters/payment_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdatePaymentRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/UpdatePaymentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Payments
+      summary: Get a payment
+      description: Get payment
+      operationId: getPayment
+      parameters:
+        - $ref: '#/components/parameters/payment_id'
+        - $ref: '#/components/parameters/version'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/payments/{payment_id}/versions':
+    get:
+      tags:
+        - Payments
+      summary: list all payment versions for a payment
+      description: get a list of all payment versions for a payment
+      operationId: listPaymentVersions
+      parameters:
+        - $ref: '#/components/parameters/payment_id'
+        - $ref: '#/components/parameters/filter_next_page_token'
+        - $ref: '#/components/parameters/filter_page_size'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListPaymentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /authenticate:
     post:
       tags:
@@ -3483,6 +3609,20 @@ components:
         type:
           $ref: '#/components/schemas/PricePlanType'
         deferredRevenue:
+          description: |
+            This option can be enabled while creating a price plan to opt for deferred revenue finalization.
+            i.e, Togai will assume that the price plan may change any time during the pricing cycle and 
+            thereby does not compute the revenue in near-real time. 
+            This gives the flexibility of editing rate cards in price plan from beginning of the pricing cycle.
+            Enabling this mode comes with the following limitations.
+            1. Following rate cards are not supported under a `deferredRevenue` plan
+                * creditGrantRateCards,
+                * billingEntitlementRateCards,
+                * entitlementOverageRateCards,
+                * IN_ADVANCE fixedFeeRateCards,
+                * IN_ADVANCE licenseRateCards
+            2. Metrics API return revenue metrics only after the grace period of the account's pricing cycle 
+            (i.e, only once the invoice becomes DUE)
           type: boolean
     UpdatePricePlanRequest:
       description: Request to update a price plan
@@ -3860,6 +4000,8 @@ components:
           description: |
             Date of effectiveness of the association.
             - Expected only if the account already has a price plan associated with it.
+            - Editing of a BILLING plan with deferredRevenue can be achieved with 
+              effectiveFrom as start date of current cycle or using `retainStartOffset` option.
         effectiveUntil:
           type: string
           format: date
@@ -5198,13 +5340,6 @@ components:
           type: string
         dataType:
           $ref: '#/components/schemas/SettingDataType'
-    SettingDataType:
-      type: string
-      enum:
-        - STRING
-        - NUMERIC
-        - JSON
-        - JSON_LOGIC
     CreateEntitySetting:
       type: object
       description: Represents a setting
@@ -6406,6 +6541,13 @@ components:
           type: integer
           format: int64
           example: 5
+    SettingDataType:
+      type: string
+      enum:
+        - STRING
+        - NUMERIC
+        - JSON
+        - JSON_LOGIC
     Slab:
       type: object
       description: Represents a pricing priceType (rates + slabs) for usage price plan
@@ -7355,6 +7497,90 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/CreditRequest'
+    CreatePaymentRequest:
+      type: object
+      description: payload to create payment
+      additionalProperties: false
+      required:
+        - accountId
+        - externalPaymentReference
+        - lineItemRecords
+        - currency
+      properties:
+        description:
+          description: A brief description of the payment
+          type: string
+          maxLength: 512
+          example: Payment for Invoice inv.234.23afv
+        notes:
+          description: A detailed note about the payment
+          type: string
+          maxLength: 512
+          example: Payment for purchase of credits
+        accountId:
+          type: string
+          maxLength: 512
+          example: ACC001
+        externalPaymentReference:
+          $ref: '#/components/schemas/ExternalPaymentReference'
+        lineItemRecords:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/PaymentLineItemRecord'
+        currency:
+          type: string
+          maxLength: 512
+          example: USD
+    ExternalPaymentReference:
+      type: object
+      description: external payment reference object
+      additionalProperties: false
+      required:
+        - sourceName
+        - sourceType
+        - transactionNumber
+      properties:
+        sourceName:
+          type: string
+        sourceType:
+          type: string
+          enum:
+            - GATEWAY
+            - CASH
+            - CHECK
+            - BANK_TRANSFER
+            - CARD
+        transactionNumber:
+          description: Check number or Card transaction number
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+    PaymentLineItemRecord:
+      type: object
+      description: payment line item record object
+      additionalProperties: false
+      required:
+        - type
+        - togaiId
+        - amount
+      properties:
+        type:
+          type: string
+          enum:
+            - INVOICE
+            - CREDITS
+        togaiId:
+          type: string
+          example: inv.234.12efwe
+        amount:
+          type: number
+    UpdatePaymentRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreatePaymentRequest'
     CreditRequest:
       description: Payload to grant Credits
       type: object
@@ -7567,6 +7793,23 @@ components:
           type: string
           maxLength: 500
           example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
+    ListPaymentResponse:
+      description: List payments response
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          minItems: 0
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/Payment'
+        nextToken:
+          type: string
+          maxLength: 500
+          example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
     CreditDetailsResponse:
       allOf:
         - $ref: '#/components/schemas/Credit'
@@ -7714,6 +7957,48 @@ components:
         pdfUrl:
           description: Download URL of the pdf file corresponding to the invoice
           type: string
+    Payment:
+      description: payment object
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - accountId
+        - externalPaymentReference
+        - lineItemRecords
+        - totalAmount
+        - currency
+        - version
+        - createdBy
+        - createdAt
+      properties:
+        id:
+          type: string
+          example: pay.w123rwe.1231
+        description:
+          type: string
+        notes:
+          type: string
+        accountId:
+          type: string
+          example: ACC001
+        externalPaymentReferences:
+          $ref: '#/components/schemas/ExternalPaymentReference'
+        lineItemRecords:
+          type: array
+          minLength: 1
+          items:
+            $ref: '#/components/schemas/PaymentLineItemRecord'
+        totalAmount:
+          type: number
+        currency:
+          type: string
+        version:
+          type: number
+        createdBy:
+          type: string
+        createdAt:
+          type: date-time
     InvoiceLineItem:
       type: object
       additionalProperties: false
@@ -8505,6 +8790,33 @@ components:
           examples:
             ListCreditsResponse:
               $ref: '#/components/examples/ListCreditsResponse'
+    PaymentResponse:
+      description: Response for POST payments requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Payment'
+          examples:
+            Payment:
+              $ref: '#/components/examples/Payment'
+    UpdatePaymentResponse:
+      description: Response for PUT payments requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Payment'
+          examples:
+            Payment:
+              $ref: '#/components/examples/Payment'
+    ListPaymentResponse:
+      description: Response for GET payments requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListPaymentResponse'
+          examples:
+            ListPaymentResponse:
+              $ref: '#/components/examples/ListPaymentResponse'
     CreateCreditResponse:
       description: Response for List credits request
       content:
@@ -8630,7 +8942,8 @@ components:
       required: false
       schema:
         type: string
-        example: '2023-03-30T10:41:10.088499'
+        format: date-time
+        example: '2020-03-30T10:41:10.088499'
     start_date:
       in: query
       name: start_date
@@ -8856,6 +9169,22 @@ components:
       schema:
         type: string
         example: ACC001
+    payment_id:
+      in: path
+      name: payment_id
+      required: true
+      schema:
+        type: string
+        example: payment.1zYnCiM9Bpg.lv25y
+    version:
+      in: query
+      name: version
+      description: Optional version to get a specific version. Gets latest version if it is not provided.
+      required: false
+      schema:
+        type: integer
+        format: int32
+        example: 2
     credit_id:
       in: path
       name: credit_id
@@ -11312,10 +11641,67 @@ components:
             value: true
           - featureId: feat.fdjsl.314
             value: custom
+    Payment:
+      summary: A sample Payment
+      value:
+        id: payment.1223dfs.234ds
+        description: Payment for services
+        notes: Invoice payment
+        accountId: acc123
+        currency: USD
+        externalPaymentReferences:
+          - sourceName: XYZ Company
+            sourceType: CARD
+            transactionNumber: TXN123
+            description: Card payment
+        lineItemRecords:
+          - togaiId: inv.234.12efwe
+            amount: 1000
+            type: INVOICE
+          - togaiId: inv.235.12efwe
+            amount: 600
+            type: INVOICE
+          - togaiId: cred.236.12efwe
+            amount: 100
+            type: CREDITS
+        totalAmount: 1700
+        version: 1
+        isLatest: true
+        createdBy: user123
+        createdAt: '2023-01-01T12:00:00'
+    ListPaymentResponse:
+      summary: A sample list payments response
+      value:
+        data:
+          - id: payment.1223dfs.234ds
+            description: Payment for services
+            notes: Invoice payment
+            accountId: acc123
+            currency: USD
+            externalPaymentReferences:
+              - sourceName: XYZ Company
+                sourceType: CARD
+                transactionNumber: TXN123
+                description: Card payment
+            lineItemRecords:
+              - togaiId: inv.234.12efwe
+                amount: 1000
+                type: INVOICE
+              - togaiId: inv.235.12efwe
+                amount: 600
+                type: INVOICE
+              - togaiId: cred.236.12efwe
+                amount: 100
+                type: CREDITS
+            totalAmount: 1700
+            version: 1
+            createdBy: user123
+            createdAt: '2023-01-01T12:00:00'
     Invoice:
       summary: A sample Invoice
       value:
         id: inv.hkgkgyh.ghg
+        sequenceId: 2020-07-2958
         customerId: 7VcRw9xZDIqsC5E
         accountId: ACC001
         usageInfo:
@@ -11545,6 +11931,51 @@ components:
             effectiveUntil: '2024-02-04'
             creditAmount: 1000
             priority: 1
+    CreatePaymentRequest:
+      summary: A sample for CreatePaymentRequest
+      value:
+        description: Payment for services
+        notes: Invoice payment
+        currency: USD
+        accountId: acc123
+        externalPaymentReference:
+          sourceName: XYZ Company
+          sourceType: CARD
+          transactionNumber: TXN123
+          description: Card payment
+        lineItemRecords:
+          - togaiId: inv.234.12efwe
+            amount: 1000
+            type: INVOICE
+          - togaiId: inv.236.12efwe
+            amount: 500
+            type: INVOICE
+          - togaiId: cred.236.12efwe
+            amount: 200
+            type: CREDITS
+    UpdatePaymentRequest:
+      summary: A sample for CreatePaymentRequest
+      value:
+        sourceVersion: 1
+        description: Payment for services
+        notes: Invoice payment
+        currency: USD
+        accountId: acc123
+        externalPaymentReference:
+          sourceName: XYZ Company
+          sourceType: CARD
+          transactionNumber: TXN123
+          description: Card payment
+        lineItemRecords:
+          - togaiId: inv.234.12efwe
+            amount: 1000
+            type: INVOICE
+          - togaiId: inv.235.12efwe
+            amount: 500
+            type: INVOICE
+          - togaiId: cred.236.12efwe
+            amount: 200
+            type: CREDITS
     ManageMiscellaneousChargesRequest:
       summary: A sample for ManageMiscellaneousChargesRequest
       value:
@@ -11992,6 +12423,24 @@ components:
           examples:
             CreateCreditRequest:
               $ref: '#/components/examples/CreateCreditRequest'
+    CreatePaymentRequest:
+      description: Payload to create a payment
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreatePaymentRequest'
+          examples:
+            CreatePaymentRequest:
+              $ref: '#/components/examples/CreatePaymentRequest'
+    UpdatePaymentRequest:
+      description: Payload to create a payment
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdatePaymentRequest'
+          examples:
+            UpdatePaymentRequest:
+              $ref: '#/components/examples/UpdatePaymentRequest'
     ManageMiscellaneousChargesRequest:
       description: Payload to update custom line items
       content:
