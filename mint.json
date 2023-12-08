@@ -1,6 +1,7 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Togai documentation",
+  "openapi": "./openapi.yaml",
   "api": {
     "baseUrl": ["https://sandbox-api.togai.com", "https://api.togai.com"],
     "auth": {
@@ -343,11 +344,11 @@
       {
         "group": "Payments",
         "pages": [
-          "api-reference/payments/list-payments",
+          "api-reference/payments/list-all-payments",
           "api-reference/payments/get-a-payment",
-          "api-reference/payments/list-all-versions-of-a-payment",
-          "api-reference/payments/update-a-payment",
-          "api-reference/payments/create-a-payment"
+          "api-reference/payments/list-all-payment-versions-for-a-payment",
+          "api-reference/payments/update-payments",
+          "api-reference/payments/create-payments"
         ]
       },
       {
