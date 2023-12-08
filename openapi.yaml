@@ -7998,7 +7998,8 @@ components:
         createdBy:
           type: string
         createdAt:
-          type: date-time
+          type: string
+          format: date-time
     InvoiceLineItem:
       type: object
       additionalProperties: false
