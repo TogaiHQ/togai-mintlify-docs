@@ -341,6 +341,16 @@
         ]
       },
       {
+        "group": "Payments",
+        "pages": [
+          "api-reference/payments/list-payments",
+          "api-reference/payments/get-a-payment",
+          "api-reference/payments/list-all-versions-of-a-payment",
+          "api-reference/payments/update-a-payment",
+          "api-reference/payments/create-a-payment"
+        ]
+      },
+      {
         "group": "InvoiceGroups",
         "pages": [
           "api-reference/invoicegroups/list-invoice-groups",
