@@ -59,6 +59,8 @@ tags:
     description: Invoices API
   - name: Credits
     description: Credits API
+  - name: Wallet
+    description: Wallet API
   - name: InvoiceTemplates
     description: InvoiceTemplates API
   - name: Payments
@@ -2790,30 +2792,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /ui/invoice_templates_metadata:
-    put:
-      tags:
-        - InvoiceTemplates
-      summary: Create/Update template metadata based on which the customizations are applied to the base Togai's invoice template
-      description: Create/Update template metadata based on which the customizations are applied to the base Togai's invoice template
-      operationId: upsertInvoiceTemplateMetadata
-      requestBody:
-        $ref: '#/components/requestBodies/ManageInvoiceTemplateMetadataRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/InvoiceTemplateMetadataResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
   '/accounts/{account_id}/miscellaneous_charges':
     put:
       tags:
@@ -2841,29 +2819,6 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
   /ui/invoice_sequence:
-    put:
-      tags:
-        - Invoices
-      summary: Add/Update invoice sequence for the organization
-      description: Add/Update invoice sequence for the organization
-      operationId: manageInvoiceSequence
-      requestBody:
-        $ref: '#/components/requestBodies/ManageInvoiceSequenceRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/InvoiceSequenceResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
         - Invoices
@@ -3008,6 +2963,56 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/wallet':
+    get:
+      tags:
+        - Wallet
+      summary: Wallet balance for Account
+      description: Wallet balance for Account
+      operationId: WalletBalanceForAccount
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/WalletBalanceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/accounts/{account_id}/wallet/entries':
+    get:
+      tags:
+        - Wallet
+      summary: Wallet entries for Account
+      description: Wallet entries for Account
+      operationId: WalletEntriesForAccount
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/filter_next_page_token'
+        - $ref: '#/components/parameters/filter_page_size'
+      responses:
+        '200':
+          $ref: '#/components/responses/WalletEntriesPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /payments:
     get:
       tags:
@@ -3057,31 +3062,6 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
   '/payments/{payment_id}':
-    put:
-      tags:
-        - Payments
-      summary: update payments
-      description: update payments
-      operationId: updatePayments
-      parameters:
-        - $ref: '#/components/parameters/payment_id'
-      requestBody:
-        $ref: '#/components/requestBodies/UpdatePaymentRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/UpdatePaymentResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
         - Payments
@@ -3094,32 +3074,6 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/PaymentResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
-  '/payments/{payment_id}/versions':
-    get:
-      tags:
-        - Payments
-      summary: list all payment versions for a payment
-      description: get a list of all payment versions for a payment
-      operationId: listPaymentVersions
-      parameters:
-        - $ref: '#/components/parameters/payment_id'
-        - $ref: '#/components/parameters/filter_next_page_token'
-        - $ref: '#/components/parameters/filter_page_size'
-      responses:
-        '200':
-          $ref: '#/components/responses/ListPaymentResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -3250,6 +3204,11 @@ components:
             maxLength: 50
             minLength: 3
           example: acme_primary
+        accountAliases:
+          description: Aliases which effective range
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateAccountAliasRequest'
         address:
           $ref: '#/components/schemas/Address'
         primaryEmail:
@@ -3365,12 +3324,29 @@ components:
         nextToken:
           type: string
           example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    CreateAccountAliasRequest:
+      description: An alternative account identifier for event ingestion with a defined effective duration.
+      type: object
+      additionalProperties: false
+      required:
+        - value
+      properties:
+        value:
+          type: string
+          maxLength: 50
+          minLength: 1
+        effectiveFrom:
+          type: string
+          format: date-time
+          description: 'Effective from date, if not provided, it will be set to -infinity'
+        effectiveUntil:
+          type: string
+          format: date-time
+          description: 'Effective until date, if not provided, it will be set to +infinity'
     AddAccountAliasesRequest:
       description: Payload to add aliases from account
       type: object
       additionalProperties: false
-      required:
-        - aliases
       properties:
         aliases:
           description: List of aliases to add
@@ -3378,21 +3354,16 @@ components:
           maxItems: 10
           minItems: 1
           items:
-            type: object
-            additionalProperties: false
-            required:
-              - value
-            properties:
-              value:
-                type: string
-                maxLength: 50
-                minLength: 1
-              effectiveFrom:
-                type: string
-                format: date-time
-              effectiveUntil:
-                type: string
-                format: date-time
+            type: string
+            maxLength: 50
+            minLength: 3
+        accountAliases:
+          description: List of account aliases to add
+          type: array
+          maxItems: 10
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CreateAccountAliasRequest'
     RemoveAccountAliasesRequest:
       description: Payload to remove account aliases
       type: object
@@ -3405,8 +3376,19 @@ components:
         accountAliases:
           type: array
           items:
-            type: string
-            description: Account Alias identifier (UUID)
+            title: RemoveAccountAliasRequest
+            type: object
+            additionalProperties: false
+            required:
+              - id
+            properties:
+              id:
+                type: string
+                description: Alias identifier (UUID)
+              from:
+                type: string
+                format: date-time
+                description: 'Alias will be deleted from this date, If not provided, it will be deleted from now'
     CreateEventSchemaRequest:
       description: Request to create event schema
       type: object
@@ -7506,6 +7488,7 @@ components:
         - externalPaymentReference
         - lineItemRecords
         - currency
+        - totalAmount
       properties:
         description:
           description: A brief description of the payment
@@ -7532,6 +7515,8 @@ components:
           type: string
           maxLength: 512
           example: USD
+        totalAmount:
+          type: number
     ExternalPaymentReference:
       type: object
       description: external payment reference object
@@ -7565,22 +7550,22 @@ components:
       additionalProperties: false
       required:
         - type
-        - togaiId
-        - amount
+        - order
       properties:
         type:
           type: string
           enum:
             - INVOICE
-            - CREDITS
+            - CREDIT
+            - WALLET_CREDIT
         togaiId:
           type: string
           example: inv.234.12efwe
         amount:
           type: number
-    UpdatePaymentRequest:
-      allOf:
-        - $ref: '#/components/schemas/CreatePaymentRequest'
+        order:
+          type: integer
+          format: int32
     CreditRequest:
       description: Payload to grant Credits
       type: object
@@ -7637,35 +7622,6 @@ components:
       properties:
         items:
           $ref: '#/components/schemas/MiscellaneousCharges'
-    ManageInvoiceTemplateMetadataRequest:
-      description: Payload to upsert invoice template metadata
-      type: object
-      additionalProperties: false
-      required:
-        - templateType
-      properties:
-        templateType:
-          type: string
-          enum:
-            - DEFAULT
-            - CUSTOM
-        customTemplateName:
-          type: string
-        customTemplateVersion:
-          type: number
-        customTemplateFileId:
-          type: string
-        defaultTemplateCustomizations:
-          $ref: '#/components/schemas/InvoiceTemplateMetadata'
-    ManageInvoiceSequenceRequest:
-      description: Payload to add/update invoice sequence
-      type: object
-      additionalProperties: false
-      properties:
-        template:
-          type: string
-        number:
-          type: integer
     InvoicePaymentsRequest:
       description: Payload to update payment information of invoice
       type: object
@@ -7727,26 +7683,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/MiscellaneousCharges'
-    InvoiceTemplateMetadataResponse:
-      description: Response to upsert invoice template metadata request
-      type: object
-      additionalProperties: false
-      required:
-        - templateType
-      properties:
-        templateType:
-          type: string
-          enum:
-            - DEFAULT
-            - CUSTOM
-        customTemplateName:
-          type: string
-        customTemplateVersion:
-          type: number
-        customTemplateFileId:
-          type: string
-        defaultTemplateCustomizations:
-          $ref: '#/components/schemas/InvoiceTemplateMetadata'
     InvoiceSequenceResponse:
       description: Response to upsert invoice sequence request
       type: object
@@ -7832,6 +7768,7 @@ components:
         - runningBalance
         - inapplicableCredits
         - unit
+        - lastUpdatedAt
       properties:
         activeCredits:
           type: number
@@ -7848,6 +7785,110 @@ components:
         unit:
           type: string
           example: USD
+        lastUpdatedAt:
+          type: string
+          format: date-time
+          example: '2021-01-01T00:00:00Z'
+    WalletBalanceResponse:
+      description: Wallet Balance response
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - accountId
+        - customerId
+        - purpose
+        - balance
+        - creditUnit
+      properties:
+        id:
+          type: string
+        accountId:
+          type: string
+          example: ACC001
+        customerId:
+          type: string
+          example: ACC001
+        balance:
+          type: number
+          example: 500
+        creditUnit:
+          type: string
+          example: USD
+        externalId:
+          type: string
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - INACTIVE
+        holdAmount:
+          type: number
+          example: 500
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties: true
+    WalletEntriesPaginatedResponse:
+      description: List wallet entries response
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          minItems: 0
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/WalletEntry'
+        nextToken:
+          type: string
+          maxLength: 500
+          example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
+    WalletEntry:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - walletId
+        - transactionType
+        - amount
+        - createdAt
+        - closingBalance
+      properties:
+        id:
+          description: Identifier of credit transactions
+          type: string
+          maxLength: 50
+        description:
+          description: description of the entry
+          type: string
+          maxLength: 50
+        walletId:
+          type: string
+        transactionType:
+          type: string
+          enum:
+            - CREDITED
+            - DEBITED
+          example: CREDITED
+        entityId:
+          type: string
+        amount:
+          type: number
+          example: 200
+        createdAt:
+          type: string
+          format: date-time
+        closingBalance:
+          type: number
+          example: 200
     Invoice:
       description: Structure of invoice
       type: object
@@ -7958,7 +7999,7 @@ components:
           description: Download URL of the pdf file corresponding to the invoice
           type: string
     Payment:
-      description: payment object
+      description: Payment object
       type: object
       additionalProperties: false
       required:
@@ -8105,118 +8146,6 @@ components:
           type: number
         value:
           type: number
-    InvoiceTemplateMetadata:
-      type: object
-      additionalProperties: false
-      properties:
-        headerLeft:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        headerRight:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block1:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block2:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block3:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block4:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block5:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block6:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block7:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block8:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block9:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block10:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block11:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        block12:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        footerLeft:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        footerRight:
-          $ref: '#/components/schemas/InvoiceTemplateMetadataBlocks'
-        lineItemView:
-          type: string
-          enum:
-            - DETAIL
-            - COMPACT
-            - NONE
-        primaryTheme:
-          type: string
-        fontSize:
-          type: number
-          minimum: 10
-          maximum: 16
-        fontFamily:
-          type: string
-        primaryFontColor:
-          type: string
-        secondaryFontColor:
-          type: string
-        hidePageBorder:
-          type: boolean
-        hidePrimaryThemeLine:
-          type: boolean
-        hideTableHeader:
-          type: boolean
-        hideQuantityColumn:
-          type: boolean
-        hidePriceColumn:
-          type: boolean
-        headerHeight:
-          type: number
-        headerBackgroundColor:
-          type: string
-        footerHeight:
-          type: number
-        footerBackgroundColor:
-          type: string
-    InvoiceTemplateMetadataBlocks:
-      type: object
-      additionalProperties: false
-      required:
-        - content
-      properties:
-        content:
-          type: string
-          enum:
-            - TITLE
-            - LOGO
-            - BILLED_BY
-            - BILLED_TO
-            - TOTAL_AMOUNT
-            - INVOICE_DETAILS
-            - LINE_ITEMS
-            - SETTING
-            - TEXT
-            - PAGE_NUMBER
-        settingId:
-          type: string
-        text:
-          type: string
-        alignment:
-          type: string
-          enum:
-            - LEFT
-            - RIGHT
-            - CENTER
-        fontSize:
-          type: number
-          minimum: 10
-          maximum: 16
-        fontWeight:
-          type: string
-          enum:
-            - NORMAL
-            - BOLD
-        forceMaxBlockWidth:
-          type: boolean
     InvoiceDetails:
       type: object
       additionalProperties: false
@@ -8800,15 +8729,6 @@ components:
           examples:
             Payment:
               $ref: '#/components/examples/Payment'
-    UpdatePaymentResponse:
-      description: Response for PUT payments requests
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/Payment'
-          examples:
-            Payment:
-              $ref: '#/components/examples/Payment'
     ListPaymentResponse:
       description: Response for GET payments requests
       content:
@@ -8842,6 +8762,24 @@ components:
           examples:
             CreditBalanceResponse:
               $ref: '#/components/examples/CreditBalanceResponse'
+    WalletBalanceResponse:
+      description: Response for Credit Balance Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WalletBalanceResponse'
+          examples:
+            CreditBalanceResponse:
+              $ref: '#/components/examples/WalletBalanceResponse'
+    WalletEntriesPaginatedResponse:
+      description: Response for Credit Balance Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/WalletEntriesPaginatedResponse'
+          examples:
+            CreditBalanceResponse:
+              $ref: '#/components/examples/WalletEntriesPaginatedResponse'
     MiscellaneousChargesResponse:
       description: Response for Miscellaneous Charges Request
       content:
@@ -8851,15 +8789,6 @@ components:
           examples:
             MiscellaneousChargesResponse:
               $ref: '#/components/examples/MiscellaneousChargesResponse'
-    InvoiceTemplateMetadataResponse:
-      description: Response for upsert invoice template metadata request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InvoiceTemplateMetadataResponse'
-          examples:
-            InvoiceTemplateMetadataResponse:
-              $ref: '#/components/examples/InvoiceTemplateMetadataResponse'
     InvoiceSequenceResponse:
       description: Response for Invoice Sequence request
       content:
@@ -9782,8 +9711,8 @@ components:
     AddAccountAliasesRequest:
       value:
         aliases:
-          - value: hello
-            effectiveFrom: '2022-06-04T00:00:00Z'
+          - account2@acme.com
+          - '+1234567890'
     RemoveAccountAliasesRequest:
       value:
         aliases:
@@ -11659,12 +11588,15 @@ components:
           - togaiId: inv.234.12efwe
             amount: 1000
             type: INVOICE
+            source: MANUAL
           - togaiId: inv.235.12efwe
             amount: 600
             type: INVOICE
+            source: MANUAL
           - togaiId: cred.236.12efwe
             amount: 100
-            type: CREDITS
+            type: CREDIT
+            source: MANUAL
         totalAmount: 1700
         version: 1
         isLatest: true
@@ -11688,12 +11620,15 @@ components:
               - togaiId: inv.234.12efwe
                 amount: 1000
                 type: INVOICE
+                source: MANUAL
               - togaiId: inv.235.12efwe
                 amount: 600
                 type: INVOICE
+                source: MANUAL
               - togaiId: cred.236.12efwe
                 amount: 100
-                type: CREDITS
+                type: CREDIT
+                source: MANUAL
             totalAmount: 1700
             version: 1
             createdBy: user123
@@ -11856,72 +11791,6 @@ components:
       value:
         template: 'YYYY-MM-{number}'
         number: 500
-    ManageInvoiceTemplateMetadataRequest:
-      summary: A sample for ManageInvoiceTemplateMetadataRequest
-      value:
-        templateType: DEFAULT
-        customTemplateName: null
-        customTemplateVersion: null
-        defaultTemplateCustomizations:
-          block1:
-            content: TITLE
-            settingId: null
-            text: null
-            alignment: LEFT
-          block2:
-            content: BILLED_BY
-            settingId: null
-            text: null
-            alignment: RIGHT
-          block3:
-            content: TEXT
-            settingId: null
-            text: This is a custom text to be displayed in invoice
-            alignment: LEFT
-          block4:
-            content: TOTAL_AMOUNT
-            settingId: null
-            text: null
-            alignment: null
-          lineItemView: DETAIL
-          primaryTheme: '#FF0077'
-          primaryFontColor: '#FF6700'
-          forceMaxBlockWidth: true
-    InvoiceTemplateMetadataResponse:
-      summary: A sample for InvoiceTemplateMetadataResponse
-      value:
-        templateType: DEFAULT
-        customTemplateName: null
-        customTemplateVersion: null
-        defaultTemplateCustomizations:
-          block1:
-            content: TITLE
-            settingId: null
-            text: null
-            alignment: LEFT
-          block2:
-            content: BILLED_BY
-            settingId: null
-            text: null
-            alignment: RIGHT
-          block3:
-            content: TEXT
-            settingId: null
-            text: This is a custom text to be displayed in invoice
-            alignment: LEFT
-          block4:
-            content: TOTAL_AMOUNT
-            settingId: null
-            text: null
-            alignment: null
-          block5: null
-          block6: null
-          block7: null
-          lineItemView: DETAIL
-          primaryTheme: '#FF0077'
-          primaryFontColor: '#FF6700'
-          secondaryFontColor: null
-          forceMaxBlockWidth: true
     CreateCreditRequest:
       summary: A sample for CreateCreditRequest
       value:
@@ -11953,30 +11822,7 @@ components:
             type: INVOICE
           - togaiId: cred.236.12efwe
             amount: 200
-            type: CREDITS
-    UpdatePaymentRequest:
-      summary: A sample for CreatePaymentRequest
-      value:
-        sourceVersion: 1
-        description: Payment for services
-        notes: Invoice payment
-        currency: USD
-        accountId: acc123
-        externalPaymentReference:
-          sourceName: XYZ Company
-          sourceType: CARD
-          transactionNumber: TXN123
-          description: Card payment
-        lineItemRecords:
-          - togaiId: inv.234.12efwe
-            amount: 1000
-            type: INVOICE
-          - togaiId: inv.235.12efwe
-            amount: 500
-            type: INVOICE
-          - togaiId: cred.236.12efwe
-            amount: 200
-            type: CREDITS
+            type: CREDIT
     ManageMiscellaneousChargesRequest:
       summary: A sample for ManageMiscellaneousChargesRequest
       value:
@@ -11987,11 +11833,6 @@ components:
             value: '200'
           - name: json logic charge
             value: '{"var": "um.linitem.id"}'
-    ManageInvoiceSequenceRequest:
-      summary: A sample for ManageInvoiceSequenceRequest
-      value:
-        template: 'YYYY-MM-{number}'
-        number: 500
     InvoicePaymentsRequest:
       summary: A sample for InvoicePaymentsRequest
       value:
@@ -12004,6 +11845,35 @@ components:
         runningBalance: 700
         inapplicableCredits: 100
         units: USD
+        lastUpdatedAt: '2020-07-04T12:00:00.000Z'
+    WalletBalanceResponse:
+      summary: A sample for CreditBalanceResponse
+      value:
+        id: wallet.1223.sf23f
+        accountId: ACC001
+        customerId: CUST001
+        availableBalance: PREPAID_CREDIT
+        balance: 500
+        creditUnit: USD
+        externalId: ext_id_123
+        status: ACTIVE
+        holdAmount: 500
+        createdAt: '2023-12-13T12:00:00Z'
+        updatedAt: '2023-12-13T12:00:00Z'
+        metadata:
+          autoNetOff: false
+    WalletEntriesPaginatedResponse:
+      summary: A sample for CreditBalanceResponse
+      value:
+        data:
+          - id: wallet.q3df.1241
+            description: payment
+            walletId: cred.1234.2342
+            transactionType: CREDITED
+            entityId: inv.wrwerw.4234e
+            amount: 500
+            createdAt: '2023-11-07T05:31:56Z'
+            closingBalance: 500
     CreateCustomInvoiceRequest:
       summary: A sample for CreateCustomInvoiceRequest
       value:
@@ -12433,15 +12303,6 @@ components:
           examples:
             CreatePaymentRequest:
               $ref: '#/components/examples/CreatePaymentRequest'
-    UpdatePaymentRequest:
-      description: Payload to create a payment
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/UpdatePaymentRequest'
-          examples:
-            UpdatePaymentRequest:
-              $ref: '#/components/examples/UpdatePaymentRequest'
     ManageMiscellaneousChargesRequest:
       description: Payload to update custom line items
       content:
@@ -12451,24 +12312,6 @@ components:
           examples:
             ManageMiscellaneousChargesRequest:
               $ref: '#/components/examples/ManageMiscellaneousChargesRequest'
-    ManageInvoiceTemplateMetadataRequest:
-      description: Payload to upsert invoice template metadata
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ManageInvoiceTemplateMetadataRequest'
-          examples:
-            ManageInvoiceTemplateMetadataRequest:
-              $ref: '#/components/examples/ManageInvoiceTemplateMetadataRequest'
-    ManageInvoiceSequenceRequest:
-      description: Payload to add/update invoice sequence
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/ManageInvoiceSequenceRequest'
-          examples:
-            ManageInvoiceSequenceRequest:
-              $ref: '#/components/examples/ManageInvoiceSequenceRequest'
     InvoicePaymentsRequest:
       description: Payload to update payments of invoice
       required: true
