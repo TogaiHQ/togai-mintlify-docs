@@ -473,10 +473,10 @@ paths:
       description: This API let’s you to create an alias
       operationId: createAlias
       requestBody:
-        $ref: '#/components/requestBodies/CreateAliasRequest'
+        $ref: '#/components/requestBodies/CreateBulkAliasRequest'
       responses:
         '201':
-          $ref: '#/components/responses/AliasResponse'
+          $ref: '#/components/responses/AliasPaginatedResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
   '/aliases/{alias}':
@@ -2818,28 +2818,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /ui/invoice_sequence:
-    get:
-      tags:
-        - Invoices
-      summary: Get invoice sequence for the organization
-      description: Get invoice sequence for the organization
-      operationId: getInvoiceSequence
-      responses:
-        '200':
-          $ref: '#/components/responses/InvoiceSequenceResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
   /credits:
     get:
       tags:
@@ -4406,6 +4384,19 @@ components:
           pattern: '^[\sa-zA-Z0-9_-]*$'
         attributeName:
           type: string
+    CreateBulkAliasRequest:
+      description: Create bulk alias
+      type: object
+      additionalProperties: false
+      required:
+        - aliases
+      properties:
+        aliases:
+          type: array
+          maxItems: 100
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CreateAliasRequest'
     CreateAliasRequest:
       description: Create an alias
       type: object
@@ -7683,18 +7674,6 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/MiscellaneousCharges'
-    InvoiceSequenceResponse:
-      description: Response to upsert invoice sequence request
-      type: object
-      additionalProperties: false
-      required:
-        - template
-        - number
-      properties:
-        template:
-          type: string
-        number:
-          type: integer
     ListInvoicesResponse:
       description: List invoices response
       type: object
@@ -7931,6 +7910,7 @@ components:
             - INITIATE_REFUND
             - REFUND_COMPLETED
             - MERGED
+            - PARTIALLY_PAID
           example: DUE
         invoiceClass:
           description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
@@ -8789,15 +8769,6 @@ components:
           examples:
             MiscellaneousChargesResponse:
               $ref: '#/components/examples/MiscellaneousChargesResponse'
-    InvoiceSequenceResponse:
-      description: Response for Invoice Sequence request
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InvoiceSequenceResponse'
-          examples:
-            InvoiceSequenceResponse:
-              $ref: '#/components/examples/InvoiceSequenceResponse'
     TokenResponse:
       description: Response with token
       content:
@@ -10427,9 +10398,10 @@ components:
         targetId: pp.2zYnCiM9Bpg.bfeu2
         targetVersion: 2
         migrationMode: IMMEDIATE
-    CreateAliasRequest:
+    CreateBulkAliasRequest:
       value:
-        value: primary_number
+        aliases:
+          - value: alias1
     Customer:
       summary: A sample Customer
       value:
@@ -11786,11 +11758,6 @@ components:
             value: '100'
           - name: charge 2
             value: '200'
-    InvoiceSequenceResponse:
-      summary: A sample for InvoiceSequenceResponse
-      value:
-        template: 'YYYY-MM-{number}'
-        number: 500
     CreateCreditRequest:
       summary: A sample for CreateCreditRequest
       value:
@@ -12188,16 +12155,16 @@ components:
           examples:
             UpdateFeatureRequest:
               $ref: '#/components/examples/UpdateFeatureRequest'
-    CreateAliasRequest:
-      description: Payload to create alias
+    CreateBulkAliasRequest:
+      description: Payload to create bulk aliases
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateAliasRequest'
+            $ref: '#/components/schemas/CreateBulkAliasRequest'
           examples:
             CreateAliasRequest:
-              $ref: '#/components/examples/CreateAliasRequest'
+              $ref: '#/components/examples/CreateBulkAliasRequest'
     GetMetricsRequest:
       content:
         application/json:
