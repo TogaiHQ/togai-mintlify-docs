@@ -352,6 +352,13 @@
         ]
       },
       {
+        "group": "Wallet",
+        "pages": [
+          "api-reference/wallet/wallet-balance-for-account",
+          "api-reference/wallet/wallet-entries-for-account"
+        ]
+      },
+      {
         "group": "InvoiceGroups",
         "pages": [
           "api-reference/invoicegroups/list-invoice-groups",
