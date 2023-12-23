@@ -3958,16 +3958,12 @@ components:
           type: string
           format: date
           description: |
-            Date of effectiveness of the association.
-            - Expected only if the account already has a price plan associated with it.
-            - Editing of a BILLING plan with deferredRevenue can be achieved with 
-              effectiveFrom as start date of current cycle or using `retainStartOffset` option.
+            Date of effectiveness of the association. The date is expected in YYYY-MM-DD format.
         effectiveUntil:
           type: string
           format: date
           description: |
-            Date until which the association must be effective.
-            - Expected only if effectiveFrom is present.
+            Date until which the association must be effective. The date is expected in YYYY-MM-DD format.
         pricePlanDetailsOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
         retainStartOffsets:
