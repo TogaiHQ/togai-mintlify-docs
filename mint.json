@@ -180,23 +180,47 @@
           "api-reference/accounts/get-an-account",
           "api-reference/accounts/delete-an-account",
           "api-reference/accounts/update-an-account",
-          "api-reference/accounts/add-aliases-to-account",
-          "api-reference/accounts/remove-aliases-to-account",
-          "api-reference/accounts/create-an-alias",
-          "api-reference/accounts/get-an-alias",
-          "api-reference/accounts/get-all-aliases-of-an-account",
-          "api-reference/accounts/list-all-aliases",
-          "api-reference/accounts/delete-an-alias",
-          "api-reference/accounts/disassociate-a-plan-fromto-an-account",
-          "api-reference/accounts/get-all-purchases-for-an-account",
-          "api-reference/accounts/initiate-a-purchase",
-          "api-reference/accounts/get-a-specific-purchase-of-an-account",
-          "api-reference/accounts/list-all-proposals-of-an-account",
-          "api-reference/accounts/propose-a-purchase-of-a-plan",
-          "api-reference/accounts/get-proposal-information",
-          "api-reference/accounts/edit-schedules-of-an-account",
-          "api-reference/accounts/list-pricing-schedules-of-an-account",
-          "api-reference/accounts/approve-or-decline-a-purchase-of-a-billing-plan"
+          {
+            "group": "Account Aliases",
+            "pages": [
+              "api-reference/accounts/account-aliases/get-all-aliases-of-an-account",
+              "api-reference/accounts/account-aliases/add-aliases-to-account",
+              "api-reference/accounts/account-aliases/remove-aliases-to-account"
+            ]
+          },
+          {
+            "group": "Plan Associations",
+            "pages": [
+              "api-reference/accounts/plan-association/list-pricing-schedules-of-an-account",
+              "api-reference/accounts/plan-association/edit-schedules-of-an-account",
+              "api-reference/accounts/plan-association/disassociate-a-plan-fromto-an-account"
+            ]
+          },
+          {
+            "group": "Purchases",
+            "pages": [
+              "api-reference/accounts/purchases/get-all-purchases-for-an-account",
+              "api-reference/accounts/purchases/initiate-a-purchase",
+              "api-reference/accounts/purchases/get-a-specific-purchase-of-an-account"
+            ]
+          },
+          {
+            "group": "Proposals",
+            "pages": [
+              "api-reference/accounts/proposals/list-all-proposals-of-an-account",
+              "api-reference/accounts/proposals/propose-a-purchase-of-a-plan",
+              "api-reference/accounts/proposals/get-proposal-information",
+              "api-reference/accounts/proposals/approve-or-decline-a-purchase-of-a-billing-plan"
+            ]
+          }
+        ]
+      },{
+        "group": "Aliases",
+        "pages": [
+          "api-reference/aliases/list-all-aliases",
+          "api-reference/aliases/create-an-alias",
+          "api-reference/aliases/get-an-alias",
+          "api-reference/aliases/delete-an-alias"
         ]
       },
       {
