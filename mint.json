@@ -137,6 +137,7 @@
       "group": "Integrations",
       "pages": [
         "docs/integrations/integrations-concepts",
+        "docs/integrations/overview",
         "docs/integrations/stripe",
         "docs/integrations/chargebee",
         "docs/integrations/zohobooks",
@@ -370,8 +371,6 @@
         "pages": [
           "api-reference/payments/list-all-payments",
           "api-reference/payments/get-a-payment",
-          "api-reference/payments/list-all-payment-versions-for-a-payment",
-          "api-reference/payments/update-payments",
           "api-reference/payments/create-payments"
         ]
       },
