@@ -2144,7 +2144,7 @@ paths:
       description: |
         Togai Metrics API allows you to fetch different metrics from Events, Usage Meters and PricePlans with multiple queryable options.
         A single request can query up to five metrics. 
-        Single response can contain a maximum of 100 data points.
+        Single response can contain a maximum of 300 data points.
       operationId: getMetrics
       requestBody:
         $ref: '#/components/requestBodies/GetMetricsRequest'
@@ -2277,6 +2277,53 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
           description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '429':
+          description: Request throttled. Please check the response message on the failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  '/license_updates/{license_id}':
+    patch:
+      tags:
+        - Licenses
+      summary: Update a license entry details
+      description: This API let’s you to update metadata of a license entry
+      operationId: updateLicenseEntryDetails
+      parameters:
+        - $ref: '#/components/parameters/filter_license_id'
+      requestBody:
+        $ref: '#/components/requestBodies/LicenseEntryDetailsUpdateRequest'
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LicenseUpdateResponse'
+              examples:
+                LicenseUpdateResponse:
+                  $ref: '#/components/examples/LicenseUpdateResponse'
+        '400':
+          description: Bad request. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credential is not valid. Please check the response message for failure details.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Credential does not have access to update a license entry.
           content:
             application/json:
               schema:
@@ -3958,12 +4005,14 @@ components:
           type: string
           format: date
           description: |
-            Date of effectiveness of the association. The date is expected in YYYY-MM-DD format.
+            Date of effectiveness of the association. The date is expected in YYYY-MM-DD format
+            - Editing of a BILLING plan with deferredRevenue can be achieved with 
+              effectiveFrom as start date of current cycle or using `retainStartOffset` option.
         effectiveUntil:
           type: string
           format: date
           description: |
-            Date until which the association must be effective. The date is expected in YYYY-MM-DD format.
+            Date until which the association must be effective. The date is expected in YYYY-MM-DD format
         pricePlanDetailsOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
         retainStartOffsets:
@@ -6794,6 +6843,39 @@ components:
           type: string
           description: The idempotency key for uniqueness of the license update request
           example: idempotencyKey#1
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
+    LicenseEntryDetailsUpdateRequest:
+      description: License Entry Details update request
+      type: object
+      additionalProperties: false
+      required:
+        - accountId
+        - effectiveFrom
+        - metadata
+      properties:
+        accountId:
+          type: string
+          description: The account id for which the license is being updated
+          maxLength: 50
+          example: acc.fdjsl.313
+        effectiveFrom:
+          type: string
+          description: The effective from date of the license entry
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
     GetLicenseUpdatesResponse:
       description: Get license updates response
       type: object
@@ -6835,6 +6917,13 @@ components:
           type: string
           format: date-time
           example: '2021-03-04T14:25:10Z'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+          example:
+            key1: value1
+            key2: value2
     LicenseUpdateResponse:
       allOf:
         - $ref: '#/components/schemas/LicenseUpdate'
@@ -7287,8 +7376,9 @@ components:
           $ref: '#/components/schemas/MetricName'
         aggregationPeriod:
           type: string
-          description: 'Set the aggregation period. Allowed periods are DAY, WEEK, MONTH'
+          description: 'Set the aggregation period. Allowed periods are HOUR, DAY, WEEK, MONTH'
           enum:
+            - HOUR
             - DAY
             - WEEK
             - MONTH
@@ -7419,12 +7509,12 @@ components:
           items:
             type: string
             format: date-time
-          maxItems: 100
+          maxItems: 300
         metricValues:
           type: array
           items:
             type: number
-          maxItems: 100
+          maxItems: 300
     ValidateEntitlementValueRequest:
       type: object
       additionalProperties: false
@@ -7520,7 +7610,7 @@ components:
           enum:
             - GATEWAY
             - CASH
-            - CHECK
+            - CHEQUE
             - BANK_TRANSFER
             - CARD
         transactionNumber:
@@ -7796,7 +7886,6 @@ components:
           type: string
           enum:
             - ACTIVE
-            - INACTIVE
         holdAmount:
           type: number
           example: 500
@@ -7934,6 +8023,11 @@ components:
           type: string
           format: date-time
           example: '2020-07-04T12:00:00.000Z'
+        endDateInclusive:
+          description: Inclusive end date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-03T11:59:59.999Z'
         invoiceDate:
           description: Invoice date of the invoice
           type: string
@@ -12239,6 +12333,18 @@ components:
                 updateType: RELATIVE
                 quantity: -5
                 idempotencyKey: idempotencyKey#2
+    LicenseEntryDetailsUpdateRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/LicenseEntryDetailsUpdateRequest'
+          examples:
+            LicenseEntryDetailsUpdateRequest:
+              value:
+                accountId: account#1
+                effectiveFrom: '2020-01-01T00:00:00Z'
+                metadata:
+                  PO Number: PO.432t5kbj.43tdsv
     ValidateEntitlementValueRequest:
       content:
         application/json:
