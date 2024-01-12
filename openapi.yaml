@@ -3118,7 +3118,7 @@ paths:
       summary: Generate short lived bearer token
       description: |
         Generates and returns a bearer token. Behavior of this API differs on the basis of the auth mechanism used to make the request.
-          - For API key auth, this API generates a JWT token whcih is valid for 24 hours and returns it.
+          - For API key auth, this API generates a JWT token which is valid for 24 hours and returns it.
           - For JWT bearer auth, returns the same JWT token in response
         For information on how to generate API token, refer [Generating New API Keys](https://docs.togai.com/api-reference/authentication#generating-new-api-keys) section of docs.
       operationId: authenticate

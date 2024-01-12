@@ -1,0 +1,25 @@
+export const listAccountsQueryFields = {
+    query_fields: [
+        {name:"account_id",type: "string", description: "Unique identifier of the account"},
+        {name:"customer_id",type: "string", description: "Unique identifier of the customer corresponding to the account"},
+        {name:"status",type: "enum", description: "Status of the account (`ACTIVE`, `ARCHIVED`)"},
+        {name:"invoice_currency",type: "string", description: "Currency in which the account is invoiced (`USD`, `EUR`, `INR`…)"}
+    ],
+    allowed_combinations: [
+        ["account_id"],
+        ["customer_id"],
+        ["status"],
+        ["invoice_currency"],
+        ["customer_id", "status"]
+    ],
+    search_fields: [
+        {name:"account_id",type: "string"},
+        {name:"name",type: "string"},
+        {name:"primary_email",type: "string"}
+    ],
+    sort_fields: [
+        {name:"account_id",type: "string", description: ""},
+        {name:"updated_at",type: "string", description: ""}
+    ],
+    default_sort: {"updated_at": "DESC", "account_id": "ASC"}
+}

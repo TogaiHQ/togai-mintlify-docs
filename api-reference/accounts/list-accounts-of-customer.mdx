@@ -2,28 +2,7 @@
 openapi: get /accounts
 ---
 
-<AccordionGroup>
-<Accordion title="Query Parameters">
-<ParamField query="customer_id" type="string">
-  Unique identifier of the customer corresponding to the account
-</ParamField>
-<ParamField query="status" type="string">
-  Status of the account (`ACTIVE`, `ARCHIVED`)
-</ParamField>
-<ParamField query="invoice_currency" type="string">
-  Currency in which the account is invoiced (`USD`, `EUR`, `INR`...)
-</ParamField>
-</Accordion>
-</AccordionGroup>
+import {listAccountsQueryFields} from "/snippets/list-entities-query-fields.mdx";
+import {ListAPIInfo} from "/snippets/list-api-query-param-info.mdx";
 
-<AccordionGroup>
-<Accordion title="Allowed Combinations">
-`customer_id`
-
-`status`
-
-`invoice_currency`
-
-`customer_id`, `status`
-</Accordion>
-</AccordionGroup>
+<ListAPIInfo info={listAccountsQueryFields} show_filter_combinations/>

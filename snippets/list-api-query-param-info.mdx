@@ -1,0 +1,84 @@
+export const ListAPIInfo = (
+  { info: {
+    query_fields,
+    allowed_combinations,
+    search_fields,
+    sort_fields,
+    default_sort
+    },
+    show_filter_combinations
+  }
+) => {
+  return <AccordionGroup>
+    {query_fields != null && query_fields.length > 0 ? (
+    <Accordion title="Query Parameters">
+      {
+        query_fields.map(field => 
+          <ParamField  key={field} query={field.name} type={field.type}>
+            {field.description}
+          </ParamField>
+        )
+      }
+    </Accordion>) : ''
+    }
+
+    {allowed_combinations != null && allowed_combinations.length > 0 ? (
+    <Accordion title="Filterable Fields">
+      {
+        [...new Set(allowed_combinations.flat())].map(field => 
+          <ParamField key={field} query={field} type="string"/>
+        )
+      }
+      {show_filter_combinations ? (
+        <>
+        <h3 style={{marginTop: "0em"}}>Allowed filter combinations</h3>
+        <ul>
+          {allowed_combinations.map(comb => 
+            <li key="a">
+              {
+                comb.map((e,i)=><><code>{e}</code>{i != comb.length-1 ? ", ":""}</>)
+              }
+            </li>
+          )}
+        </ul>
+        </>) : ''
+      }
+    </Accordion>) : ''
+    }
+
+    {search_fields != null && search_fields.length > 0 ? (
+    <Accordion title="Searchable Fields">
+      Fields that can be searched on using <code>_search</code> query param
+      {
+        search_fields.map(field => 
+          <ParamField  key={field} query={field.name} type={field.type}>
+            {field.description}
+          </ParamField>
+        )
+      }
+    </Accordion>) : ''
+    }
+
+    {sort_fields != null && sort_fields.length > 0 ? (
+    <Accordion title="Sortable Fields">
+      Fields with which the list response can be sorted using <code>_sort</code> query param
+      {
+        sort_fields.map(field => 
+          <ParamField  key={field} query={field.name} type={field.type}>
+            {field.description}
+          </ParamField>
+        )
+      }
+      {
+        default_sort ? 
+          <Note>
+            Default sort order:<code>{Object.entries(default_sort).map(e => e[0] + " " + e[1]).join(separator = ', ')}</code>
+          </Note> : ''
+        
+      }
+    </Accordion>) : ''
+    }
+
+      
+  </AccordionGroup>
+}
