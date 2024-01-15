@@ -39,17 +39,17 @@
   "backgroundImage": "/images/background-documentation-min.png",
   "topbarLinks": [
     {
-      "name": "Demo",
+      "name": "Demo app",
       "url": "https://demo.togai.com"
     },
     {
       "name": "Login",
-      "url": "https://app.togai.com"
+      "url": "https://app.togai.com/login"
     }
   ],
   "topbarCtaButton": {
-    "name": "SignUp",
-    "url": "https://app.togai.com/onboarding"
+    "name": "Talk to us",
+    "url": "https://www.togai.com/contact-us/"
   },
   "tabs": [
     {
@@ -59,6 +59,10 @@
     {
       "name": "Change log",
       "url": "changelog"
+    },
+    {
+     "name": "Templates",
+     "url": "templates" 
     }
   ],
   "anchors": [
@@ -66,73 +70,63 @@
       "name": "Postman collection",
       "icon": "folder-open",
       "url": "https://www.postman.com/togai-workspace/workspace/togai-public"
-    },
-    {
-      "name": "Vault",
-      "icon": "vault",
-      "url": "https://pricingvault.togai.com"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://www.togai.com/blog"
     }
+    
   ],
   "versions": ["v1"],
   "navigation": [
     {
-      "group": "Introduction",
-      "pages": ["docs/introduction-to-togai", "docs/team-behind-togai"
+      "group": "Overview",
+      "pages": ["docs/templates","docs/introduction", "docs/how-togai-works"
       ]
     },
     {
-      "group": "Event Processing",
+      "group": "Usage metering",
       "pages": [
-        "docs/event-ingestion",
+        
         {
           "group": "Event Schema",
-          "pages": ["docs/event-schemas", "docs/enriched-values"]
-        }
-      ]
-    },
-    {
-      "group": "Billable Items",
-      "pages": [
-        "docs/billable-items-overview",
+          "pages": ["docs/event-schemas", "docs/event-enrichments"]
+        },
+        "docs/event-ingestion",
         "docs/usage-meter"
       ]
     },
+   
     {
-      "group": "Pricing",
+      "group": "Pricing and rating",
       "pages": [
-        "docs/add-ons",
         {
-          "group": "Price Plans",
+          "group": "Billable items",
           "pages": [
-            "docs/price-plans",
-            "docs/price-plan-overrides"
+            "docs/billable-items-overview",
+            "docs/add-ons",
+            "docs/entitlements"
           ]
         },
-        {
-          "group": "Customers",
-          "pages": [
-            "docs/customers",
-            "docs/credits",
-            "docs/price-plan-schedule",
-            "docs/proposals"
-          ]
-        },
+        "docs/price-plans"        
+      ]
+    },
+
+    {
+      "group": "Manage customers",
+      "pages": [
+        "docs/customers",
+        "docs/price-plan-overrides",
+        "docs/price-plan-schedule",
+        "docs/credits",
+        "docs/wallet",
+        "docs/proposals"
+      ]
+    }, 
+    {
+      "group": "Billing and invoicing",
+      "pages": [
         "docs/invoices",
-        "docs/entitlements"
+        "docs/invoice-groups",
+        "docs/invoice-templates"
       ]
-    },
-    {
-      "group": "Configuration",
-      "pages": [
-        "docs/admin-center",
-        "docs/quotas-and-limits"
-      ]
-    },
+    }, 
     {
       "group": "Integrations",
       "pages": [
@@ -144,6 +138,14 @@
         "docs/integrations/zuora",
         "docs/integrations/razorpay",
         "docs/integrations/first-promoter"
+      ]
+    },
+    {
+      "group": "Configuration",
+      "pages": [
+        "docs/admin-center",
+        "docs/settings",
+        "docs/quotas-and-limits"
       ]
     },
     {
@@ -395,6 +397,19 @@
     {
       "group": "Change Log",
       "pages": ["changelog/change-log"]
+    },
+    {
+      "group": "Templates",
+      "pages": [
+        "templates/eleven-labs",
+        "templates/opus-clip",
+        "templates/hypertrack",
+        "templates/loxo",
+        "templates/typeform",
+        "templates/heygen",
+        "templates/anthropic",
+        "templates/personal-ai"
+      ]
     }
   ],
   "footerSocials": {
