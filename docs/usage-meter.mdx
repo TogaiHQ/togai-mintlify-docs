@@ -122,3 +122,15 @@ This requires us to use the count function and so we set the aggregation type to
 
 ![](/docs/images/706a845-image.png)
 
+
+## Usage meter lifecycle
+
+* **Draft** - Usage meters can be created in a draft mode. Draft mode is meant to be used when you want to create a test meter and edit it as required. You can add/edit/delete the configurations in a draft state. Usage meters in draft mode cannot be associated with a price plan. You can also archive a usage meter that is in draft state. When you save a usage meter in the draft state, its status will be shown as 'Inactive'
+
+* **Active** - You can publish Usage meters directly to create it in an 'Active' state. You can also toggle an 'Inactive' schema to an 'Active' state and vice versa. Currently, you cannot edit an Active usage meter. 
+
+<Note>Active meters can be deactivated only if they do not have any price plans associated with them.</Note>
+
+* **Archive** - You can archive an Inactive Usage meter. Archived meters are not displayed in the dashboard but would still be stored within Togai.
+
+<Info>You cannot delete Usage meters from Togai currently. If you do have the need to delete a meter, please reach out to us and we can help you with it.</Info>
