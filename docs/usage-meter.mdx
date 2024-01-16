@@ -2,32 +2,87 @@
 title: "Usage Meter"
 ---
 
+## Design principles
+
+1. **Real-time** - Our metering is built to handle workflows where the metrics need to be captured real-time. For a usage based billing model, this is important from both a customer experience standpoint as well as the decision making needs for your organization.
+
+2. **User experience** - What we mean by user experience here is the need to marry simplicity, with optionality and configurability. This translates to providing multiple types of data connections without code. It should be simple enough to configure for basic metering use cases as well as support the flexibility to model complex metering needs with low/no code.
+
+3. **Independent** - A customer should be able to use Togai's metering as a standalone and autonomous product without having to plug in Togai's pricing/billing systems.
+
+
 ## What is a usage meter?
 
-Usage meters are transformation and aggregation functions on top of raw data that provides you an output in the form of time series. You can also think of the capabilities of a usage meter as an ETL function (but limited to what is required for metering and billing).
+Usage meters are transformation and aggregation functions on top of raw data that provides you an output in the form of time series. You can also think of the capabilities of a usage meter as an ETL function (but limited to what is required for metering and billing). In short, a usage meter converts a stream of data points into a single output metric.
 
-Usage meters are synonymous to a billable metric i.e., they define how the incoming events are aggregated in order to measure consumption. 
+<Frame caption="What is usage metering?">
+  <img src="/docs/images/usage-metering.png" />
+</Frame>
 
-If your pricing strategy has features that have variable pricing based on the consumption, you have to define a corresponding usage meter for it.
+Usage metering consists of 4 parts:
 
-Here's how you'll create a usage meter via the interface:
+* **Data source** - This is how you connect the usage meter to your raw data source or to a database/data warehouse which houses your metrics.
+* **Filter data** - Once you choose a data source, you can define filters to query your data and then apply the transformation & aggregation.
+* **Transformation** - You can define the data point that needs to be aggregated by choosing the attribute/dimension variable or by transforming them into a new variable by applying a custom formula using jsonLogic syntax.
+* **Aggregation** - Choose the aggregation function on your variable to start generating time series usage metrics in real-time for your customers.
 
-1. **Define Usage Meter:**  
-   1. Access the `Usage Meters` option on the side menu  
-   2. Hit the `+ New Usage Meter` button on the top right corner  
-   3. Enter a meter name and description for the same (Description is optional)  
-   4. Associate the usage meter with the respective event schema
-2. **Set Filter Condition:** You can choose to aggregate only the events that match certain criteria. The filtering logic needs to be set up in this section.  
-   1. Choose an `Attribute/Dimension`  
-   2. Select the logical operator you wish to apply  
-   3. Lastly, enter the value it should match/check against
-3. **Set Aggregation Type:** The aggregation types define how the ingested events are compiled and calculated at the end of a billing cycle. They can be of two types.
+<Check>In traditional metering systems, you would find 'Deduplication' as an addional step. In Togai, the architecture that supports inbuilt idempotency removes the need for a separate step that is used to dedupe your raw event data.</Check>
+
+
+## Data source
+<Card title="Connecting your data source" icon="database">
+  Togai supports 2 models to connect your data - 
+  <br />
+  1. You can use Togai to store your raw data, in this case you can use the <u>[event schema](/docs/event-schemas)</u> and ingestion pipeline to capture your raw data for metering.
+  <br />
+  2. You can connect Togai to your existing data source and run queries at pre-defined intervals to retrieve usage metrics and store them in Togai.
+</Card>
+
+<Tip>When you use Togai as your raw data store, that provides you the ability to meter usage in real-time. When you use an external data source, that would result in metering to happen at the frequency interval defined by you - Hourly, Daily, Weekly, Monthly, Never (At end of cycle)</Tip>
+
+
+## Togai as event store
+
+### Filtering
+You can apply filters on Togai's event store using attribute and dimension values. You can combine multiple filter options with AND/OR and filter your event data before applying the corresponding transformations and aggregations.
+
+### Transforming
+In Togai, the aggregation happens on a variable that you are looking to meter. Examples of a variable are GBmin for a cloud storage provider, payment value for a transaction, number of entities and dimensions for a vector database. The variable to be aggregated can be directly taken from the event schema that you have defined or from a transformation you can define. The transformation logic can be applied using [jsonLogic](https://jsonlogic.com/) syntax on top of the different attributes, dimensions or enrichments from your event schema.
+
+<Tip>**Example** - If you are sending the raw data in GB-min unit, but your customer pricing is in GB-month, you can create a transformation that divides GB-min usage metrics by 43200 (number of minutes in a month) and compute GB-hour data as your time series usage data that will be rated.</Tip>
+
+### Aggregation
+The usage meter is essentially an aggregated output that will be rated based on your pricing configurations. You can define the aggregation function to be used while creating a usage meter. Togai supports multiple aggregation types - 
 
 | Aggregation Type | Description                                                                                                                                                    | Example Use case                                                                             |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| COUNT            | Counts the number of times an incoming events occurs, matching it’s conditions. Togai will compute the number of unique events within the given time interval. | 1\. Number of transactions (payment gateways),2\. Number of chat requests (given to ChatGPT) |
-| SUM              | Sums a defined property of incoming events. Togai will compute the total of all values reported within a selected time.                                        | 1\. Total amount of money processed (payment gateways),2\. Total GB stored (cloud infra)     |
+| COUNT            | Counts the number of times an incoming events occurs, matching it’s conditions. Togai will compute the number of events within the given time interval. | Number of transactions (payment gateways), Number of chat requests for a chatbot |
+| SUM              | Adds a defined property of incoming events. Togai will compute the total of all values reported within a selected time.                                        | Total amount of money processed by payment gateways, Total GB-min for cloud infra provider     |
+|MAX | Provides the maximum value of the chosen series of data points | Peak load experienced in a day |
+|MIN | Provides the minimum value of the chosen series of data points | Lowest number of concurrent users|
+|AVERAGE | Computes the average of the data points during a particular time window | Daily average of transaction volume |
+|DISTINCT COUNT | Computes the number of unique values amongst a stream of data grouped by a chosen dimension | Monthly active users |
 
+<Tip>All aggregations except DISTINCT COUNT apply on a stream of numerical data points. DISTINCT COUNT is applied on a set of String data points to computed the total number of unique values under a key name (dimension)</Tip>
+
+
+## External data source
+
+Togai supports data source connections via - 
+1. SQL - JDBC url
+2. HTTP - Endpoint, headers with authentication details
+
+### SQL query builder
+When you connect an external data source that supports SQL, you can use Togai to define queries and pull data from your data source periodically. The query output has to be an individual number for every customer account id. One customer account id cannot have multiple data points and if that happens, the query will fail and will be unprocessed for that interval.
+
+There are 2 other inputs that are required - account ID and the frequency of querying. You need to define which column in your data source contains your account ID. The supported frequencies for the query builder are Hourly, Daily, Weekly, Monthly, Never (Never implies you are not looking to use Togai for metering but only for billing. The data will be retrieved only when the invoice is generated.)
+
+<Warning>Once the data is pulled for a particular interval, it will not be refreshed again. So, please ensure that your data source contains accurate information when Togai queries it.</Warning>
+
+<Note>If you are looking for a real-time metering solution, we suggest you go with using Togai as your event store and send us real-time data. Togai is built to handle this for high throughput and you can replace your data source with Togai, which will be cost effective.</Note>
+
+
+## Metering example for a payment platform 
   
 Here's an example of how to go about creating usage meters that shows when to use which aggregation type. Let's take the example of **Stripe Payments**. This is what their pricing looks like: 
 
@@ -41,7 +96,7 @@ To model this 2-part pricing of Stripe, you'll need to create **two usage meters
 2. **Payment Mode**: This is incase Stripe wants to charge differently or just segment users based on the Payment mode (Debit card, ACH etc).
 ![](/docs/images/stripe-create-event-schema.png)   
 
-#### Usage meter 1:
+**Usage meter 1**
 
 This is to model the first part of the pricing: `**2.9% of transaction amount**`.
 
@@ -57,21 +112,13 @@ If you want to create a usage meter to aggregate only the transactions done usin
 
 ![](/docs/images/5f60741-image.png) 
 
-#### Usage meter 2:
+**Usage meter 2**
 
 This is to model the second part of the pricing: `**30¢ per transaction**`.
 
 In this case, for every unique transaction done by a user we need to increase the counter by 1\. So that we can then multiply the final number of the counter with 30 (cents). 
 
-Clearly, this requires us to use the count function and so we set the aggregation type to `Count`.
+This requires us to use the count function and so we set the aggregation type to `Count`.
 
 ![](/docs/images/706a845-image.png)
 
-<Card title="Create usage meter API" icon="lightbulb" iconType="duotone" color="#2853C2" href="/api-reference/usage-meters/create-an-usage-meter">
-  [You can also create usage meters using our API](/api-reference/usage-meters/create-an-usage-meter)
-</Card>
-
-Notes: 
-
-1. Metering is done in **real-time** to facilitate entitlements.
-2. **Idempotency** of data is maintained (i.e. a record is processed atomically/only once.)

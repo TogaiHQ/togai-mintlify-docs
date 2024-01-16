@@ -61,7 +61,11 @@
       "url": "changelog"
     },
     {
-     "name": "Templates",
+     "name": "Use cases",
+     "url": "use-cases" 
+    },
+    {
+      "name": "Templates",
      "url": "templates" 
     }
   ],
@@ -85,7 +89,7 @@
       "pages": [
         
         {
-          "group": "Event Schema",
+          "group": "Defining an event",
           "pages": ["docs/event-schemas", "docs/event-enrichments"]
         },
         "docs/event-ingestion",
@@ -96,15 +100,20 @@
     {
       "group": "Pricing and rating",
       "pages": [
+        "docs/billable-items",
         {
-          "group": "Billable items",
+          "group": "Price Plan",
           "pages": [
-            "docs/billable-items-overview",
-            "docs/add-ons",
-            "docs/entitlements"
+            "docs/price-plan-overview", 
+            "docs/pricing-cycle", 
+            "docs/rate-cards", 
+            "docs/pricing-rules",
+            "docs/price-plan-lifecycle-version",
+            "docs/pp-old-docs"
+
           ]
-        },
-        "docs/price-plans"        
+        }
+        
       ]
     },
 
@@ -409,6 +418,12 @@
         "templates/heygen",
         "templates/anthropic",
         "templates/personal-ai"
+      ]
+    },
+    {
+      "group": "Use cases",
+      "pages": [
+        "use-cases/pay-as-you-go"
       ]
     }
   ],

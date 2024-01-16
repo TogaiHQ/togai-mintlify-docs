@@ -40,3 +40,16 @@ In Togai, this can be modeled as a single event schema since the same heartbeat 
 <Frame caption="Example of an event schema for a cloud storage provider">
   <img src="/docs/images/event-schema-example.png" />
 </Frame>
+
+
+### Event schema lifecycle
+
+* **Draft** - An event schema can be created in a draft mode. Draft mode is meant to be used when you want to create a test schema and edit it as required. You can add/edit/delete attributes and dimensions for schema in a draft state. Schemas in draft mode cannot be associated with a usage meter. You can also archive an event schema that is in draft state. When you save an event schema in the draft state, its status will be shown as 'Inactive'
+
+* **Active** - You can publish an event schema directly to create it in an 'Active' state. You can also toggle an 'Inactive' schema to an 'Active' state and vice versa. Currently, you cannot delete attributes, dimensions or enrichments for an Active schema. However, you can add new attributes, dimensions or enrichments to it.
+
+<Note>Active schemas can be deactivated only if they do not have any usage meters associated with them.</Note>
+
+* **Archive** - You can archive an Inactive schema. Archived schemas are not displayed in the dashboard but would still be stored within Togai.
+
+<Info>You cannot delete an event schema from Togai currently. If you do have the need to delete a schema, please reach out to us and we can help you with it.</Info>

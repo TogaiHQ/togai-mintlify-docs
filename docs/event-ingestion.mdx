@@ -2,7 +2,13 @@
 title: "Event Ingestion"
 ---
 
-In the previous section, we went through [how to define the data structure](/docs/event-schemas) to send usage data to Togai. In this section, we will take you through how to start sending the raw usage data, monitor them and debug if required.
+In the previous section, we went through [how to define the data structure](/docs/event-schemas) to send usage data to Togai. In this section, we will take you through how to start sending the raw usage data, monitor them and debug if required. Togai's ingestion pipeline has been designed keeping in mind these principles - 
+
+* **Scalability** - Togai would be the source of truth for your raw usage data that can be metered and rated for any pricing configuration. Our ingestion pipe is built to handle high throughput (continuous stream of 10000 events per second is supported - this translates to billion events per day)
+
+* **Reliability** - Togai has multiple redundancies and fall back mechanisms to ensure there is zero data loss for any event. Since, your events have a direct impact to dollars, this is a core tenet for us.
+
+* **Accuracy** - Our 2 ingestion pipelines (async and sync) has inbuilt idempotency which means an event will be counted once, and exactly once.
 
 ## Basics 
 
