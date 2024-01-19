@@ -21,39 +21,6 @@ Pricing rules in Togai are configurable using supported [javascript operators](/
 * **Add/update** - You can either add a new line item for the target computation or update an existing line item of the invoice.
 * **Order** - Here, you define the priority of computing the pricing rules since inter-dependent pricing rules will cause conflict, if parallelized.
 
-## Supported javascript operators
-
-| Operator types | Values                           |
-| -------------- | ------------------------------------- |
-| **Supported Literals**     | |
-| Boolean     | true, false                     |
-| String      | "string1", "string2",                           |
-| Template   | `string1, ${var1}` |
-|Numeric | 1, 2.04, -10292.64, 0b01011010, 0xFF00FF, etc.    |
-|Null | null   |
-|Object expressions |  key1: [1, 2, 2], key2: "value2", key3: 'value3'     |
-|Array | [1, 2, 3, 4]    |
-|Variables | var1,var2,var3 etc.    |
-| | |
-|**Mathematical operations** |  |
-|Comparison | var1 > var2, var1 < var2, var1 < = var2, var1 === var2, var1 !== var2 |
-|Arithmetic | var1 + var2, var1 * var2, var1 - var2, var1 / var2, var1 % var2 |
-|Unary | !cond, !!cond, -var, +var |
-|Conditional | var1 && var2, var1 || var2, condition ? var1 : var2 |
-|If Statements | if (conditionA) { var1 } else if (conditionB) { var2 } else { var3 } |
-|Maximum  | max(var1, var2, var3) |
-|Minimum | min(var1, var2, var3) |
-| | |
-|**String Operations** | |
-|Concatenation | cat("a", "b","c") → "abc" |
-|Substring | substr("abcd", 1, 2) → "bc" |
-| | |
-|**Grouping** | |
-|Parentheses | (1 + 2) * 3 → 9 |
-| | |
-|**Array Operations** | |
-|Spread | [1, 2, ...var1] |
-
 
 ## Example 1: Payments company volume based discount
 
@@ -74,13 +41,7 @@ In this case, we model the 3 separate payment modes as 3 individual usage meters
 
 **Add/update** - Add as a discount to the invoice
 
-```
-Rule : (revenue.usageRateCard1 + revenue.usageRateCard2 +
-        revenue.usageRateCard3 > 1000000)
-Computation : revenue.totalRevenue * 0.1
-Action : Add as New Line Item
-Description : Discount based on usage
-```
+
 
 ## Example 2: Communications company doing bundling
 
@@ -96,10 +57,3 @@ In this case, we have 2 individual rate cards to model the license fees with num
 
 **Add/update** - Add as a discount to the invoice
 
-```
-Rule : (usage.teleCallingLicenseRateCard > 0)
-Computation : min(usage.teleCallingLicenseRateCard * 1000 * 0.1, 
-                  revenue.teleCallingUsageRateCard)
-Action : Add as New Line Item
-Description : Discount based on purchased licenses
-```
