@@ -23,3 +23,213 @@ export const listAccountsQueryFields = {
     ],
     default_sort: {"updated_at": "DESC", "account_id": "ASC"}
 }
+
+
+export const listCustomersQueryFields = {
+    query_fields: [
+        {name:"id",type: "string", description: "Unique identifier of the customer"},
+        {name:"status",type: "enum", description: "Status of the account (`ACTIVE`, `ARCHIVED`)"}
+    ],
+    allowed_combinations: [
+        ["id"],
+        ["status"]
+    ],
+    search_fields: [
+        {name:"id",type: "string"},
+        {name:"name",type: "string"},
+        {name:"primary_email",type: "string"}
+    ],
+    sort_fields: [
+        {name:"id",type: "string", description: ""},
+        {name:"updated_at",type: "string", description: ""}
+    ],
+    default_sort: {"updated_at": "DESC", "id": "ASC"}
+}
+
+export const listPricePlanQueryFields = {
+    query_fields: [
+        {name:"type",type: "enum", description: "Type of the price_plan (`BILLING`, `ENTITLEMENT`, `PURCHASE`)"},
+        {name:"status",type: "enum", description: "Status of the account (`ACTIVE`, `ARCHIVED`)"}
+    ],
+    allowed_combinations: [
+        ["type"],
+        ["status"],
+        ["type", "status"]
+    ],
+    search_fields: [
+        {name:"id",type: "string"},
+        {name:"name",type: "string"},
+        {name:"description",type: "string"}
+    ],
+    sort_fields: [
+        {name:"id",type: "string", description: ""},
+        {name:"updated_at",type: "string", description: ""}
+    ],
+    default_sort: {"updated_at": "DESC", "id": "ASC"}
+}
+
+export const listUsageMeterQueryFields = {
+    query_fields: [
+        { name: "aggregation", type: "string", description: "Aggregation type for usage meters" },
+        { name: "status", type: "enum", description: "Status of the usage meter (`ACTIVE`, `ARCHIVED`)" },
+        { name: "id", type: "string", description: "Unique identifier of the usage meter" }
+    ],
+    allowed_combinations: [
+        ["aggregation", "status"],
+        ["status"],
+        ["id"]
+    ],
+    search_fields: [
+        {name:"id",type: "string"},
+        {name:"name",type: "string"},
+        {name:"billable_name",type: "string"}
+    ],
+    sort_fields: [
+        { name: "updated_at", type: "string", description: "" }
+    ],
+    default_sort: { "updated_at": "DESC"}
+}
+
+export const listAddOnQueryFields = {
+    query_fields: [
+        { name: "status", type: "enum", description: "Status of the add-on (`ACTIVE`, `ARCHIVED`)" },
+        { name: "type", type: "enum", description: "Type of the add-on" }
+    ],
+    allowed_combinations: [
+        ["status"],
+        ["type"],
+        ["status", "type"]
+    ],
+    search_fields: [
+        {name:"id",type: "string"},
+        {name:"name",type: "string"},
+        {name:"billable_name",type: "string"}
+    ],
+    sort_fields: [
+        { name: "created_at", type: "string", description: "" },
+        { name: "name", type: "string", description: "" },
+        { name: "id", type: "string", description: "" }
+    ],
+    default_sort: { "name": "ASC", "id": "ASC" }
+}
+
+export const listEventSchemaQueryFields = {
+    query_fields: [
+        { name: "status", type: "enum", description: "Status of the event schema (`ACTIVE`, `ARCHIVED`)" }
+    ],
+    allowed_combinations: [
+        ["status"]
+    ],
+    search_fields: [
+        {name:"name",type: "string"},
+        {name:"description",type: "string"}
+    ],
+    sort_fields: [
+        { name: "updated_at", type: "string", description: "" },
+        { name: "name", type: "string", description: "" }
+    ],
+    default_sort: { "updated_at": "DESC", "name": "ASC" }
+}
+
+export const listLicenseEntriesQueryFields = {
+    query_fields: [
+        { name: "license_id", type: "string", description: "Unique identifier of the license" },
+        { name: "account_id", type: "string", description: "Unique identifier of the account" }
+    ],
+    allowed_combinations: [
+        ["license_id"],
+        ["account_id"],
+        ["license_id", "account_id"]
+    ],
+    sort_fields: [
+        { name: "created_at", type: "string", description: "" },
+        { name: "effective_from", type: "string", description: "" }
+    ],
+    default_sort: { "created_at": "DESC" }
+}
+
+export const listInvoiceQueryFields = {
+    query_fields: [
+        { name: "status", type: "enum", description: "Status of the invoice (`DRAFT`, `DUE`, `PAID`, `VOID`, `UN_COLLECTIBLE`, `INITIATE_REFUND`, `REFUND_COMPLETED`, `MERGED`)" },
+        { name: "class", type: "enum", description: "Class to which the invoice is categorized (`INVOICE`, `ORDER`, `BILLABLE`)" },
+        { name: "owner_id", type: "string", description: "Unique identifier of the owner associated with the invoice" },
+        { name: "invoice_date", type: "string", description: "Date of the invoice" },
+        { name: "customer_id", type: "string", description: "Unique identifier of the customer associated with the invoice" },
+        { name: "price_plan_id", type: "string", description: "Unique identifier of the price plan associated with the invoice" },
+        { name: "start_date", type: "string", description: "Start date of the invoice" },
+        { name: "end_date", type: "string", description: "End date of the invoice" }
+    ],
+    allowed_combinations: [
+        ["status"],
+        ["class"],
+        ["class", "owner_id"],
+        ["status", "owner_id"],
+        ["status", "class"],
+        ["status", "class", "owner_id"],
+        ["status", "invoice_date"],
+        ["class", "invoice_date"],
+        ["status", "invoice_date", "customer_id"],
+        ["class", "invoice_date", "customer_id"],
+        ["status", "invoice_date", "customer_id", "owner_id"],
+        ["class", "invoice_date", "customer_id", "owner_id"],
+        ["owner_id"],
+        ["owner_id", "price_plan_id"],
+        ["owner_id", "price_plan_id", "start_date"],
+        ["owner_id", "price_plan_id", "start_date", "end_date"]
+    ],
+    search_fields: [
+        {name:"id",type: "string"},   
+        {name:"customer_id",type: "string"},
+        {name:"account_id",type: "string"},
+        {name:"customer_name",type: "string"},
+        {name:"account_name",type: "string"}
+    ],
+    sort_fields: [
+        { name: "created_at", type: "string", description: "" },
+        { name: "id", type: "string", description: "" }
+    ],
+    default_sort: { "created_at": "DESC", "id": "ASC" }
+}
+
+export const listCreditsQueryFields = {
+    query_fields: [
+        { name: "id", type: "string", description: "Unique identifier of the credit" },
+        { name: "account_id", type: "string", description: "Unique identifier of the account associated with the credit" },
+        { name: "status", type: "enum", description: "Status of the credit" },
+        { name: "created_at", type: "string", description: "Creation date of the credit" }
+    ],
+    allowed_combinations: [
+        ["id"],
+        ["account_id"],
+        ["account_id", "status"],
+        ["account_id", "status", "created_at"],
+        ["account_id", "created_at"]
+    ],
+    search_fields: [
+        { name: "id", type: "string", description: "Unique identifier of the credits" }
+    ],
+    sort_fields: [
+        { name: "created_at", type: "string", description: "" },
+        { name: "id", type: "string", description: "" }
+    ],
+    default_sort: { "created_at": "DESC", "id": "ASC" }
+}
+
+
+export const listPaymentsQueryFields = {
+    query_fields: [
+        { name: "id", type: "string", description: "Unique identifier of the payment" },
+        { name: "account_id", type: "string", description: "Unique identifier of the account associated with the payment" },
+        { name: "created_at", type: "string", description: "Creation date of the payment" }
+    ],
+    allowed_combinations: [
+        ["id"],
+        ["account_id"],
+        ["account_id", "created_at"]
+    ],
+    sort_fields: [
+        { name: "created_at", type: "string", description: "" },
+        { name: "id", type: "string", description: "" }
+    ],
+    default_sort: { "created_at": "DESC", "id": "ASC" }
+}
