@@ -1,0 +1,45 @@
+---
+title: "AWS Redshift"
+---
+
+Amazon Redshift is a fast, fully managed cloud data warehouse that makes it simple and cost-effective to analyze all your data. It allows you to run complex analytic queries against petabytes of structured data, using sophisticated query optimization, columnar storage on high-performance local disks, and massively parallel query execution.
+
+The integration between **AWS Redshift** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Prerequisites
+
+### Create a read-only user
+* Create a read-only user in AWS Redshift
+* Grant the user access to the tables that you want to sync with Togai
+* Make sure that the user has access to the tables that you want to sync with Togai
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `AWS Redshift` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `Connection URI`: The connection URI for your AWS Redshift database
+
+### Connection URI
+The syntax for the AWS Redshift connection URI using the username and password authentication:
+
+```bash
+jdbc:redshift://redshift.company.us-west-1.redshift.amazonaws.com:9000/dev;UID=amazon;PWD=amazon
+```
+
+<Tip>
+    You can construct the connection URI using the <a href="https://docs.aws.amazon.com/redshift/latest/mgmt/jdbc20-build-connection-url.html" target="_blank">AWS Redshift documentation</a>
+</Tip>
+
+## Flows
+
+### Sync customer from AWS Redshift to Togai
+* The flow will be available to be triggered on demand from the Togai dashboard
+* It will execute a SQL query to fetch all the customers from AWS Redshift
+* It will then create the customers in Togai using the `Customers` API
+
+### Sync events from AWS Redshift to Togai
+* The flow will be available to be triggered on demand from the Togai dashboard
+* It will execute a SQL query to fetch all the events from AWS Redshift
+* It will then create the events in Togai using the `Event Ingestion` API

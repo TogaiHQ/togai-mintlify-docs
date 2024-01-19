@@ -1,0 +1,29 @@
+---
+title: "Event enrichments"
+---
+
+Event enrichments allow you to create additional attributes or dimensions that are not part of the original event schema payload. You can compute a new value using a formula in jsonLogic syntax and use that for further metering.
+
+### Basics
+
+There are 2 parts to an enrichment - 
+
+* **Field type** - You can define if the enrichment should be an attribute or a dimension as part of the _enriched_ event schema.
+* **Enrichment type and value** - You can define if the enrichment is a static value or a computed dynamic value based on a custom formula. The formula is given in the form of [jsonLogic syntax](https://jsonlogic.com/). Using this, you can build complex rules and create additional variables (attribute or dimension) and enrich the ingested event.
+* **Dependencies** - Dependencies are variables that you can define which are not part of the original event schema. These can be static values or dynamic values take from other [settings within Togai](/docs/settings).
+
+<Tip>**When is an enrichment required?** Enrichments allow you to offload custom event transformations to Togai rather than building application logic at your end to apply the transformation.</Tip>
+
+<Info>**Note:** Enrichments are not metered values. They are transformations only at an individual event level. For aggregate transformations, please use the computations allowed when defining your usage meters.</Info>
+
+
+### Creating an event enrichment
+
+Let's continue with the [example](/docs/event-schemas#create-an-event-schema) used while creating an event schema. Here, we need to compute the performance value which is dependent on the read and write rates. Let's take the case where read_rate and write_rate should be added together to determine the total GBps for performance billing.
+
+In this case, since both the variables in the computation are part of the schema, we do not have to define a separate dependency. We can directly define an attribute enrichment that adds the read and write rates from the schema.
+
+<Frame caption="Example of an event enrichment">
+  <img src="/docs/images/event-enrichment-example.png" />
+</Frame>
+

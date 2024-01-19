@@ -1,0 +1,45 @@
+---
+title: "Paystack"
+---
+
+Paystack is a online payments processing company that provides a platform for businesses to accept payments via various methods such as credit/debit cards, bank transfers, and mobile money. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between Paystack and Togai requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `Paystack` from the available apps  
+* Click on the `+Add connection` button  
+* Provide a name for the connection and paste your:
+    * `Paystack Secret Key`
+
+### Paystack Secret Key
+![](/docs/integrations/images/paystack-secret-key.png)
+
+* Go to your Paystack dashboard and click on `Settings` from the left navigation bar
+* Click on `API Keys & Webhooks` from the sub-navigation bar
+* Copy your `Secret Key` and paste it into the appropriate field in Togai 
+* For more information on how to get your Paystack Secret Key, please refer to the [Paystack documentation](https://support.paystack.com/hc/en-us/articles/360011508199-How-do-I-generate-new-API-keys-#:~:text=On%20your%20Dashboard%2C%20go%20to,'Generate%20new%20secret%20key'.)
+
+## Flows
+Here are the out-of-the-box flows that you can use: 
+
+### 1. Sync Togai accounts to Paystack
+* A new account is created in Togai
+* Togai then creates a corresponding customer in Paystack and syncs the customer identifier between Togai and Paystack.
+* You can see this mapping of customer identifier in the Settings tab of every customer. The setting name for Paystack customer identifier in Togai is `PaystackCustomerCode`.
+
+### 2. Sync Togai invoices to Paystack
+* A new invoice is created in Togai
+* Togai then creates a corresponding payment request on Paystack using the setting `PaystackCustomerCode` for the customer on Paystack.
+* Caution: If the customer does not have a Paystack customer identifier, the invoice will not be synced to Paystack. You can see the Paystack customer identifier in the Settings tab of every customer. The setting name for Paystack customer identifier in Togai is `PaystackCustomerCode`.
+
+### 3. Mark Togai invoice paid on Paystack payment
+* Togai receives a payment request success event from Paystack.
+* Togai fetches the payment request details from Paystack and marks the corresponding invoice as paid in Togai.
+* To enable this flow, you need to configure a webhook in Paystack.
+    * Go to your Paystack dashboard and click on `Settings` from the left navigation bar
+    * Click on `API Keys & Webhooks` from the sub-navigation bar
+    * Click on `Webhook URL` and paste the webhook URL from Togai obtained when enabling the flow
+    

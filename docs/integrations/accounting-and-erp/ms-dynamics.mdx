@@ -1,0 +1,32 @@
+---
+title: "MS Dynamics 365"
+---
+
+MS Dynamics 365 is a portfolio of intelligent business applications that delivers superior operational efficiency and breakthrough customer experiences enabling businesses to become more agile and reduce complexity without increasing costs.
+
+The integration between **MS Dynamics 365** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `MS Dynamics 365` from the available apps  
+* Click on the `+Add connection` button  
+* Prompt with list of access policies that you would grant to Togai will be displayed, click on `Accept` to proceed
+* You will be redirected to MS Dynamics 365 login page
+* Enter your MS Dynamics 365 credentials and log in to your MS Dynamics 365 account
+* Click on `Accept` to grant Togai access to your MS Dynamics 365 account
+* You will be redirected back to Togai and the connection will be added to your account
+
+## Flows
+
+### 1. Sync Togai accounts to MS Dynamics 365
+* Flow is triggered when a new account is created in Togai
+* Togai then creates a corresponding customer in MS Dynamics 365 and syncs the customer identifier between Togai and MS Dynamics 365, so that the customer can be identified in both systems.
+* The mapping of customer identifier in the Settings tab of every Togai Account. The setting name for MS Dynamics customer identifier in Togai is `MsDynamics365AccountPlatformId`.
+
+
+### 2. Sync Togai invoices to MS Dynamics 365
+* Flow is triggered when a new invoice is created in Togai
+* Togai then creates a corresponding invoice on the accounting platform, MS Dynamics 365 using the customer identifier created in the previous flow.
+* Caution: If the customer does not have a MS Dynamics 365 customer identifier, the invoice will not be synced to MS Dynamics 365.

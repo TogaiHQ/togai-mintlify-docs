@@ -1,0 +1,38 @@
+---
+title: "Slack"
+---
+
+Slack is a messaging app for business that connects people to the information they need. By bringing people together to work as one unified team.
+
+The integration between **Slack** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `Slack` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `WWebhook URL`
+
+### Webhook URL
+![Slack Webhook URL](/docs/integrations/images/slack-webhook-url.png)
+
+* Go to the [Slack App Developer](https://api.slack.com/apps) page 
+* Click on `Create New App` to create a new app
+* Provide a name for the app and select the workspace where you want to install the app
+* Click on `Create App`
+* Click on `Incoming Webhooks` from the left navigation bar
+* Click on the `Activate Incoming Webhooks` toggle button
+* Click on `Add New Webhook to Workspace` button to add a new webhook
+* Select the channel where you want to receive the notifications and click on `Allow`
+* Copy the `Webhook URL` and paste it in the `Webhook URL` field in Togai
+
+## Flows
+
+### 1. Slack notify account created
+* Flow is triggered on a new account creation in Togai
+* The flow sends a notification to the Slack channel with the account details
+
+### 2. Slack notify invoice due
+* Flow is triggered on an invoice becoming due in Togai
+* The flow sends a notification to the Slack channel with the invoice details

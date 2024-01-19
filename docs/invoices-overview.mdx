@@ -1,0 +1,67 @@
+---
+title: "Invoices overview"
+---
+
+In a usage based pricing model, customers find it hard to predict their costs due to the variability in their usage. It is extremely important for customers to know their consumption data & patterns in real-time. Just showing usage metrics to customers is not sufficient. Customers need to be aware of their costs for the current cycle in real-time so that they can always keep track and not be surprised at the end of the cycle.
+
+<Check>**Togai's invoicing system is intrinsically built to handle real-time rating and billing requirements to meet the above basic expectations of the customers.**</Check>
+
+<Frame caption="Invoicing in Togai">
+  <img src="/docs/images/invoicing.png" />
+</Frame>
+
+## How invoicing works?
+
+Togai automatically generates invoices for each account/group based on the following - 
+
+* Wait till end of grace period for a billing cycle
+* List of rate cards in the price plan
+* Usage quantity for each rate card
+* Pricing model and type for each rate card to be applied to relevant usage slab
+* Apply pricing rules
+* Apply Credits and commitments
+* Apply custom charges
+* Manage tax, if applicable
+* Calculate gross and net amounts and generate the final invoice based on the invoice template
+* Automatically send the generated invoice to customers
+
+## Invoice statuses
+
+* **Ongoing** - This is the status of an invoice that has 'In Arrears' rate cards during the current billing cycle.
+* **Due** - As soon as the grace period ends, the Ongoing invoice becomes 'Due'
+* **Paid** - This is the status of an invoice for which payment has been received
+* **Uncollectible** - If you have an invoice where you do not expect the customer to pay, you can mark the invoice as 'Uncollectible'
+* **Void** - You can also cancel an invoice using this option
+
+<Note>Paid and Void statuses are terminal states of an invoice and cannot be modified further. The rest of the statuses can be updated/modified depending on the scenarios and your actions.</Note>
+
+## Invoicing features
+As part of the invoice module, Togai provides additional capabilities.
+
+* Invoice groups - [Learn more](/docs/invoice-groups)
+* Invoice template - [Learn more](/docs/invoice-templates)
+
+<Tip>You can group invoice line items by adding tags to the rate cards in a price plan</Tip>
+
+## Custom charges
+This feature allows you to include additional charges in an upcoming or ongoing invoice. This feature enhances flexibility by allowing you to configure an additional value or a discount based on a computation on your existing line items in the invoice. You also have the option to choose if a custom charge should be counted for revenue or not.
+
+## Invoice list
+
+When you access the **“Invoices”** option on the side menu, you’ll be able to view a list of:  
+a. Historical Invoices  
+b. Ongoing Invoices
+
+On selecting any of these invoices, you can view the detailed invoice items present and also be able to preview/download it.
+
+## Other features
+
+Invoice groups - [Learn more](/docs/invoice-groups) <br />
+Invoice templates - [Learn more](/docs/invoice-templates) <br />
+Credits - [Learn more](/docs/credits)
+
+## Invoice structure
+
+<Frame caption="Invoice Structure">
+  <img src="/docs/images/invoice-structure.png" />
+</Frame>

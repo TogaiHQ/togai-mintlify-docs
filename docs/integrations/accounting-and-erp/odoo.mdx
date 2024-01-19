@@ -1,0 +1,32 @@
+---
+title: "Odoo"
+---
+
+Odoo is a suite of business management software tools including, for example, CRM, e-commerce, billing, accounting, manufacturing, warehouse, project management, and inventory management.
+
+The integration between **Odoo** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `Odoo` from the available apps  
+* Click on the `+Add connection` button  
+* Prompt with list of access policies that you would grant to Togai will be displayed, click on `Accept` to proceed
+* You will be redirected to Odoo login page
+* Enter your Odoo credentials and log in to your Odoo account
+* Click on `Accept` to grant Togai access to your Odoo account
+* You will be redirected back to Togai and the connection will be added to your account
+
+## Flows
+
+### 1. Sync Togai accounts to Odoo
+* Flow is triggered when a new account is created in Togai
+* Togai then creates a corresponding customer in Odoo and syncs the customer identifier between Togai and Odoo, so that the customer can be identified in both systems.
+* The mapping of customer identifier in the Settings tab of every Togai Account. The setting name for MS Dynamics customer identifier in Togai is `OdooAccountPlatformId`.
+
+
+### 2. Sync Togai invoices to Odoo
+* Flow is triggered when a new invoice is created in Togai
+* Togai then creates a corresponding invoice on the accounting platform, Odoo using the customer identifier created in the previous flow.
+* Caution: If the customer does not have a Odoo customer identifier, the invoice will not be synced to Odoo.

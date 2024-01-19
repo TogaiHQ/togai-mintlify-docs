@@ -1,0 +1,32 @@
+---
+title: "Quickbooks"
+---
+
+Quickbooks is a popular accounting software developed by Intuit, widely used by businesses for managing financial transactions, invoicing, payroll, and tax preparation. It offers a user-friendly interface and features tailored for small to medium-sized businesses.
+
+The integration between **Quickbooks** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+![Login to Quickbooks](/docs/integrations/images/quickbooks-login.png)
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `Quickbooks` from the available apps  
+* Click on the `+Add connection` button  
+* You will be redirected to Quickbooks login page
+* Enter your Quickbooks credentials and log in to your Quickbooks account
+* Click on `Accept` to grant Togai access to your Quickbooks account
+* You will be redirected back to Togai and the connection will be added to your account
+
+## Flows
+
+### 1. Sync Togai accounts to Quickbooks
+* A new account is created in Togai
+* Togai then creates a corresponding customer in Quickbooks and syncs the customer identifier between Togai and Quickbooks.
+* You can see this mapping of customer identifier in the Settings tab of every customer. The setting name for Quickbooks customer identifier in Togai is `QuickbooksCustomerId`.
+
+
+### 2. Sync Togai invoices to Quickbooks
+* A new invoice is created in Togai
+* Togai then creates a corresponding invoice on Quickbooks using the setting `QuickbooksCustomerId` for the customer on Quickbooks.
+* Caution: If the customer does not have a Quickbooks customer identifier, the invoice will not be synced to Quickbooks. You can see the Quickbooks customer identifier in the Settings tab of every customer. The setting name for Quickbooks customer identifier in Togai is `QuickbooksCustomerId`.

@@ -1,0 +1,45 @@
+---
+title: "Overview"
+---
+
+## Design principles
+
+Price plan is the configuration that enables you to setup any monetization strategy for your company. The price plan entity in Togai has been designed keeping in mind the following principles - 
+
+1. **Configurability** - Different teams are responsible for pricing in a company's lifecycle and it is important for all the pricing setup to be configurable without requiring someone to write code to effect changes to the pricing model or price values.
+
+2. **Flexibility** - We have seen traditional billing systems act as a significant bottleneck to a company's business model. This principle allows you to model any type of pricing for your customers without worrying about your invoicing operations and billing workflows.
+
+3. **Extensibility** - After a certain scale, any company would have multiple iterations to their pricing model and needs to account for price versions and grandfathering in your customers. Togai accounts for this implicitly in its pricing and rating entity model.
+
+## Price plan setup
+
+In Togai, a price plan is a single configuration that can be used to model multiple types of monetization models - 
+
+* **Product catalogue** - In traditional billing systems, product catalogue is where you define your products, rates and your pricing model (one-time, subscription/usage). You can configure the same as a Price plan within Togai. It can be a master product catalogue that consists of all your products, offerings and their pricing or a subset group in case you want to create multiple catalogues as corresponding price plans within Togai.
+
+* **Packaging a subscription** - Subscription management solutions allow you to create different subscription tiers (Good-better-best model) and package different set of features for different pricing within them. This can also be achieved using a price plan to replicate a package/bundled offering as a subscription template within Togai.
+
+* **Contract template** - If you are selling to large organizations, you would be creating custom contracts specific to each customer. You can model custom contracts in Togai as a price plan and create a 1:1 association between a customer and a plan or have a template created as a plan that can be associated with multiple customers, with support for [overriding them](/docs/price-plan-overrides).
+
+
+## Price plan steps
+<Frame caption="3 steps to configure a plan">
+  <img src="/docs/images/price-plan-steps.png" />
+</Frame>
+
+There are 3 parts to configuring a price plan - 
+
+<Steps>
+  <Step title="Pricing cycle">
+    You can configure the pricing model and the supported currencies in this step. <br />  [Learn more](/docs/pricing-cycle)
+  </Step>
+  <Step title="Rate cards">
+    In this section, you can define the different rate cards for each of your billable items. <br /> [Learn more](/docs/rate-cards)
+  </Step>
+  <Step title="Pricing rules">
+    This is a rule engine that allows you to create custom conditions and apply rules based on those criteria in your pricing configuration.
+    <br /> [Learn more](/docs/pricing-rules) 
+  </Step>
+</Steps>
+

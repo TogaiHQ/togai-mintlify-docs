@@ -2,47 +2,54 @@
 title: "Event Schemas"
 ---
 
-Event schemas represent the format in which your events will be processed and stored within Togai's system. Imagine this to be your database where you define fields.
+Togai's metering system is based on an event driven architecture. You can send raw usage data in the form of an event stream and Togai will process them in real-time to track usage and revenue metrics for your customers.
 
-We support two types of fields for building a basic schema:  
-a. Attributes - These are continuous variables or numerical values upon which you'd want to apply mathematical functions.  
-b. Dimensions - These are categorical variables that can contain string values.
+### Basics
 
-For more complex schemas that require calculations to be performed on raw data metrics and return output values back to the event as an attribute, we launched support for Enriched Values. I recommend reading about [enriched values](/docs/enriched-values) before proceeding to the next section.
+<Tip>**What is an event?** - In a usage based pricing model, an event is the action you are looking to monetize your customers for. Examples of an event are - a heartbeat system that sends pulses to capture the time a server runs on the cloud, an API call, a transaction for a fintech, an SMS delivery for a communications platform </Tip>
+
+Event schemas are used to define the payload structure for the raw usage data you are looking to meter. Event schemas are required when you are looking to use Togai as the primary system to capture your raw usage event data or capture aggregated data periodically before transforming them within Togai's metering layer.
+
+In Togai, defining an event schema has 3 configurable parts - 
+
+1. **Attributes** - these are numerical values for the usage you are looking to meter. Examples are GB minute data for an heartbeat event, transaction amount for a fintech event, distance for a logistics tracking event. You can send individual event information or aggregated data here depending on your requirements and data model. You can define an attribute name and the unit of measurement for the attribute.
+
+2. **Dimensions** - these are values used to group and filter your usage data. Examples are region & instance types/sizes for a cloud provider, payment mode for a payments company, SMS operator for a communications platform. Dimensions can be modeled as key value pairs and you define the key name while creating an event schema.
+
+3. **Enrichments** - enrichments are used to compute additional information based on a formula using the existing event data and/or other variables and augment the event payload with this enriched value. An example is to track read and write rates for a storage provider separately but your pricing is based on total throughput that includes both values. In this case you can create a formula within Togai's enrichment layer to conver the individual read and write rates into the total throughput metric that should be metered and rated.
+
+<Note>Enrichment is an advanced feature and would require you to know jsonLogic syntax. Learn more about enrichments [here.](/docs/event-enrichments) </Note>
+
+When creating an event schema, it is important to understand how you have instrumented your product. Togai is flexible and configurable to create your own schema to match the payload that you already use for instrumenting your product. You can follow 3 basic principles while designing your schema - 
+
+* Work with what you already have
+* Design with flexibility
+* For systems that are scaled to over 1000 events per second, combine multiple event types into a single schema, if possible, to save egress costs.
+
+<Warning>Currently, you will only be able to new attributes, dimensions or enrichments to an existing schema. You cannot delete attributes, dimensions or enrichments in an event schema once it is published.</Warning>
+
 
 ### Create an event schema
 
-To create an event schema via the user interface:
+Let's take an example of a storage company that has pricing based on 2 metrics - Storage and Performance. The unit for Storage tracking is TB-minute and performance is GBps per consumed TB.
 
-1. Access the **'Event Schemas'** option via the side menu
-2. From the top right corner, select the **'+ New Event Schema'** button
-3. Enter the name and description for the schema
-4. Add your attributes and the respective units for measurement
-5. Add your dimensions to record the string values
-6. If you have any dependencies or enriched values, define them
-7. The final step is to publish the event schema by hitting the **'Publish'** button  
-Note: If you're looking to modify or review the schema before confirming the creation, you can hit the **'Save As Draft'** button
+In this case, the best practice to instrument your product would be to setup a heartbeat monitor that tracks both metrics every minute and sends that information to your metering system. 
 
-![2282](/docs/images/create-event-schema.png "create-event-schema")
+In Togai, this can be modeled as a single event schema since the same heartbeat pulse can track both data points. For the performance metric, we need to track read and write rates separately in the schema.
 
-Event schema creation
+<Frame caption="Example of an event schema for a cloud storage provider">
+  <img src="/docs/images/event-schema-example.png" />
+</Frame>
 
-Once the event schema is created, you can access the event schemas view to scan a list of All Schemas, Active Schemas, Drafts and Inactive Schemas.
 
-![2278](/docs/images/view-event-schema.png "view-event-schema")
+### Event schema lifecycle
 
-All event schemas view
+* **Draft** - An event schema can be created in a draft mode. Draft mode is meant to be used when you want to create a test schema and edit it as required. You can add/edit/delete attributes and dimensions for schema in a draft state. Schemas in draft mode cannot be associated with a usage meter. You can also archive an event schema that is in draft state. When you save an event schema in the draft state, its status will be shown as 'Inactive'
 
-  
-### Edit an Event Schema
+* **Active** - You can publish an event schema directly to create it in an 'Active' state. You can also toggle an 'Inactive' schema to an 'Active' state and vice versa. Currently, you cannot delete attributes, dimensions or enrichments for an Active schema. However, you can add new attributes, dimensions or enrichments to it.
 
-To edit an existing event schema, select the schema. This will take you to a page where you can:
+<Note>Active schemas can be deactivated only if they do not have any usage meters associated with them.</Note>
 
-1. View a summary of the schema (Name, attributes and dimensions)
-2. View the usage meters attached to it
-3. View the various schema versions
-4. You can also push in test data from here to check the sanity of the schema
+* **Archive** - You can archive an Inactive schema. Archived schemas are not displayed in the dashboard but would still be stored within Togai.
 
-On hitting the 'Edit Event Schema' button on the top right corner of the screen, you will be able to edit the schema per your requirements.
-
-_You can also create and update event schemas using our_ [API](/api-reference/event-schemas/create-an-event-schema)_._
+<Info>You cannot delete an event schema from Togai currently. If you do have the need to delete a schema, please reach out to us and we can help you with it.</Info>

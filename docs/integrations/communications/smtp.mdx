@@ -1,0 +1,61 @@
+---
+title: "SMTP"
+---
+
+This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between SMTP and Togai requires only a one-time setup. Follow the steps below:
+
+###  Installation of App Instances  
+[](#installation-of-app-instances)  
+   * Navigate to the Integrations section from the left navigation bar in Togai  
+   * Click on `Apps` to access the list of apps with tight integration support  
+   * Locate and select `SMTP` from the available apps  
+   * Click on the `+Add connection` button  
+   * Provide a name for the connection and paste your `SMTP host` along with credestials for your server into the appropriate field
+
+**_Repeat the same process for Togai, treating it as a separate App within the integration._**
+
+  
+**Note:** Togai is considered an app in our integration so it is easy for you to configure different keys for different flows. This way you can have specific permissions configured for a specific key, making it more secure. To create a secret key for Togai, go to the Admin Center on the left nav bar. Click on the API tokens tab. Then click on the ‘\`Generate new token\`’ button.
+###  Triggers and Actions
+[](#triggers-and-actions)  
+There is 1 Action available for SMTP currently. The way it works is,
+
+If `{trigger}`, then do `{Action}`
+
+You can pick and choose the trigger and action that you want from the lengthy list available from all the applications. 
+
+You can use these as building blocks to build your own flows.
+
+An example flow would be: On creation of an invoice in Togai, send mail via SMTP. 
+
+![](/docs/integrations/images/smtp-actions.png) 
+###  Flows and Automation
+* To enable flows, access the **`Flows`** section within Integrations
+* Select the desired flow from the available options or create a new flow to meet your requirements
+* **To create a new flow:**
+![](/docs/integrations/images/d3f89f5-image.png) 
+* Enter the flow name and description
+* Select the flow type from the dropdown  
+**Inbound Flow** \- based on third party events(eg: SMTP), actions are triggered in Togai  
+**Outbound Flow** \- based on events occurring in Togai, changes are made to the connected third party app
+* Define triggers by choosing the source application from where the flow starts
+* Select a predefined trigger from the dropdown list
+* Next, define an action which makes the desired changes by selecting the destination app
+* Select a predefined action from the dropdown list. You can add multiple actions.
+* Lastly, preview the flow and save changes
+* Else, choose an existing flow and select **`+Add Connection`**
+* Configure the triggers and actions by specifying the app instance (SMTP or Togai) associated with each step.
+
+Now, when a new customer is added in Togai, it is synced in SMTP as well. To refer to customers in SMTP or Togai, you can obtain the customer ID and account ID. In Togai, go to Customers, select an account, and find the customer ID and account ID under the Settings tab. Use these IDs to reference the customer in SMTP, or vice versa.
+
+###  Available Flows
+![](/docs/integrations/images/smtp-flow.png) 
+
+Here are the out-of-the-box flows that you can use: 
+
+**1\. Send Mail to customer on Invoice or Order Due**
+
+* An invoice or order in Togai becomes due
+* A mail is sent to that particular account's primary email address

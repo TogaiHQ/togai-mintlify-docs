@@ -2,18 +2,27 @@
 title: "Price Plan Schedule"
 ---
 
-You can schedule changes in price plans associated to a customer, in advance. You can schedule the association of a new price plan and also create overrides to that price plan. Or you can choose to attach the new plan as is without overrides. 
+## Overview
+Price plan schedule is used to manage the timeline of your customer's subscription. It is applicable for the recurring plan that is associated with the account. You can also think of the schedule as managing the lifecycle of your customer's contract.
 
-In some countries, you are legally bound to inform a customer of any price plan changes in advance of a specific number of months. In such cases, you can inform your customers of the change and set up the schedule. 
 
-![](/docs/images/ee1b38d-image.png) 
+<Frame caption="Example of a price plan schedule as a timeline">
+  <img src="/docs/images/price-plan-schedule.png" />
+</Frame>
 
-If you choose to override, you can: 
+In the above example you have 2 price plans - A and B. Price plan A is signed on day 0 and is a monthly contract for 14 months with the first 2 months offered as a free trial for testing purpose. Then there is a new add-on purchased by the customer in the middle of the year (Month 8 from day 0) which gets added as an override to the price plan A. At the end of the contract, customer signs a new contract which is added as price plan B. All this can be managed using the Price plan schedule in a simple to use configuration.
 
-* change pricing cycle details like the start date, grace period, how frequently they should be billed.
-![](/docs/images/a594c95-image.png) 
-* change the price plan config:  
-   * You can add fixed fees or license fees  
-   * you can delete the existing fees  
-   * you can change the fee details of the existing fees (as shown in the image below)
-![](/docs/images/46fbff6-image.png)
+## Schedule configurations
+**Edit Schedule** - This option allows you to edit the schedule and manage overrides for a price plan associated in the account's schedule timeline. For a normal price plan, you can edit the schedule for a current price plan only from tomorrow. For a deferred revenue computation plan, you can edit the schedule either from the start of current unbilled cycle or from tomorrow.
+
+<Warning>You cannot edit schedule for a price plan for a past date, even one that is unbilled. The exception is for a deferred revenue computation plan which allows you to edit schedule from the start of the unbilled cycle, and that can be a past date.</Warning>
+
+<Check>You can make any number of changes to future dated schedules (from tomorrow). If you make changes to a schedule for a future date, the invoice will be generated as of the date of the change and a new Ongoing invoice will begin from the new scheduled price plan. The ability to consolidate these intermediate cycle invoices to a single invoice at the end of every cycle is currently under development.</Check>
+
+
+**Attach New plan** - You can associate any number of plans in the account's pricing schedule in the future. You can use this to provide free trials, automated pricing ramps and contractually scheduled price changes. <br />
+
+**Detach plan** - You can use this option to remove a plan from the account's pricing schedule. This can be done for plans that are in the future (from tomorrow).
+
+**Detach plan for a specific range** - This option is used to model temporary breaks in contracts where invoicing should not happen. Here too, you can detach a plan for a specific range in the future.
+

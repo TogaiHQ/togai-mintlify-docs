@@ -1,0 +1,63 @@
+---
+title: "Pricing Rules"
+---
+
+## Overview
+Pricing rules allow you to package and bundle your product in completely unique ways and provides you extreme flexibility to monetize as you see fit. This is an advanced rule engine that can be used to apply different rules on existing rate cards in an invoice or other static/dynamic fields and apply a computed logic while you generate an Invoice.
+
+
+<Frame caption="Configurability of pricing rules">
+  <img src="/docs/images/pricing-rule-configurability.png" />
+</Frame>
+
+
+## Configurability
+
+Pricing rules in Togai are configurable using [jsonLogic syntax](https://jsonlogic.com/) or via javascript. Computation of a pricing rule happens along with the computation of the invoice (near real-time). The following entities should be defined for a pricing rule.
+
+* **Type** - You can configure the pricing rule to be a discount or an additional charge
+* **Rule** - A rule is a condition that is based on the values of a variable in the price plan/invoice. You can use multiple variables to create a condition across multiple rate cards of the plan.
+* **Computation** - Currently, the target action is split into computation and destination as 2 configurable values. You can define the computation as a mathematical formula using [jsonLogic syntax](https://jsonlogic.com/).
+* **Add/update** - You can either add a new line item for the target computation or update an existing line item of the invoice.
+* **Order** - Here, you define the priority of computing the pricing rules since inter-dependent pricing rules will cause conflict, if parallelized.
+
+## Example 1: Payments company volume based discount
+
+Let's take the case of a payment processor like Stripe. Stripe's pricing model is based on the transaction amount and their default pricing is 2.9% of the transaction amount + 30 cents per transaction. For simplicity, let's assume Stripe's default pricing is 3%.
+
+Now, they have a custom contract with a large enterprise which follows the below pricing - 
+
+* 2.8% for credit card transactions
+* 2% for debit card transactions
+* Flat $1 per ACH or Wire
+* If the overall payment value during a month across all payment modes cross $1 million dollars, then provide additional 10% discount on the overall invoice.
+
+In this case, we model the 3 separate payment modes as 3 individual usage meters and usage rate cards in Togai. The aggregated volume discount is configured as a pricing rule as per the below logic - 
+
+**Rule** - Total payment value (recorded as a usage meter) of rate card 1 + rate card 2 + rate card 3 > $1mn
+
+**Computation** - 10% of total invoice value
+
+**Add/update** - Add as a discount to the invoice
+
+```
+`PROVIDE SAMPLE JSONLOGIC/JAVASCRIPT SYNTAX`
+```
+
+## Example 2: Communications company doing bundling
+
+Another example - we have a cloud contact center solution that offers license based pricing based on the number of call center agents using their product. However, they also provide a tele-calling facility which is priced based on the number of minutes. 
+
+Let's add a complex scenario where the company wants to provide a bundled offering where each license gets a free call usage of upto 1000 minutes per month and beyond that, there is an overage price.
+
+In this case, we have 2 individual rate cards to model the license fees with number of licenses as input quantity and the usage based rate card for the tele-calling fees. For the bundled pricing, we create the below rule
+
+**Rule** - Usage quantity of tele-calling > 0
+
+**Computation** - Minimum of [(Number of licenses * 1000 * price per unit of a call) , Actual tele-calling usage revenue]
+
+**Add/update** - Add as a discount to the invoice
+
+```
+`PROVIDE SAMPLE JSONLOGIC/JAVASCRIPT SYNTAX`
+```

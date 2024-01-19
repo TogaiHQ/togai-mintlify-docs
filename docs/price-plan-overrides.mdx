@@ -2,32 +2,42 @@
 title: "Price plan overrides"
 ---
 
-Businesses that generate a high volume of transactions could demand a separate price based on their predicted volume of sales or revenue. This negotiation could happen between you, the business provider and the customer, and the decided price can be stored against the customer subscription.
+In a B2B setting, there is always going to be manual intervention when it comes to sales. Custom quotes and contracts are the norm when it comes to selling to slightly larger companies as well as any approach that is not PLG (product led growth) driven.
 
-These overrides are generally provided to acquire large enterprise customers and each customer will have their own pricing requirements on procurement. These deal details are not accessible for other customers and are bound by contract terms covering legal and privacy requirements. Your sales teams can utilize the Price Override feature to handle customer specific pricing for their customers.
+## Overrides - concept
 
-Now on to how overrides work. 
+The concept of overrides in Togai is to allow simplicity for product teams combined with flexibility for the sales teams. <br />
 
-1. Go to the plan you want to attach to an account and click on +Attach Plan to Account at the top
-![](/docs/images/645db9b-image.png) 
-1. Choose the account you want to attach to the plan. You can then turn on the "Add Cycle Override" if you want to override the pricing cycle start date for that particular customer.  
-![](/docs/images/2962f37-image.png)
-![](/docs/images/510d5f6-image.png) 
+**Simplicity** - Having a single price plan or a few set of price plans for different products/customer segments is ideal for the product teams from both - initial configuration and setup as well as ongoing maintenance standpoint. It is straightforward to do version control, migrate and grandfather customers as required with this approach. However, this approach alone will result in sales teams not having the flexibility to negotiate and close deals with creative monetization tactics. This would result in a significant drop in deal closure rates. Hence, the next tenet of flexibility. <br />
 
-If you've created a customer and you want to now override their price plan configuration details and/or pricing cycle details: 
+**Flexibility** - Overrides feature of Togai provides the flexibility to sales teams to offer any pricing to customers and improve their deal closure rates, without impacting the price plan management.
 
-1. Click on Customers tab
-2. Search for their Name and click on it. The Customer Details tab opens. Click on the account.  
-![](/docs/images/cf949bd-image.png)
-3. And then click on Price Plan Schedule tab.
-4. Click on the Override Price Plan button  
-![](/docs/images/9a71730-image.png)
-5. You can edit the "Effective From Date".
-6. To override Pricing cycle details, turn on the "Override Price Plan Cycle" toggle. You can then edit details such as Pricing cycle, Pricing Cycle start date, and Grace Period.  
-![](/docs/images/7ce4d6e-image.png)
-7. To override Price Plan Configuration details, turn on the "Override Price Plan Configuration" toggle and click on Proceed button.
-8. You can now add custom License and Fixed fees for an account.  
-![](/docs/images/a06c56c-image.png)
-9. You can also edit existing fees by clicking ont he "+Add Override" option inside each fee.  
-![](/docs/images/a3f6c27-image.png)
-10. Once you're done, click on "Apply Overrides" button to finish.
+<Frame caption="Overrides - simple & flexible">
+  <img src="/docs/images/overrides.png" />
+</Frame>
+
+## Types of overrides
+
+<CardGroup cols={2}>
+  <Card title="Cycle overrides" icon="recycle" href="/docs/price-plan-overrides#cycle-overrides">
+    Allows you to edit the pricing cycle.
+  </Card>
+  <Card title="Rate card overrides" icon="square-dollar" href="/docs/price-plan-overrides#rate-card-overrides">
+    Change the rate cards in the price plan.
+  </Card>
+ </CardGroup>
+
+
+## Cycle overrides
+Cycle overrides allow you to edit the pricing/billing cycle details. You can change all the cycle related configurations including the Billing cycle, cycle period (by choosing the cycle start day) and the grace period.
+
+<Frame caption="In this configuration example, the billing cycle is Monthly and the cycle period is from 5th of every month to the 4th of the next month and the invoice will be DUE on 7th of every month. It does not matter what the cycle configurations of the price plan are.">
+  <img src="/docs/images/cycle-overrides.png" />
+</Frame>
+
+
+## Rate card overrides
+
+You can use rate card overrides to create any type of custom contract on top on an existing base price plan. You can add or remove rate cards. You can edit an existing rate card as well. You would also be able to modify all the configurations within each and every rate card including the pricing model (Standard/Tiered/Volume), pricing type (Flat/per unit/package), slab and price values.
+
+<Note>Price plan overrides allows for extreme flexibility - you can configure an entirely new plan as an override to model a custom contract and you will be able to track the number of overrides for every price plan separately.</Note>

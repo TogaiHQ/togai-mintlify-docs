@@ -2,18 +2,46 @@
 title: "Proposals"
 ---
 
-Proposals in togai is a document used to inform a potential buyer the cost of goods or services before they commit to the purchase. Proposals can be created for a new subscription, changes to existing subscriptions (such as plan upgrades, applying addons and so on) and for one-time charges. A proposal is useful in enabling you to implement internal purchase approval processes at your end. After a proposal is accepted, you can create a new association to the price plan or update the existing association with the changes and an invoice gets created to denote completion of purchase.
+## What is a proposal?
+As mentioned in the [QTC overview](/docs/qtc-overview), a proposal forms part of the quote-to-cash process. It is also called as a 'Quote' in many other tools that offer CPQ (Configure, Price and Quote) capabilities.
 
-![](/docs/images/84a7338-image.png) 
+The initial phase of the Quote-to-Cash (QTC) sequence is segmented into three parts: Configure, Price, Quote (CPQ). This begins with the configuration step, where a sales representative initiates the creation of a client's quote. This stage is vital because any errors introduced at this point can lead to significant issues later.
 
-### Create proposal:
+## Togai is not a CPQ, why does Togai have proposals?
+In traditional manual configuration methods, sales teams must sift through extensive spreadsheets and product databases individually to gather necessary information. Due to the frequent manual entry of data, discrepancies often arise, with the same product appearing multiple times with varying details. Consequently, sales representatives must depend on their judgment to provide quotes to customers promptly, which can lead to inconsistencies and mistakes.
 
-1. Head to the Customer tab and select the customer/account that you need to send a proposal to.
-2. Click on their account and go to the Proposal tab
-3. Click on `+Create Proposal` button
-4. Choose the payment mode that this customer will have to abide by - Prepaid or Postpaid
-5. Define the expiry date for this proposal. If the customer you're sending this to doesn't accept it by then, the proposal will expire and the association of the plan to the customer will not happen
-6. Choose the Price plan corresponding to this customer and choose the date till which this will recur.
-7. You can also create a custom plan for this customer by overriding the price plan cycle and configuration.
+Conversely, automated QTC systems remove the uncertainty from the configuration for sales staff. They expedite the initial stages for both the organization and its clients, while implementing various controls to guarantee uniformity and high quality.
 
-Note: We are currently in the last leg of building a DocuSign integration which will be used to implement the acceptance of proposal.
+## How proposals work in Togai?
+As Togai acts as the central repository and source of truth for all your pricing configurations, it is a natural extension to enable sales team to use the configurations & override them to create custom proposals and send them to potential customers.
+
+We also provide an integration to [Docusign](/docs/integrations/docusign) to automate the contracting process when the proposal is sent to customers. Once, they approve the contract, we receive a notification through Docusign and the proposed plan is automatically associated to the corresponding account in Togai and the billing process is automated end-to-end.
+
+Proposals are created in Togai by going to the [Purchases](/docs/purchases) tab within an account and initiaing a purchase. You can choose to toggle the 'Create as Proposal' switch to trigger the proposal flow for customers.
+
+<Note>You can give an expiry date for the proposal after which the customer/sales person would not be able to approve it. You would have to re-initiate a new proposal, if that happens.</Note>
+
+<Warning>Contract start date for a proposal can only be after the proposal's expiry date.</Warning>
+
+You can view the list of proposals sent to customers and their statuses in the Proposals tab inside accounts section.
+
+## Proposal types
+
+There are 2 types of proposals in Togai - 
+
+**Prepaid** - In this type, a proposal will be sent to customer upon creation. Once the proposal is approved, an **Order** will be raised 'In Advance' based on the proposa/price plan configurations. Only upon receipt of payment for the Order, will the plan be associated to the account and the billing & invoicing will begin.
+
+<Frame caption="Prepaid proposal statuses">
+  <img src="/docs/images/prepaid-proposal-flow.png" />
+</Frame>
+
+**Postpaid** - In this type, a proposal will be sent to customer upon creation. Once the proposal is approved, the plan will be associated to the account automatically and the billing & invoicing will begin.
+
+<Frame caption="Postpaid proposal statuses">
+  <img src="/docs/images/postpaid-proposal-flow.png" />
+</Frame>
+
+## Create proposal from the dashboard
+<Frame caption="Sample proposal creation">
+  <img src="/docs/images/create-proposal.png" />
+</Frame>

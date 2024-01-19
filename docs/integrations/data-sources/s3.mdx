@@ -1,0 +1,63 @@
+---
+title: "S3"
+---
+
+Amazon S3 is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+
+The integration between **Amazon S3** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `S3` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `AWS Access Key ID`
+    * `AWS Secret Access Key`
+
+### AWS Access Key ID and AWS Secret Access Key
+
+Create a new IAM user in your AWS account with access to S3 bucket that is going to act as your events object store and copy the `AWS Access Key ID` and `AWS Secret Access Key` from the `Security credentials` section of the user with following policy:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "VisualEditor0",
+                "Effect": "Allow",
+                "Action": "s3:GetObject",
+                "Resource": "arn:aws:s3:::<S3_BUCKET_NAME>/*"
+            }
+        ]
+    }
+    ```
+
+## Flows
+
+### Import events from S3 Bucket 
+
+#### Install
+
+* Provide `Event Schema Name` corresponding to the events that are going to be imported from S3 bucket using this flow 
+* Provide `Schema Mapping` as a JSON for the CSV files with default column names as the key and the corresponding CSV header as the value. The following is a sample schema mapping for reference:
+    ```json
+    {
+        "accountId": "User Identifier",
+        "id": "Event Id",
+        "timestamp": "Event Time",
+        "attributes.messageCount": "SMS Count",
+        "attributes.mailCount": "Email Count",
+        "dimensions.region": "Region"
+    }
+    ```
+* On installation, the a webhook URL will be generated that needs to be configured as the S3 bucket notification destination for `s3:ObjectCreated:*` events. Refer to the [AWS documentation](https://docs.aws.amazon.com/AmazonS3/latest/userguide/NotificationHowTo.html) for more details on how to configure S3 bucket notifications.
+
+#### Working
+
+![S3 Bucket List Objects Screen](/docs/integrations/images/s3-bucket-list-objects-screen.png)
+
+* The flow will be triggered when a new file is uploaded to the S3 bucket
+* The new file created event will be used to generate a pre-signed URL for the file which will be used to download the file
+* The pre-signed URL will be used to import the events from the file into Togai using the **Bulk Imports** feature which will be used to import the events into the corresponding event schema
+* The imported events will be available in the **Events** section of Togai
+* The status of the import will be available in the **Bulk Imports** section of Togai

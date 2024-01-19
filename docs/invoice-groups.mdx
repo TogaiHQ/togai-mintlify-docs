@@ -1,0 +1,32 @@
+---
+title: "Invoice groups"
+---
+
+## Overview
+
+Invoice groups in Togai are used to consolidate multiple standalone invoices into a single grouped invoice. You can use Invoice groups for different use cases and consolidations - 
+
+* Single customer with test and production accounts
+* Organization with multiple teams who are on different plans
+* Reseller invoicing when they sell to multiple end customers (modeled as accounts in Togai)
+
+
+## Invoice group fields
+
+An invoice group contains the same set of configurable fields that are captured for an account from an invoicing perspective.
+
+* Group name
+* Currency
+* Net term days
+* Email
+* Phone number
+* Billing address
+* List of accounts to be grouped
+
+<Check> Once a group is created, all invoices that are DUE on the same day for the accounts within the group are consolidated into the same invoice that is sent to the group's contact details. </Check>
+
+<Note>Invoice groups can be combined for accounts that have the same currency</Note>
+
+<Info>Invoice groups will have every individual rate card of every account in that group as a separate line item in that invoice generated for the group. There will not be any automatic consolidation within the invoice group.</Info>
+
+<Warning> Currently, multiple purchases that happen on the same day across grouped accounts are consolidated at the end of the day into a single invoice. This behaviour is being modified so that purchases are not allowed to be consolidated at all. </Warning>
