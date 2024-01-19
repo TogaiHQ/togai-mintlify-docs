@@ -188,8 +188,7 @@
             "docs/integrations/data-sources/jdbc-overview",
             "docs/integrations/data-sources/postgres",
             "docs/integrations/data-sources/prometheus",
-            "docs/integrations/data-sources/s3",
-            "docs/integrations/data-sources/snowflake",
+            "docs/integrations/data-sources/s3",            
             "docs/integrations/data-sources/victoria-metrics"
           ]
         },

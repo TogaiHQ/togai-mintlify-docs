@@ -7,7 +7,7 @@ title: "Alerts"
 You can create alerts in Togai to notify yourself or your customers when they meet a define threshold as per the configured alert value. An alert configuration in Togai has 2 parts 
 
 * Creating the alert - this is where you configure the alert itself
-* Configuring the channel - you can add one or more communication channles for an alert.
+* Configuring the channel - you can add one or more communication channels for an alert
 
 <Frame caption="Alerts and communication channels">
   <img src="/docs/images/alerts-channels.png" />
@@ -20,6 +20,11 @@ Togai supports the following types of alerts -
 * Usage based alert - this is an alert that is triggered when the custome crossed a certain usage value defined in this alert configuration.
 * Entitlement alert - this alert is triggered when customer's entitlement balance drops below the defined theshold
 * Credit balance alert - this alert is triggered when the customer's credit balance drops below a specified low balance threshold.
+* Unprocessed event alert - this alert is triggered to notify you when we receive an event that goes into [Unprocessed](/docs/event-ingestion#event-states) state
+
+<Tip>Alerts can also be chosen for different entities in Togai - i) Organization level alerts are triggered to you when a threshold is met/crossed across all your customer accounts put together. ii) Account level alerts are triggered specific to the threshold being met/crossed only for that specific account. </Tip>
+
+<Check>Togai also provides APIs to create alerts that your customers can use and configure monitoring thresholds in your product. This is extremely important for a usage based pricing model since customers would not want surprises at the end of the billing cycle.</Check>
 
 ## Alert configurations
 

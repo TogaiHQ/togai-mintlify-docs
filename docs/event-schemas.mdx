@@ -24,7 +24,7 @@ When creating an event schema, it is important to understand how you have instru
 
 * Work with what you already have
 * Design with flexibility
-* For systems that are scaled to over 1000 events per second, combine multiple event types into a single schema, if possible, to save egress costs.
+* Choose the right idempotency key as "event_id"
 
 <Warning>Currently, you will only be able to new attributes, dimensions or enrichments to an existing schema. You cannot delete attributes, dimensions or enrichments in an event schema once it is published.</Warning>
 

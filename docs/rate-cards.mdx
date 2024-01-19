@@ -56,6 +56,14 @@ This rate card is used to create a pay-as-you-go consumption based component in 
 
 License rate cards are used to configure a seat based pricing model or one where you charge on users. It can also be used to model other actions that require persistance across billing cycles. Examples can be total data stored by your customer, number of [Zaps configured](https://www.zapier.com/pricing) or momentary usages that have increments/decrements such as parallel tests being run for a testing platform. You can provide different slabs and pricing types in this rate card.
 
+Some important points to note for a License rate card - 
+
+* There are 4 types of behaviours for a license rated card based on the configurations chosen for Invoice Association (In Advance or In Arrears) and Proration option
+* Currently, the granularity for a license rate card is per day. Let's take an example of a postpaid user based pricing which is modeled as a license rate card with In Arrears configuration. Now if the customer adds/removes users multiple times within a single day, the invoice will combine the entire set of operations done into a single usage quantity for that particular day.
+* If proration is enabled, the max number of license values on a particular day is taken as the usage quantity for rating and invoicing.
+* The revenue metrics (positive or negative) for license rate cards are computed for the entire duration of the cycle as on the date of addition/deletion of the license quantities, irrespective of proration.
+* For In Advance license with proration enabled, if a customer decreases the number of license quantities, the difference amount owed back to the customer for the remaining period of the cycle is added to the customer's account as a credit balance. This balance can be netted off against subsequent invoices of the account.
+
 <Frame caption="Example of a license rate card">
   <img src="/docs/images/license-fee.png" />
 </Frame>
