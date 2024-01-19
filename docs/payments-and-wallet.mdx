@@ -1,0 +1,30 @@
+---
+title: "Payments and wallet"
+---
+
+Payments management is something Togai has natively so that the post-invoicing processing and receivables can be managed in a single platform. This also provides the ability to give credit limits and trigger alerts if those limits are breached.
+
+<Info>This section is **not** related to payment processing via payment gateways like Stripe or Adyen. That is explained under the [integrations tab](/docs/integrations/overview)</Info>
+
+
+## How are payments recorded within Togai?
+
+There are 2 ways of recording a payment in Togai - 
+
+### Mark as paid
+
+This means every DUE invoice or an order has an option to be marked as Paid. This can be initiated or automatically using payment gateway triggers.
+
+
+### Recording a payment entry 
+Payments can also be recorded separately for every account or account group. Here, you can provide all the transaction details and payment instrument to keep track of the payment entries as a ledger balance.
+
+## Wallet
+
+The 2nd option mentioned above (recording a payment entry) is treated as a wallet. The main properties of a wallet are the ability to hold a balance and then be able to add to it or remove from it in the form of transactions as it happens in a ledger.
+
+You can use this feature to model a pre-paid/advance wallet for your customers who can fund this and hold an advance amount. This amount can be kept in the wallet itself or utilized to net-off against pending DUE invoices or added as a new credit entry that does not expire to the customer's account.
+
+<Tip>If you net-off a wallet balance against an ongoing invoice, then value of the ongoing invoice will be placed in 'Hold' in the wallet with only the balance available for utilization. This amount will update automatically as the invoice gets refreshed based on consumption. </Tip>
+
+<Check>When netting off against an invoice, you can also choose which invoice to net off the wallet balance against.</Check>

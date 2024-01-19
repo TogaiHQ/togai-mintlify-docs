@@ -4,7 +4,7 @@ title: "Authentication 🔐"
 
 Togai uses token based authentication to authenticate API requests.
 
-#### Generating New API Keys 🔑
+## Generating New API Keys 🔑
 
 If this is your first time using Togai, you'll likely need to generate a new API key from your Togai web app, [API Tokens](https://app.togai.com/settings/api-tokens) screen. You can do this by navigating in web app ->
 
@@ -19,3 +19,14 @@ The Secret key is the Bearer Token used for authenticating your request. It is t
 <Frame caption="Create an API token">
   <img src="/api-reference/images/a5c498b-Screenshot_2023-02-01_at_6.16.41_PM.png" />
 </Frame>
+
+
+## Types of authentication
+
+Togai provides 3 types of authentication - 
+
+1. Username & Password - this can be used as your authentication mechanism for API but this is not the recommended approach.
+2. Long lived secret key - This is the token used from the previous section and used as the Bearer token while making API requests to Togai.
+3. Short lived token - You can check the [method here](/api-reference/authentication/get-bearer-token) to generate a short lived API token. The advantage this provides is high throughput performance for the [Ingest API](/api-reference/event-ingestion/ingest-events-to-togai).
+
+<Tip>We recommend using the short lived token if you need high throughput ingestion for your events.</Tip>

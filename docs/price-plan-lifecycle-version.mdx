@@ -1,0 +1,40 @@
+---
+title: "Lifecycle and version control"
+---
+
+## Price plan lifecycle
+
+* **Draft** - Price plans can be created in a draft mode. Draft mode is meant to be used when you want to create a test plan and edit it as required. You can add/edit/delete the configurations in a draft state. Price plans in draft mode cannot be associated with a customer account. You can also archive a plan that is in draft state. When you save a price plan in the draft state, its status will be shown as 'Inactive'
+
+* **Active** - You can publish Price plans directly to create it in an 'Active' state. You can also toggle an 'Inactive' plan to an 'Active' state and vice versa. Currently, you cannot edit an Active plan. 
+
+<Note>Active plans can be deactivated only if they do not have any customer accounts associated with them.</Note>
+
+* **Archive** - You can archive an Inactive Price plan. Archived plans are not displayed in the dashboard but would still be stored within Togai.
+
+<Info>You cannot delete Price plans from Togai currently. If you do have the need to delete a plan, please reach out to us and we can help you with it.</Info>
+
+## Price Plan Versioning
+
+You can use Togai to manage different versions of your price plan. We understand that as your business evolves, you will need to keep updating your pricing in line with the value your business provides. When you change your pricing, you are faced with many challenges - 
+
+- How to inform customers prior to making the changes?
+- How to schedule changes upfront?
+- How to handle existing customers?
+- How to keep track of the changes?
+- How to manage different segments of customers?
+- How to grandfather pricing for a select group of people?
+
+To handle all of the above questions, Togai supports creating multiple versions of the same price plan. You will be able to create, manage and keep track of the different versions of your price plan as your pricing evolves to meet business needs. You can use our [API](/api-reference/price-plans/update-a-price-plan) to update an existing price plan and create a new version. You can also use the Togai dashboard to add a new version to a price plan. The next section explains how to migrate customers from old price plan versions to new ones seamlessly.
+
+
+## Price Plan Migration
+
+Togai now gives you the ability to migrate accounts from one price plan to another or between different versions of the same price plan. The following migration options are supported - 
+
+* Migrate to new version/plan immediately
+* Migrate to new version/plan from start of next pricing cycle
+* Migrate without overrides to new version/plan immediately
+* Migrate without overrides to new version/plan from start of next pricing cycle
+* Don't migrate existing accounts (for Price plan version management)
+

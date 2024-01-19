@@ -1,0 +1,169 @@
+---
+title: "Rate cards"
+---
+
+Rate cards are the entity that allows you to set the pricing for every line item in your invoice. 
+
+<Frame caption="Rating process">
+  <img src="/docs/images/rate-cards.png" />
+</Frame>
+
+<br />
+
+**You define the rate cards in the 2nd step of creating your price plan. Togai offers maximum flexibility when it comes to the types of supported rate cards.**
+
+<br />
+
+<CardGroup cols={3}>
+  <Card title="Fixed fee" icon="hyphen" href="/docs/rate-cards#fixed-fee-rate-card">
+    Model recurring / one-time platform and subscription fees
+  </Card>
+  <Card title="Usage based" icon="display-chart-up-circle-dollar" href="/docs/rate-cards#usage-based-rate-card">
+    Pay-as-you-go consumption based models
+  </Card>
+  <Card title="License" icon="user" href="/docs/rate-cards#license-rate-card">
+    Seat, contact, user, record or license based pricing
+  </Card>
+  <Card title="Entitlement" icon="lock" href="/docs/rate-cards#entitlement-rate-card">
+    Price features that require restricted usage or access
+  </Card>
+  <Card title="Overage" icon="plus" href="/docs/rate-cards#entitlement-overage-rate-card">
+    Allow pre-paid models with flexibility to go over restricted usage
+  </Card>
+  <Card title="Credit" icon="hand-holding-dollar" href="/docs/rate-cards#credit-grant-rate-card">
+    Model promotional discounts as well as minimum commitments
+  </Card>
+</CardGroup>
+
+
+## Fixed fee rate card
+
+Fixed fee rate cards are used to model a flat pricing that does not have any input quantity. You can model one-time purchases such as setup fees and professional services or recurring fees such as platform subscription fees and bill your customers.
+
+<Frame caption="Example of a fixed fee recurring rate card">
+  <img src="/docs/images/fixed-fee.png" />
+</Frame>
+
+## Usage based rate card
+
+This rate card is used to create a pay-as-you-go consumption based component in your price plan with different types of slabs (tier/volume) and pricing types (per unit/package).
+
+<Frame caption="Example of a usage based rate card">
+  <img src="/docs/images/usage-rate-card.png" />
+</Frame>
+
+## License rate card
+
+License rate cards are used to configure a seat based pricing model or one where you charge on users. It can also be used to model other actions that require persistance across billing cycles. Examples can be total data stored by your customer, number of [Zaps configured](https://www.zapier.com/pricing) or momentary usages that have increments/decrements such as parallel tests being run for a testing platform. You can provide different slabs and pricing types in this rate card.
+
+<Frame caption="Example of a license rate card">
+  <img src="/docs/images/license-fee.png" />
+</Frame>
+
+## Entitlement rate card
+
+Entitlement rate cards are used to model a pre-paid committed purchase which comes with restriced usage/access. You can create a custom entitlement cycle within your overall billing cycle allowing for extreme flexibility.
+
+<Frame caption="Example of an entitlement rate card">
+  <img src="/docs/images/entitlement.png" />
+</Frame>
+
+## Entitlement Overage rate card
+
+When you sell to large customers, you would have minimum commitments but not want to restrict their usage when they cross the agreed upon committed values. This can be easily modeled as an Overage rate card within Togai which is similar to a usage based rate card but is applicable only upon the entitlement threshold getting breached.
+
+<Frame caption="Example of an overage rate card">
+  <img src="/docs/images/overage.png" />
+</Frame>
+
+## Credit grant rate card
+
+Credit grant rate cards have 2 use cases in Togai - 
+
+1. Marketing promotions and discounts - you can offer a free currency credit to your customers for any amount and have them applied to specific line items of your invoice. This can be used to model any type of upfront promotion or adhoc discounts.
+
+2. Minimum commitments for individual line items - You can create a credit grant with a purchase price associated for the minimum commitment amount and associate them to specific line items or group of items in your invoice to model high configurability in your minimum commitments.
+
+<Frame caption="Credit grant rate card used to model minimum commitment">
+  <img src="/docs/images/minimum-commitment.png" />
+</Frame>
+
+<br />
+
+<Card title="Important note" icon="triangle-exclamation">
+You can have only 1 rate card per billable item in a price plan. You cannot create 2 or more rate cards for the same billable item (usage meter/add-on/feature) within a single price plan.
+</Card>
+
+
+## Minimum commitment
+If your minimum commitment requirement is at an overall plan/contract level, this can be modeled simply as a plan minimum that will be applicable in your overall invoice.
+
+## Rate card common entities
+In this section, let's go through a few common entities across the rate cards - 
+
+**Invoice association** - **In Arrears** means that this fee will be invoiced (becomes DUE) at the end of the billing cycle. **In Advance** would mean this rate card is invoiced (becomes DUE) at the beginning of the cycle. 
+
+<Note>This option is not available for Usage and Entitlement overage rate cards which will always be invoiced In Arrears</Note>
+
+**Proration** - This is a toggle that allows you to enable pro-ration for Fixed and License rate cards. Enabling proration means your customers will pay only for the duration that have been associated on the plan rather than the entire duration of the billing cycle.
+
+**Tag** - By default, every rate card in the price plan will be displayed as an individual line item in the invoice. This option can be used to group various line items in the invoice under a single 'Tag'
+
+**Recurrence Interval** - This configuration allows you to define a cycle for the rate card that is different from the plan's default billing cycle. So, you can essentially configure your pricing cycle at a rate card level, thus offering maximum flexibility when it comes to price modeling.
+
+<Tip>If the billing cycle is Monthly and the recurrence interval is 2, then that rate card will be invoiced every 2 months instead of monthly.</Tip>
+
+**Recurrence Offset** - This option allows you to delay the start of invoicing for the rate card by 'X' number of billing cycles where 'X' is what you input in this configuration.
+
+<Tip>You can use the offset feature to provide a free trial for non-usage based rate cards, that will delay the the invoicing start date for that rate card by the chosen number of billing cycles.</Tip>
+
+## Pricing model
+
+Togai provides 3 configurations for pricing models and types. Pricing model in Togai allows you to configure tiers of pricing slabs based on usage quantity. These are applicable for rate cards where there is a usage quantity - Usage fee rate card, License rate card and Entitlement overage rate card.
+
+### Standard
+This allows you to setup a single tier of pricing for any usage quantity.
+
+### Tiered
+This model allows you to create any number of slabs based on usage quantities that can each be priced individually.
+
+### Volume
+This model allows you to create any number of slabs based on usage quantities where the pricing is dependent on the final slab the usage quantity falls upon the invoice becoming DUE.
+
+<Tip>A simple example to showcase the difference between Tiered and Volume pricing model <br />Let's have 2 slabs and price per unit as per below: <br /> Slab 1: 0 - 100 units, price per unit 2 USD  <br />  Slab 2: > 100 units, price per unit 1 USD <br /> If the actual usage of a customer is 150 units for the cycle, then the output for each would be: <br />**TIERED** - (100 * 2 USD) + (50 * 1 USD) = 250 USD <br /> **VOLUME** - (150 * 1 USD) = 150 USD</Tip>
+
+
+## Pricing type
+Pricing type allows you to define the per unit pricing for your rate card. These are applicable for rate cards where there is a usage quantity - Usage fee rate card, License rate card and Entitlement overage rate card.
+
+### Flat
+This pricing type allows you to configure a fixed fee for the entire usage slab chosen.
+
+### Per unit
+This allows you to create a pay-as-you-go based pricing for the chosen usage slab.
+
+### Package
+This option provides you the flexibility to charge per bundle where you can define your own bundle/package size. Example of a package is say $10 per 1000 API hits where 1000 is the package size and customer has to pay in increments of 1000 (package size).
+
+### Max and min
+These provide floor and ceiling price limits for your slab, the customer will be charged atleast the floor price (min) and atmost the ceiling price (max) if these are configured in your rate cards.
+
+
+## Simple configuration for a complex contract
+Let's take an example of a CRM product whose contract has the following clauses - 
+
+* An annual fixed platform fee of $20,000 charged upfront that includes
+* 10 free users and $100 per user per month above that with pro-ration and charged along with usage based fee
+* First 1000 contacts free, with $1 for additional 10 contacts upto a maximum of 5000 contacts - for more, please contact us
+* Limit download to 20000 records per month
+* Overage price of 0.05 USD per record upto 25000 records and 0.03 USD per record after that
+* Allow unused records to roll-over to next month's free usage limit
+* An API product that is priced at 1 USD per unit for the first 5000 and has a volume based slab of 0.8 USD per unit beyond that
+* Initial one-time setup fee of $5000
+* Minimum usage commitment of $1000 per month
+
+
+
+<Frame caption="Simple configuration for a complex contract">
+  <img src="/docs/images/rate-card-modeling.png" />
+</Frame>

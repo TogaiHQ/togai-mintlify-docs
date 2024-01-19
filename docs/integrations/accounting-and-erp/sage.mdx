@@ -1,0 +1,32 @@
+---
+title: "Sage"
+---
+
+Sage Business Cloud Accounting is cloud-based accounting software thats simple to set up and use and has an open API, which is ideal for customization.
+
+The integration between **Sage** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `Sage` from the available apps  
+* Click on the `+Add connection` button  
+* Prompt with list of access policies that you would grant to Togai will be displayed, click on `Accept` to proceed
+* You will be redirected to Sage login page
+* Enter your Sage credentials and log in to your Sage account
+* Click on `Accept` to grant Togai access to your Sage account
+* You will be redirected back to Togai and the connection will be added to your account
+
+## Flows
+
+### 1. Sync Togai accounts to Sage
+* Flow is triggered when a new account is created in Togai
+* Togai then creates a corresponding customer in Sage and syncs the customer identifier between Togai and Sage, so that the customer can be identified in both systems.
+* The mapping of customer identifier in the Settings tab of every Togai Account. The setting name for MS Dynamics customer identifier in Togai is `SageAccountPlatformId`.
+
+
+### 2. Sync Togai invoices to Sage
+* Flow is triggered when a new invoice is created in Togai
+* Togai then creates a corresponding invoice on the accounting platform, Sage using the customer identifier created in the previous flow.
+* Caution: If the customer does not have a Sage customer identifier, the invoice will not be synced to Sage.

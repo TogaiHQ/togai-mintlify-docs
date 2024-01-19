@@ -1,0 +1,30 @@
+---
+title: "Alerts"
+---
+
+## Overview
+
+You can create alerts in Togai to notify yourself or your customers when they meet a define threshold as per the configured alert value. An alert configuration in Togai has 2 parts 
+
+* Creating the alert - this is where you configure the alert itself
+* Configuring the channel - you can add one or more communication channles for an alert.
+
+<Frame caption="Alerts and communication channels">
+  <img src="/docs/images/alerts-channels.png" />
+</Frame>
+
+## Alert types
+
+Togai supports the following types of alerts - 
+
+* Usage based alert - this is an alert that is triggered when the custome crossed a certain usage value defined in this alert configuration.
+* Entitlement alert - this alert is triggered when customer's entitlement balance drops below the defined theshold
+* Credit balance alert - this alert is triggered when the customer's credit balance drops below a specified low balance threshold.
+
+## Alert configurations
+
+* Time interval - this allows you to set the frequency of checking if the alert condition has been met. The minimum interval is 30 minutes with increments of 30 minutes.
+* Validity - You can also define a temporary alert that will check only for the duration of this validity period. If left empty, then the alert will be valid forever.
+
+## Communication channels
+You can configure multiple communication channels to a single alert. For example, if a customer crosses a usage threshold, you can intimate the same to both the customer via email as well as an internal slack channel for your accounts management team. Currently, Togai supports 3 channels - **Webhook, Email and Slack**

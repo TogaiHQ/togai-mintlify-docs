@@ -1,12 +1,17 @@
 {
   "$schema": "https://mintlify.com/schema.json",
   "name": "Togai documentation",
-  "openapi": ["/openapi.yaml"],
+  "openapi": [
+    "/openapi.yaml"
+  ],
   "api": {
-    "baseUrl": ["https://sandbox-api.togai.com", "https://api.togai.com"],
+    "baseUrl": [
+      "https://sandbox-api.togai.com",
+      "https://api.togai.com"
+    ],
     "auth": {
-        "method": "bearer",
-        "inputPrefix": "Bearer <>"
+      "method": "bearer",
+      "inputPrefix": "Bearer <>"
     },
     "playground": {
       "mode": "simple"
@@ -14,10 +19,17 @@
     "maintainOrder": true
   },
   "analytics": {
-    "gtm": { "tagId": "GTM-TS4BK7Z" },
-    "ga4": { "measurementId": "G-Q0BLXR7WX5" }
+    "gtm": {
+      "tagId": "GTM-TS4BK7Z"
+    },
+    "ga4": {
+      "measurementId": "G-Q0BLXR7WX5"
+    }
   },
-  "feedback":{"suggestEdit": true, "raiseIssue": true},
+  "feedback": {
+    "suggestEdit": true,
+    "raiseIssue": true
+  },
   "logo": {
     "dark": "/images/togai-dark.svg",
     "light": "/images/togai-light.png"
@@ -39,17 +51,17 @@
   "backgroundImage": "/images/background-documentation-min.png",
   "topbarLinks": [
     {
-      "name": "Demo",
+      "name": "Demo app",
       "url": "https://demo.togai.com"
     },
     {
       "name": "Login",
-      "url": "https://app.togai.com"
+      "url": "https://app.togai.com/login"
     }
   ],
   "topbarCtaButton": {
-    "name": "SignUp",
-    "url": "https://app.togai.com/onboarding"
+    "name": "Talk to us",
+    "url": "https://www.togai.com/contact-us/"
   },
   "tabs": [
     {
@@ -59,6 +71,10 @@
     {
       "name": "Change log",
       "url": "changelog"
+    },
+    {
+      "name": "Templates",
+      "url": "templates"
     }
   ],
   "anchors": [
@@ -66,84 +82,158 @@
       "name": "Postman collection",
       "icon": "folder-open",
       "url": "https://www.postman.com/togai-workspace/workspace/togai-public"
-    },
-    {
-      "name": "Vault",
-      "icon": "vault",
-      "url": "https://pricingvault.togai.com"
-    },
-    {
-      "name": "Blog",
-      "icon": "newspaper",
-      "url": "https://www.togai.com/blog"
     }
   ],
-  "versions": ["v1"],
+  "versions": [
+    "v1"
+  ],
   "navigation": [
     {
-      "group": "Introduction",
-      "pages": ["docs/introduction-to-togai", "docs/team-behind-togai"
+      "group": "Overview",
+      "pages": [
+        "docs/introduction",
+        "docs/how-togai-works"
       ]
     },
     {
-      "group": "Event Processing",
+      "group": "Usage metering",
       "pages": [
-        "docs/event-ingestion",
         {
-          "group": "Event Schema",
-          "pages": ["docs/event-schemas", "docs/enriched-values"]
-        }
-      ]
-    },
-    {
-      "group": "Billable Items",
-      "pages": [
-        "docs/billable-items-overview",
+          "group": "Defining an event",
+          "pages": [
+            "docs/event-schemas",
+            "docs/event-enrichments"
+          ]
+        },
+        "docs/event-ingestion",
         "docs/usage-meter"
       ]
     },
     {
-      "group": "Pricing",
+      "group": "Pricing and rating",
       "pages": [
-        "docs/add-ons",
+        "docs/billable-items",
         {
-          "group": "Price Plans",
+          "group": "Price Plan",
           "pages": [
-            "docs/price-plans",
-            "docs/price-plan-overrides"
+            "docs/price-plan-overview",
+            "docs/pricing-cycle",
+            "docs/rate-cards",
+            "docs/pricing-rules",
+            "docs/price-plan-lifecycle-version"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "group": "Manage customers",
+      "pages": [
+        "docs/customers",
+        "docs/price-plan-overrides",
+        "docs/price-plan-schedule",
         {
-          "group": "Customers",
+          "group": "Quote to cash",
           "pages": [
-            "docs/customers",
-            "docs/credits",
-            "docs/price-plan-schedule",
-            "docs/proposals"
+            "docs/qtc-overview",
+            "docs/proposals",
+            "docs/purchases"
           ]
-        },
-        "docs/invoices",
-        "docs/entitlements"
+        }
+      ]
+    },
+    {
+      "group": "Billing and payments",
+      "pages": [
+        "docs/invoices-overview",
+        "docs/invoice-groups",
+        "docs/invoice-templates",
+        "docs/credits",
+        "docs/payments-and-wallet"
+      ]
+    },
+    {
+      "group": "Insights and alerts",
+      "pages": [
+        "docs/insights-overview",
+        "docs/revenue-simulator",
+        "docs/alerts"
       ]
     },
     {
       "group": "Configuration",
       "pages": [
         "docs/admin-center",
+        "docs/settings",
         "docs/quotas-and-limits"
       ]
     },
     {
       "group": "Integrations",
       "pages": [
-        "docs/integrations/integrations-concepts",
         "docs/integrations/overview",
-        "docs/integrations/stripe",
-        "docs/integrations/chargebee",
-        "docs/integrations/zohobooks",
-        "docs/integrations/zuora",
-        "docs/integrations/razorpay",
-        "docs/integrations/first-promoter"
+        "docs/integrations/supported-integrations",
+        {
+          "group": "Payments",
+          "pages": [
+            "docs/integrations/payments/adyen",
+            "docs/integrations/payments/paystack",
+            "docs/integrations/payments/razorpay",
+            "docs/integrations/payments/stripe"
+          ]
+        },
+        {
+          "group": "Data sources",
+          "pages": [
+            "docs/integrations/data-sources/aws-redshift",
+            "docs/integrations/data-sources/jdbc-overview",
+            "docs/integrations/data-sources/postgres",
+            "docs/integrations/data-sources/prometheus",
+            "docs/integrations/data-sources/s3",
+            "docs/integrations/data-sources/snowflake",
+            "docs/integrations/data-sources/victoria-metrics"
+          ]
+        },
+        {
+          "group": "Billing & invoicing",
+          "pages": [
+            "docs/integrations/billing-and-invoicing/chargebee",
+            "docs/integrations/billing-and-invoicing/zuora"
+          ]
+        },
+        {
+          "group": "Accounting & ERP",
+          "pages": [
+            "docs/integrations/accounting-and-erp/ms-dynamics",
+            "docs/integrations/accounting-and-erp/netsuite",
+            "docs/integrations/accounting-and-erp/odoo",
+            "docs/integrations/accounting-and-erp/quickbooks",
+            "docs/integrations/accounting-and-erp/sage",
+            "docs/integrations/accounting-and-erp/xero",
+            "docs/integrations/accounting-and-erp/zohobooks"
+          ]
+        },
+        {
+          "group": "CRM & CPQ",
+          "pages": [
+            "docs/integrations/crm-and-cpq/docusign",
+            "docs/integrations/crm-and-cpq/hubspot",
+            "docs/integrations/crm-and-cpq/salesforce"
+          ]
+        },
+        {
+          "group": "Communications",
+          "pages": [
+            "docs/integrations/communications/ses",
+            "docs/integrations/communications/slack",
+            "docs/integrations/communications/smtp"
+          ]
+        },
+        {
+          "group": "Marketing",
+          "pages": [
+            "docs/integrations/marketing/first-promoter"
+          ]
+        }
       ]
     },
     {
@@ -158,243 +248,262 @@
     {
       "group": "APIs",
       "version": "v1",
-      "pages": [{
-        "group": "Authentication",
-        "pages": [
-          "api-reference/authentication/get-bearer-token"
-        ]
-      },{
-        "group": "Customers",
-        "pages": [
-          "api-reference/customers/list-customers",
-          "api-reference/customers/create-a-customer",
-          "api-reference/customers/get-a-customer",
-          "api-reference/customers/delete-a-customer",
-          "api-reference/customers/update-a-customer"
-        ]
-      },
-      {
-        "group": "Accounts",
-        "pages": [
-          "api-reference/accounts/list-accounts-of-customer",
-          "api-reference/accounts/create-an-account",
-          "api-reference/accounts/get-an-account",
-          "api-reference/accounts/delete-an-account",
-          "api-reference/accounts/update-an-account",
-          {
-            "group": "Account Aliases",
-            "pages": [
-              "api-reference/accounts/account-aliases/get-all-aliases-of-an-account",
-              "api-reference/accounts/account-aliases/add-aliases-to-account",
-              "api-reference/accounts/account-aliases/remove-aliases-to-account"
-            ]
-          },
-          {
-            "group": "Plan Associations",
-            "pages": [
-              "api-reference/accounts/plan-association/list-pricing-schedules-of-an-account",
-              "api-reference/accounts/plan-association/edit-schedules-of-an-account",
-              "api-reference/accounts/plan-association/disassociate-a-plan-fromto-an-account"
-            ]
-          },
-          {
-            "group": "Purchases",
-            "pages": [
-              "api-reference/accounts/purchases/get-all-purchases-for-an-account",
-              "api-reference/accounts/purchases/initiate-a-purchase",
-              "api-reference/accounts/purchases/get-a-specific-purchase-of-an-account"
-            ]
-          },
-          {
-            "group": "Proposals",
-            "pages": [
-              "api-reference/accounts/proposals/list-all-proposals-of-an-account",
-              "api-reference/accounts/proposals/propose-a-purchase-of-a-plan",
-              "api-reference/accounts/proposals/get-proposal-information",
-              "api-reference/accounts/proposals/approve-or-decline-a-purchase-of-a-billing-plan"
-            ]
-          }
-        ]
-      },{
-        "group": "Aliases",
-        "pages": [
-          "api-reference/aliases/list-all-aliases",
-          "api-reference/aliases/create-an-alias",
-          "api-reference/aliases/get-an-alias",
-          "api-reference/aliases/delete-an-alias"
-        ]
-      },
-      {
-        "group": "Event Schemas",
-        "pages": [
-          "api-reference/event-schemas/list-event-schemas",
-          "api-reference/event-schemas/create-an-event-schema",
-          "api-reference/event-schemas/get-an-event-schema",
-          "api-reference/event-schemas/delete-an-event-schema",
-          "api-reference/event-schemas/update-an-event-schema",
-          "api-reference/event-schemas/list-all-event-schema-versions",
-          "api-reference/event-schemas/activate-an-event-schema",
-          "api-reference/event-schemas/deactivate-an-event-schema"
-        ]
-      },
-      {
-        "group": "Usage Meters",
-        "pages": [
-          "api-reference/usage-meters/list-usage-meters-for-event-schema",
-          "api-reference/usage-meters/create-an-usage-meter",
-          "api-reference/usage-meters/get-usage-meter",
-          "api-reference/usage-meters/delete-an-usage-meter",
-          "api-reference/usage-meters/update-an-usage-meter",
-          "api-reference/usage-meters/activate-usage-meter",
-          "api-reference/usage-meters/deactivate-usage-meter"
-        ]
-      },
-      {
-        "group": "AddOns",
-        "pages": [
-          "api-reference/addons/list-addons",
-          "api-reference/addons/create-an-addon",
-          "api-reference/addons/get-an-addon",
-          "api-reference/addons/delete-an-addon",
-          "api-reference/addons/update-an-addon"
-        ]
-      },
-      {
-        "group": "Licenses",
-        "pages": [
-          "api-reference/licenses/get-a-list-of-licenses-updates",
-          "api-reference/licenses/update-a-license-entry"
-        ]
-      },
-      {
-        "group": "Feature",
-        "pages": [
-          "api-reference/feature/list-feature",
-          "api-reference/feature/create-a-feature-and-optionally-associate-with-one-or-more-event_schemas",
-          "api-reference/feature/get-a-feature",
-          "api-reference/feature/update-a-feature"
-        ]
-      },
-      {
-        "group": "Price Plans",
-        "pages": [
-          "api-reference/price-plans/list-price-plans",
-          "api-reference/price-plans/create-a-price-plan",
-          "api-reference/price-plans/get-a-price-plan",
-          "api-reference/price-plans/update-a-price-plan",
-          "api-reference/price-plans/activate-a-price-plan",
-          "api-reference/price-plans/add-currencies-to-a-price-plan",
-          "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
-        ]
-      },     
-      {
-        "group": "Settings",
-        "pages": [
-          "api-reference/settings/lists-settings",
-          "api-reference/settings/create-a-setting",
-          "api-reference/settings/get-a-setting",
-          "api-reference/settings/update-a-setting"
-        ]
-      },
-      {
-        "group": "Price Experimentation",
-        "pages": [
-          "api-reference/price-experimentation/calculate-and-return-the-revenue-for-a-existing-or-new-price-plan"
-        ]
-      },
-      {
-        "group": "Migrations",
-        "pages": [
-          "api-reference/migrations/get-the-status-of-a-migration",
-          "api-reference/migrations/migrates-accounts-which-are-associated-to-one-price-plan-to-another-price-plan",
-          "api-reference/migrations/list-migrations"
-        ]
-      },
-      {
-        "group": "Event Ingestion",
-        "pages": [
-          "api-reference/event-ingestion/ingest-events-to-togai",
-          "api-reference/event-ingestion/ingest-events-to-togai-in-batch"
-        ]
-      },
-      {
-        "group": "Entitlements",
-        "pages": [
-          "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
-          "api-reference/entitlements/get-feature-credits-balance",
-          "api-reference/entitlements/list-feature-credits-entries-of-a-feature-for-an-account",
-          "api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account",
-          "api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account",
-          "api-reference/entitlements/get-entitlements-for-a-account",
-          "api-reference/entitlements/check-entitlement-value-for-a-account",
-          "api-reference/entitlements/get-entitlement-value-for-a-account"
-        ]
-      },
-      {
-        "group": "Event Management",
-        "pages": [
-          "api-reference/event-management/get-a-list-of-usage-events-with-multiple-query-options",
-          "api-reference/event-management/get-an-usage-event-using-event-id",
-          "api-reference/event-management/undo-ingested-events"
-        ]
-      },
-      {
-        "group": "Metrics",
-        "pages": [
-          "api-reference/metrics/get-togai-metrics"
-        ]
-      },
-      {
-        "group": "Credits",
-        "pages": [
-          "api-reference/credits/list-credits",
-          "api-reference/credits/grant-credit",
-          "api-reference/credits/get-credit-details",
-          "api-reference/credits/void-credit",
-          "api-reference/credits/credit-balance-for-account"
-        ]
-      },
-      {
-        "group": "Invoices",
-        "pages": [
-          "api-reference/invoices/list-invoices",
-          "api-reference/invoices/get-an-invoice",
-          "api-reference/invoices/add-or-update-miscellaneous-charges-in-invoice",
-          "api-reference/invoices/update-payment-status-in-invoice",
-          "api-reference/invoices/add-or-update-miscellaneous-charges-in-upcoming-invoice-for-a-account",
-          "api-reference/invoices/create-a-custom-invoice-for-an-account",
-          "api-reference/invoices/delete-a-custom-invoice-in-draft-state"
-        ]
-      },
-      {
-        "group": "Payments",
-        "pages": [
-          "api-reference/payments/list-all-payments",
-          "api-reference/payments/get-a-payment",
-          "api-reference/payments/create-payments"
-        ]
-      },
-      {
-        "group": "Wallet",
-        "pages": [
-          "api-reference/wallet/wallet-balance-for-account",
-          "api-reference/wallet/wallet-entries-for-account"
-        ]
-      },
-      {
-        "group": "InvoiceGroups",
-        "pages": [
-          "api-reference/invoicegroups/list-invoice-groups",
-          "api-reference/invoicegroups/create-an-invoice-group",
-          "api-reference/invoicegroups/get-information-of-an-invoice-group",
-          "api-reference/invoicegroups/add-accounts-to-an-invoice-group",
-          "api-reference/invoicegroups/remove-accounts-from-an-invoice-group-removing-all-accounts-will-also-delete-the-invoice-group"
-        ]
-      }]
+      "pages": [
+        {
+          "group": "Authentication",
+          "pages": [
+            "api-reference/authentication/get-bearer-token"
+          ]
+        },
+        {
+          "group": "Customers",
+          "pages": [
+            "api-reference/customers/list-customers",
+            "api-reference/customers/create-a-customer",
+            "api-reference/customers/get-a-customer",
+            "api-reference/customers/delete-a-customer",
+            "api-reference/customers/update-a-customer"
+          ]
+        },
+        {
+          "group": "Accounts",
+          "pages": [
+            "api-reference/accounts/list-accounts-of-customer",
+            "api-reference/accounts/create-an-account",
+            "api-reference/accounts/get-an-account",
+            "api-reference/accounts/delete-an-account",
+            "api-reference/accounts/update-an-account",
+            {
+              "group": "Account Aliases",
+              "pages": [
+                "api-reference/accounts/account-aliases/get-all-aliases-of-an-account",
+                "api-reference/accounts/account-aliases/add-aliases-to-account",
+                "api-reference/accounts/account-aliases/remove-aliases-to-account"
+              ]
+            },
+            {
+              "group": "Plan Associations",
+              "pages": [
+                "api-reference/accounts/plan-association/list-pricing-schedules-of-an-account",
+                "api-reference/accounts/plan-association/edit-schedules-of-an-account",
+                "api-reference/accounts/plan-association/disassociate-a-plan-fromto-an-account"
+              ]
+            },
+            {
+              "group": "Purchases",
+              "pages": [
+                "api-reference/accounts/purchases/get-all-purchases-for-an-account",
+                "api-reference/accounts/purchases/initiate-a-purchase",
+                "api-reference/accounts/purchases/get-a-specific-purchase-of-an-account"
+              ]
+            },
+            {
+              "group": "Proposals",
+              "pages": [
+                "api-reference/accounts/proposals/list-all-proposals-of-an-account",
+                "api-reference/accounts/proposals/propose-a-purchase-of-a-plan",
+                "api-reference/accounts/proposals/get-proposal-information",
+                "api-reference/accounts/proposals/approve-or-decline-a-purchase-of-a-billing-plan"
+              ]
+            }
+          ]
+        },
+        {
+          "group": "Aliases",
+          "pages": [
+            "api-reference/aliases/list-all-aliases",
+            "api-reference/aliases/create-an-alias",
+            "api-reference/aliases/get-an-alias",
+            "api-reference/aliases/delete-an-alias"
+          ]
+        },
+        {
+          "group": "Event Schemas",
+          "pages": [
+            "api-reference/event-schemas/list-event-schemas",
+            "api-reference/event-schemas/create-an-event-schema",
+            "api-reference/event-schemas/get-an-event-schema",
+            "api-reference/event-schemas/delete-an-event-schema",
+            "api-reference/event-schemas/update-an-event-schema",
+            "api-reference/event-schemas/list-all-event-schema-versions",
+            "api-reference/event-schemas/activate-an-event-schema",
+            "api-reference/event-schemas/deactivate-an-event-schema"
+          ]
+        },
+        {
+          "group": "Usage Meters",
+          "pages": [
+            "api-reference/usage-meters/list-usage-meters-for-event-schema",
+            "api-reference/usage-meters/create-an-usage-meter",
+            "api-reference/usage-meters/get-usage-meter",
+            "api-reference/usage-meters/delete-an-usage-meter",
+            "api-reference/usage-meters/update-an-usage-meter",
+            "api-reference/usage-meters/activate-usage-meter",
+            "api-reference/usage-meters/deactivate-usage-meter"
+          ]
+        },
+        {
+          "group": "AddOns",
+          "pages": [
+            "api-reference/addons/list-addons",
+            "api-reference/addons/create-an-addon",
+            "api-reference/addons/get-an-addon",
+            "api-reference/addons/delete-an-addon",
+            "api-reference/addons/update-an-addon"
+          ]
+        },
+        {
+          "group": "Licenses",
+          "pages": [
+            "api-reference/licenses/get-a-list-of-licenses-updates",
+            "api-reference/licenses/update-a-license-entry"
+          ]
+        },
+        {
+          "group": "Feature",
+          "pages": [
+            "api-reference/feature/list-feature",
+            "api-reference/feature/create-a-feature-and-optionally-associate-with-one-or-more-event_schemas",
+            "api-reference/feature/get-a-feature",
+            "api-reference/feature/update-a-feature"
+          ]
+        },
+        {
+          "group": "Price Plans",
+          "pages": [
+            "api-reference/price-plans/list-price-plans",
+            "api-reference/price-plans/create-a-price-plan",
+            "api-reference/price-plans/get-a-price-plan",
+            "api-reference/price-plans/update-a-price-plan",
+            "api-reference/price-plans/activate-a-price-plan",
+            "api-reference/price-plans/add-currencies-to-a-price-plan",
+            "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
+          ]
+        },
+        {
+          "group": "Settings",
+          "pages": [
+            "api-reference/settings/lists-settings",
+            "api-reference/settings/create-a-setting",
+            "api-reference/settings/get-a-setting",
+            "api-reference/settings/update-a-setting"
+          ]
+        },
+        {
+          "group": "Price Experimentation",
+          "pages": [
+            "api-reference/price-experimentation/calculate-and-return-the-revenue-for-a-existing-or-new-price-plan"
+          ]
+        },
+        {
+          "group": "Migrations",
+          "pages": [
+            "api-reference/migrations/get-the-status-of-a-migration",
+            "api-reference/migrations/migrates-accounts-which-are-associated-to-one-price-plan-to-another-price-plan",
+            "api-reference/migrations/list-migrations"
+          ]
+        },
+        {
+          "group": "Event Ingestion",
+          "pages": [
+            "api-reference/event-ingestion/ingest-events-to-togai",
+            "api-reference/event-ingestion/ingest-events-to-togai-in-batch"
+          ]
+        },
+        {
+          "group": "Entitlements",
+          "pages": [
+            "api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature",
+            "api-reference/entitlements/get-feature-credits-balance",
+            "api-reference/entitlements/list-feature-credits-entries-of-a-feature-for-an-account",
+            "api-reference/entitlements/update-a-feature-credits-entry-of-a-feature-for-an-account",
+            "api-reference/entitlements/void-a-feature-credits-entry-of-a-feature-for-an-account",
+            "api-reference/entitlements/get-entitlements-for-a-account",
+            "api-reference/entitlements/check-entitlement-value-for-a-account",
+            "api-reference/entitlements/get-entitlement-value-for-a-account"
+          ]
+        },
+        {
+          "group": "Event Management",
+          "pages": [
+            "api-reference/event-management/get-a-list-of-usage-events-with-multiple-query-options",
+            "api-reference/event-management/get-an-usage-event-using-event-id",
+            "api-reference/event-management/undo-ingested-events"
+          ]
+        },
+        {
+          "group": "Metrics",
+          "pages": [
+            "api-reference/metrics/get-togai-metrics"
+          ]
+        },
+        {
+          "group": "Credits",
+          "pages": [
+            "api-reference/credits/list-credits",
+            "api-reference/credits/grant-credit",
+            "api-reference/credits/get-credit-details",
+            "api-reference/credits/void-credit",
+            "api-reference/credits/credit-balance-for-account"
+          ]
+        },
+        {
+          "group": "Invoices",
+          "pages": [
+            "api-reference/invoices/list-invoices",
+            "api-reference/invoices/get-an-invoice",
+            "api-reference/invoices/add-or-update-miscellaneous-charges-in-invoice",
+            "api-reference/invoices/update-payment-status-in-invoice",
+            "api-reference/invoices/add-or-update-miscellaneous-charges-in-upcoming-invoice-for-a-account",
+            "api-reference/invoices/create-a-custom-invoice-for-an-account",
+            "api-reference/invoices/delete-a-custom-invoice-in-draft-state"
+          ]
+        },
+        {
+          "group": "Payments",
+          "pages": [
+            "api-reference/payments/list-all-payments",
+            "api-reference/payments/get-a-payment",
+            "api-reference/payments/create-payments"
+          ]
+        },
+        {
+          "group": "Wallet",
+          "pages": [
+            "api-reference/wallet/wallet-balance-for-account",
+            "api-reference/wallet/wallet-entries-for-account"
+          ]
+        },
+        {
+          "group": "InvoiceGroups",
+          "pages": [
+            "api-reference/invoicegroups/list-invoice-groups",
+            "api-reference/invoicegroups/create-an-invoice-group",
+            "api-reference/invoicegroups/get-information-of-an-invoice-group",
+            "api-reference/invoicegroups/add-accounts-to-an-invoice-group",
+            "api-reference/invoicegroups/remove-accounts-from-an-invoice-group-removing-all-accounts-will-also-delete-the-invoice-group"
+          ]
+        }
+      ]
     },
     {
       "group": "Change Log",
-      "pages": ["changelog/change-log"]
+      "pages": [
+        "changelog/change-log"
+      ]
+    },
+    {
+      "group": "Templates",
+      "pages": [
+        "templates/eleven-labs",
+        "templates/opus-clip",
+        "templates/hypertrack",
+        "templates/loxo",
+        "templates/typeform",
+        "templates/heygen",
+        "templates/anthropic",
+        "templates/personal-ai"
+      ]
     }
   ],
   "footerSocials": {

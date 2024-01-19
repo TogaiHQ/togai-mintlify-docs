@@ -16,6 +16,13 @@ b. users who have been invited to use Togai but haven't accepted the invite\\
 
 Additionally, you can also add new users by hitting the **"Invite New User"** button.
 
+<Note> We support 4 types of users in Togai - Administrator, Analyst, Developer, Product Manager </Note>
+
+**Administrator** - Full read and write access to all features<br />
+**Analyst** - Read only access to all features<br />
+**Developer** - Full access to Event schemas, Usage meters, Customers, accounts and settings<br />
+**Product Manager** - Full access to Price plans, Schedules, Invoices and credits. Read only access to Event schema, usage meters, customers, accounts, settings
+
 ### 3\. Currencies
 
 Togai has a built-in support for multiple currencies to help you serve various geographies across the globe.
@@ -28,7 +35,28 @@ To add multiple currencies:
 3. Enter the exchange rate to convert the values to your base currency. Please note that once the conversion rate is saved, it cannot be changed.
 4. Confirm the creation of the currency
 
-### 4\. API Tokens
+<Note> The conversion factor used in the currency table here is only for reporting and revenue recognition purpose. The pricing and rating for price plans with multiple currencies will always happen in the value of the defined local currency unit. </Note>
+
+### 4\. Alias management
+
+You can manage your organization's aliases in this section. You can remove aliases from one account and assign them to a new account.
+
+### 5\. Invoice config
+You can define the organization default for Net term days (credit period you want to give for a Due invoice)
+
+If you have an Invoice sequencing format, that can be configured in this section.
+
+You can also upload your logo to be used in your invoice template.
+
+### 6\. Invoice templates
+
+We covered invoice templates in the [previous section](/docs/invoice-templates).
+
+### 7\. Billing information
+This is the billing details of your company/organization that can be added to your invoice template. Togai supports multiple billing information configurations here that can be used in different templates.
+
+
+### 8\. API Tokens
 
 The API Tokens tab helps you generate new tokens and also view a list of the older ones.
 
@@ -40,11 +68,14 @@ To create a new token:
 
 Please note that you can toggle to deactivate a token and also delete it.
 
-![](/docs/images/8e4d4d5-Screenshot_2023-03-10_at_12.22.14_PM.png "Screenshot_2023-03-10_at_12.22.14_PM.png")
+<Frame caption="API tokens">
+  <img src="/docs/images/api-tokens.png" />
+</Frame>
 
-### 5\. Bulk Import
 
-Bulk Import tab allows you to upload a csv file to migrate your customers/accounts into Togai. 
+### 9\. Bulk Import
+
+Bulk Import tab allows you to upload a csv file to migrate your customers/accounts into Togai as well as ingest usage data for metering. We support ingestion of both events as well as license quantities via file upload here.
 
 To bulk upload from your system:
 
@@ -55,7 +86,7 @@ To bulk upload from your system:
 5. Once you've selected your csv file to be uploaded, you'll be prompted to map all fields.
 6. Lastly, you can hit the **"Start Import"** button to begin importing your data.
 
-### 6\. Price Plan Migration
+### 10\. Price Plan Migration
 
 You can migrate accounts from one plan to another with just a few clicks. Follow the steps below: 
 
@@ -67,23 +98,6 @@ You can migrate accounts from one plan to another with just a few clicks. Follow
    2. Migrate `all accounts` to new price plan from `next pricing cycle`  
    3. Migrate all accounts `without overrides` to new price plan `immediately `  
    4. Migrate all accounts `without overrides` to new pricing plan from `next pricing cycle `
+   
 ![](/docs/images/4d20e7b-image.png) 
 
-### 7\. Settings
-
-There are 6 entities for which you can create settings. 
-
-* Organization
-* Customer
-* Account
-* Event Schema
-* Usage Meter
-* Add on
-* Price Plan
-* Invoice
-
-In the Admin center, you can create settings for the Organization. For the rest, you can go to the corresponding sections. 
-
-Organization wide setting is a metadata component that can be used in certain scenarios like event enrichment and no-code center workflows. 
-
-The setting type can be JSON, JSON Logic, Numeric and String.

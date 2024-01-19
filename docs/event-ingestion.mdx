@@ -2,21 +2,56 @@
 title: "Event Ingestion"
 ---
 
-Select the **“Events”** tab on the side menu to view the list of events that have been triggered from your system to Togai.
+In the previous section, we went through [how to define the data structure](/docs/event-schemas) to send usage data to Togai. In this section, we will take you through how to start sending the raw usage data, monitor them and debug if required. Togai's ingestion pipeline has been designed keeping in mind these principles - 
+
+* **Scalability** - Togai would be the source of truth for your raw usage data that can be metered and rated for any pricing configuration. Our ingestion pipe is built to handle high throughput (continuous stream of 10000 events per second is supported - this translates to billion events per day)
+
+* **Reliability** - Togai has multiple redundancies and fall back mechanisms to ensure there is zero data loss for any event. Since, your events have a direct impact to dollars, this is a core tenet for us.
+
+* **Accuracy** - Our 2 ingestion pipelines (async and sync) has inbuilt idempotency which means an event will be counted once, and exactly once.
+
+## Basics 
+
+Events are the primary building block in Togai. An event can be metered to track usage of your product. It can then be used to compute your revenue metrics in real-time. Your customers can view the real-time cost metrics on an ongoing basis as and when they use your product.
+
+An event in Togai comprises of the following parts:
+
+* **schemaName:** This is the name of the event schema for which you are sending the event for. This is required since you can map a single event schema to multiple usage metrics and monetize them independently.
+* **id:** This is the idempotency key used for deduplication of an event. For more details about how Togai handles idempotency, please check the note below.
+* **timestamp:** This is the timestamp of the event as you would need it to be metered. We use the timestamp provided by you in the event payload for metering and not when we received the event. This timestamp must be in ISO 8601 format.
+* **accountID:** This is the customer's account ID or account alias ID to which the event needs to be associated and metered. Ingest aliases are useful when sending events using an identifier from your system, such as an email address, phone number or account number. Each customer in Togai can have multiple ingest aliases, and usage events with an accountID matching any of those aliases will count towards that customer's usage.
+* **event properties:** These are the attributes and dimensions that are part of the event schema that was defined by you. If the event payload does not contain the attributes and dimensions mentioned in your schema name, then the event will be unprocessed.
+
+<Tip>**Idempotency handling** -  Idempotency is inbuilt into Togai's architecture. This means an event is processed once, and only once. If a valid record is ingested (you receive 202 response), Togai guarantees it will be processed only once. The idempotency window is 45 days in Togai.</Tip>
+
+<Warning>If you send a backdated event post the closure of a billing cycle, that event will be unprocessed. Sending backdated events in Togai is allowed upto the grace period you have configured for a customer in Togai.</Warning>
+
+## Types of event ingestion
+
+* **[Async event ingestion](/api-reference/event-ingestion/ingest-events-to-togai)** - We recommend this type for postpaid billing models. This allows you to send raw data to Togai without blocking critical parts of your application for your users. Since Togai allows you to send backdated events and uses the timestamp you provide for metering, you can safely send data asynchronously to Togai to meter it.
+
+* **[Async batch event ingestion](/api-reference/event-ingestion/ingest-events-to-togai-in-batch)** - For high throughput scenarios, you can use our batch API to send upto 1000 events in a single request for metering.
+
+* **[Sync event ingestion](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature)** - Togai supports a synchronous option to ingest events for billing models that involve pre-paid purchases. For example, in a scenario where customer has purchased 1000 API calls for a fixed fee, you can use Togai's [entitlements](docs/entitlements) to configure a usage limit and then ingest data synchronously, to understand if your customer is eligible for access or not.
+
+<Check>Togai is built to handle billions of events per day with the ingestion system having multiple redundancies and tested for six 9s uptime. If you have a custom requirement with continuous processing of over ten thousand events per second, we provide an SDK that meters in your infrastructure to reduce egress costs.</Check>
+
+
+## Event states
 
 The events ingested in Togai can have one of the following three states:  
-**1\. Processed Events** \- This list details the lists of events that were successfully processed  
-**2\. Unprocessed Events** \- This list contains the events that were not successfully processed by Togai  
-**3\. In-Progress Events** \- This section lists the events that are currently in the queue waiting to be processed
+1. **Processed events** - This list details the lists of events that were successfully processed. 
+2. **Unprocessed events** - This list contains the events that were not successfully processed by Togai.
+3. **In-Progress events** - This section lists the events that are currently in the queue waiting to be processed.
 
-To view the properties or the JSON Payload of any event, simply select the event and a summary will be displayed in a side panel on the screen.
+If your ingestion request to Togai fails with a network error or a 5xx HTTP status code, some of your events may have been ingested, but others may not. You should always retry a failed call to /ingest until you receive a 200 status code. The unique id in each event prevents duplicate processing, so retries are always safe.
 
-![2278](/docs/images/event-details.png "Event Details")
+<Warning>**Avoid retries on 4xx status code responses** - If a call to /ingest fails with a 4xx HTTP status code, this indicates an issue with the payload. Do not automatically retry such a call. Instead, put it aside in a dead letter queue and trigger an alarm so you can investigate the failure and resolve the issue. </Warning>
 
-Event Details
+## Event pipeline and auditing
 
-You can view the JSON payload pushed from the same side panel. Here is what it would look like:
+Togai provides a complete pipeline view for every event where you can see the data flow for the event from ingestion to usage tracking to revenue computation and invoice for a customer. This allows you to always have full visibility of your event data, audit them and also use it for debugging when required.
 
-![1559](/docs/images/event-json-payload.png "JSON Payload of an event")
-
-JSON Payload of an event
+<Frame caption="Event pipeline">
+  <img src="/docs/images/event-pipeline.png" />
+</Frame>

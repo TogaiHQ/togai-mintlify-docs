@@ -1,0 +1,32 @@
+---
+title: "Salesforce"
+---
+
+Salesforce provides customer relationship management (CRM) software and applications focused on sales, customer service, marketing automation, e-commerce, analytics etc.
+
+The integration between **Salesforce** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+![Login to Salesforce](/docs/integrations/images/salesforce-login.png)
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `Salesforce` from the available apps  
+* Click on the `+Add connection` button  
+* You will be redirected to Salesforce login page
+* Enter your Salesforce credentials and log in to your Salesforce account
+* Click on `Accept` to grant Togai access to your Salesforce account
+* You will be redirected back to Togai and the connection will be added to your account
+
+## Flows
+
+### 1. Togai - Salesforce Account Sync
+* Flow is triggered on a new account creation in Salesforce
+* Togai creates a corresponding customer and syncs the customer identifier between Togai and Salesforce.
+* You can see this mapping of customer identifier in the Settings tab of every customer. The setting name for Salesforce customer identifier in Togai is `SalesforceAccountId`.
+
+### 2. Togai - Salesforce Quote Sync
+* Flow is triggered on a Quote accepted event in Salesforce
+* Flow continues to fetch the Salesforce product from the Quote, so that it can be transformed into a Togai entity
+* Togai creates a corresponding price plan for the Salesforce product
+* Togai either marks the invoice created for the customer as paid or attaches a price plan to the customer depending on the Quote 

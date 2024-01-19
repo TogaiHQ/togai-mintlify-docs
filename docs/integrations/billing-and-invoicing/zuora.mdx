@@ -1,0 +1,46 @@
+---
+title: "Zuora"
+---
+
+The Togai and Zuora Integration supports a bidirectional sync between Togai and Zuora. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between Zuora and Togai requires only a one-time setup. Follow the steps below:
+
+## Install
+
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `Zuora` from the available apps
+* Click on the `+Add connection` button
+
+![](/docs/integrations/images/eb4f882-image.png) 
+
+* Fill in the following details to create a connection:
+   * **App link name**: Name for the connection
+   * **Endpoint URL:** The Zuora endpoint that is required to fetch the data. 
+   <Tip>
+      Refer to the Zuora documentation on [Access to APIs](https://www.zuora.com/developer/api-references/api/overview/#section/Introduction/Access-to-the-API), which has all the valid Zuora endpoints required to configure.
+   </Tip>
+   * **Client ID**: The Client Identifier of a Zuora OAuth Client created to authenticate the Zuora Rest APIs.
+   * **Client Secret:** The Client Secret of a Zuora OAuth Client to authenticate the Zuora Rest APIs.
+   <Tip>
+      Refer to the Zuora documentation on [how to create an OAuth Client for a User](https://knowledgecenter.zuora.com/Zuora%5FCentral%5FPlatform/Tenant%5FManagement/A%5FAdministrator%5FSettings/Manage%5FUsers#Create%5Fan%5FOAuth%5FClient%5Ffor%5Fa%5FUser), which has instructions on how to create a client.
+   </Tip>
+   * **Charge ID:** This is an optional field. If you want to sync the credits to Zuora from Togai, then credits will be added against this Zuora `Charge Id`.
+
+
+## Flows
+
+![](/docs/integrations/images/b1ecc3d-image.png)
+
+### 1. Sync customers created from Zuora to Togai  
+   1. The flow listens to the webhook for customer creation in Zuora.
+   2. If a webhook for customer creation exists, Togai listens and automatically creates a corresponding customer in Togai and syncs the customer ID between Togai and Zuora.  
+   3. You can see this mapping of IDs in the Settings tab for that customer.
+
+### 2. Sync subscriptions in Zuora to Togai  
+   1. When a Subscription is created in Zuora, the corresponding price plan will be created in Togai  .
+   2. The price plan will then be associated to the specific account inside Togai. 
+   3. You can see the mapping of customer ID betwee Zuora and Togai in the Settings tab of that customer inside Togai
+
+By following this API guide, you can leverage the Togai and Zuora Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.

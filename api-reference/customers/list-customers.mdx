@@ -2,7 +2,34 @@
 openapi: get /customers
 ---
 
-import {listCustomersQueryFields} from "/snippets/list-entities-query-fields.mdx";
-import {ListAPIInfo} from "/snippets/list-api-query-param-info.mdx";
+<AccordionGroup>
+  <Accordion title="Query Parameters">
+    <ParamField query="id" type="string">
+      Unique identifier of the customer
+    </ParamField>
+    <ParamField query="status" type="enum">
+      Status of the customer (`ACTIVE`, `ARCHIVED`)
+    </ParamField>
+  </Accordion>
+</AccordionGroup>
 
-<ListAPIInfo info={listCustomersQueryFields} show_filter_combinations/>
+<AccordionGroup>
+  <Accordion title="Filterable Fields">
+    <ParamField query="id" type="string"/>
+    <ParamField query="status" type="string"/>
+  </Accordion>
+  <Accordion title="Searchable Fields">
+    Fields that can be searched on using `_search` query param
+    <ParamField query="name" type="string"/>
+    <ParamField query="primary_email" type="string"/>
+    <ParamField query="billing_address" type="string"/>
+  </Accordion>
+  <Accordion title="Sortable Fields">
+    Fields with which the list response can be sorted using `_sort` query param
+    <ParamField query="updated_at" type="string"/>
+    <ParamField query="id" type="string"/>
+
+    <Note>Default sort order: `updated_at DESC, id ASC`</Note>
+
+  </Accordion>
+</AccordionGroup>

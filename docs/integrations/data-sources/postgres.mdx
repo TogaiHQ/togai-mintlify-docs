@@ -1,0 +1,34 @@
+---
+title: "Postgres"
+---
+
+Postgres, is a free and open-source relational database management system emphasizing extensibility and SQL compliance.
+
+The integration between **Postgres** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `Postgres` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `Connection URI`: The connection URI for your Postgres database
+
+### Connection URI
+The syntax for the postgres connection URI using the username and password authentication:
+
+```bash
+jdbc:postgresql://username:password@host:port/database
+```
+
+## Flows
+
+### Sync customer from Postgres to Togai
+* The flow will be available to be triggered on demand from the Togai dashboard
+* It will execute a SQL query to fetch all the customers from Postgres
+* It will then create the customers in Togai using the `Customers` API
+
+### Sync events from Postgres to Togai
+* The flow will be available to be triggered on demand from the Togai dashboard
+* It will execute a SQL query to fetch all the events from Postgres
+* It will then create the events in Togai using the `Event Ingestion` API

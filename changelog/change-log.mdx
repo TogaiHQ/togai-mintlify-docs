@@ -4,15 +4,45 @@ icon: clipboard
 ---
 This Change Log provides a consolidated list of features and enhancements to Togai's metering and billing platform on an ongoing basis. This Change Log will be updated weekly to reflect the pace of new features and changes that are being taken live within Togai. If you have any feature asks, please send a mail to engg@togai.com and we will accommodate it in our roadmap.
 
+## January 2024
+
+### 14th January 2024
+- Custom ad-hoc invoices are now tracked in revenue metrics
+- Alerts and communication channels launched. [Learn more](/docs/alerts)
+- You can now preview an ongoing invoices based on the template associated with the account
+- Custom invoice in draft state can be edited and deleted now
+- Slack communication app launched
+
+### 7th January 2024
+- Custom charges can now be created without impacting revenue
+- Now, you can store metadata with license purchases (use case example is where you can record PO number to submit to your customer for payment)
+- Effective browser caching for front end performance improvement
+
+
 ## December 2023
 
-### December 10th 2023
+### 31st December 2023
+- Invoice templates - allow uploading of templates as well
+- New [wallet](/docs/payments-and-wallet#wallet) entity launched along with payment capture and maintenance of ledger
+- Allow alias management at organization level
+- Support hourly metrics in addition to daily metrics
+- Delete API available for settings
+
+### 24th December 2023
+- Optimization of price plans to store in cache
+- Delayed/[deferred revenue computation](/docs/pricing-cycle) allows price plan edits from start of the current unbilled cycle and rerate the usage.
+- APIs for listing feature available
+- Billable name in add-ons made unique and queryable
+- SMTP app integration in No-code center allowing emails to be automated
+
+
+### 17th December 2023
 - Credit balances will be refreshed at the same rate as invoice refreshes
 - Filter invoices based on whether you want to view/display zero dollar or zero usage line items
 - New UI refresh for price plan schedule
 - Update Stripe invoice flow to add payment link as a setting after invoice is finalized (due)
 
-### December 3rd 2023
+### 10th December 2023
 - You can now create an invoice template and assign it to different customer accounts. Multiple invoice templates can be created.
 - Invoice sequencing available along with a template
 - You can now record and track payments and assign them to invoices and manage your account receivables
@@ -21,7 +51,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## November 2023
 
-### November 26th 2023
+### 26th November 2023
 - Now, you can create a price plan with deferred revenue computation. This means that the revenue metrics for plans with this configuration will be computed at the end of the billing cycle. The benefit this configuration provides is the ability to change your price plan any number of times during a billing cycle and also for a past time period during an unbilled cycle.
 - You can add separate display names to be shown in the invoice for all usage meters, add-ons and features.
 - Upload custom logo for your invoice
@@ -33,22 +63,22 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Quickbooks integration is live now
 - Dynamic triggers for alert channels based on conditions
 
-### November 19th 2023
+### 19th November 2023
 - Signup or Login with Microsoft account credentials (SSO via Microsoft)
-- Create custom invoice with line items (In DRAFT, DUE and PAID state) [DRAFT invoices will become due on the said date]
+- Create custom invoice with line items (In DRAFT, DUE and PAID state - DRAFT invoices will become due on the said date)
 - PDFs for invoices are created when an invoice becomes DUE
 - Added display name in Add-on API response
 - Tally integration
 - Support conditional triggers which can help to trigger flows only if certain conditions are met.
 
-### November 12th 2023
+### 12th November 2023
 - Download schedules list in csv format
 - Download schedule details in xlsx format (in account summary & schedules list pages)
 - Update phone number and other details (GSTN, VATN, etc...) at account level
 - Get organization level billing details (address, ph number, GSTN, VATN, etc.)
 - Add/edit currency in new price plan view
 
-### November 5th 2023
+### 5th November 2023
 - Invoice line items is decimal adjusted according to the currencies. For example - YEN has 0 decimals, INR has 2 and so on
 - Async purchase takes no additional time to update status to SUCCESS once the purchase is granted
 - Anniversary price plan can now be created (Start Offsets are auto-calculated based on the association date)
@@ -64,7 +94,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## October 2023
 
-### October 29th 2023
+### 29th October 2023
 - You can now configure alerts for your entitlement grants based on how much balance your customer has consumed.
 - Purchase plans are now associated asynchronously for handling scale.
 - We now support idempotency for license updates.
@@ -75,18 +105,18 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Salesforce integration to sync customer accounts and quotes to price plans automatically.
 
 
-### October 22nd 2023
+### 22nd October 2023
 - Now you can void an event and re-send it using the same id. This [API](/api-reference/event-management/undo-ingested-events#openapi-delete-events) allows you to correct old events with new attributes and dimensions that can then be used for metering, rating and billing.
 - We now provide the ability to search for any entity (eg: Usage meter, add-on, features, price plans, customers, accounts) using its ID
 - You can now have a customized theme for your dashboard and match the user-experience you provide to your customers through your product.
 
-### October 15th 2023
+### 15th October 2023
 
 - Support for In-advance pro-rated fixed fees
 - Support for deletion for events
 - Edit entitlement grants in the dashboard
 
-### October 8th 2023
+### 8th October 2023
 
 - Fixed Fees are now supported in One-time price plans (Plan type: PURCHASE)
 - Entitlement quantities can now be used for Purchase plan too (entitlement quantity is used as the quantity of all the rate cards in Purchase plan)
@@ -98,7 +128,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Disable Stripe auto-debit for customers even if they have a payment method
 - Enable multiple flow-links for a single flow 
 
-### October 1st 2023
+### 1st October 2023
 
 - Now you can record revenue at an event level and not just at an aggregated level
 - Set password if you have signed up using Google SSO
@@ -106,7 +136,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## September 2023
 
-### September 24th 2023
+### 24th September 2023
 
 - Faster revenue computation and invoice updates.
 - Event idempotency updated to 45 days for both event ingestion and entitlement ingestion
@@ -115,13 +145,13 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - File based ingestion (csv format) for license updates
 - Users who created account via Google can also set password
 
-### September 17th 2023
+### 17th September 2023
 
 - Support for configuring proration for license rate cards when the number of licenses are reduced and the refunds to be given as credits
 - Capture billing address and email id at an account level
 - Netsuite and Salesforce integrations
 
-### September 10th 2023
+### 10th September 2023
 
 - New type of rate card - to support overages for entitlement rate cards
 - Accept custom formula using jsonLogic for custom charges at invoice or account settings
@@ -135,7 +165,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Support for an invoice group to collect payments via payment gateways
 
 
-### September 3rd 2023
+### 3rd September 2023
 
 - Weekly pricing cycle
 - Create an invoice group to consolidate invoices from multiple accounts into a single invoice
@@ -145,7 +175,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## August 2023
 
-### August 25th 2023
+### 25th August 2023
 
 - New UI design
 - Overdue status for invoices
@@ -153,7 +183,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Pull usage data from VictoriaMetrics and Prometheus integration automatically by writing custom queries
 - Automatically link the default flows for supported apps and auto-register webhooks programatically where supported
 
-### August 18th 2023
+### 18th August 2023
 
 - Configure due date for an invoice at an organization level or a customer level
 - Support creating proposals for entitlement purchases
@@ -165,7 +195,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Quickbooks integration
 - Automatically configure a payment gateway based on the customer's country
 
-### August 11th 2023
+### 11th August 2023
 
 - License rate cards support 'In Advance' invoicing
 - Create credit grant rate cards as part of a price plan
@@ -177,7 +207,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 - Allow negative values for fixed fee rate card
 - Paystack integration is live
 
-### August 9th 2023
+### 9th August 2023
 
 - Rate card level quantities when purchasing plans (support as a new type of plan: Purchase plan. entitlement plans will be deprecated)
 - Ability to create proposals which upon accepting becomes a purchase
@@ -191,7 +221,7 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## July 2023
 
-### July 28th 2023
+### 28th July 2023
 
 - Credit grant rate card: Ability to configure recurring credit grants as part of price plan for a price.
 - Orders: Initiating entitlement plan purchases will now create orders instead of invoices. Togai creates an invoice (convert order into invoice) once the payment is received against the order.
@@ -200,12 +230,12 @@ This Change Log provides a consolidated list of features and enhancements to Tog
     0$ invoices will automatically be marked as paid there by auto confirming the purchases and granting corresponding entitlements.
     Invoice status revamp. We are moving to unified invoice statuses from having invoice status and payment status earlier.
 
-### July 20th 2023
+### 20th July 2023
 
 - Togai now gives you the ability to migrate accounts from one price plan to another. You have 8 possible options to choose from.
 
 
-### July 7th 2023
+### 7th July 2023
 
 -  Add and delete rate cards during overrides: You can now not only edit but also add or delete fixed fee and license rate cards while overriding a customer's price plan.
 

@@ -1,0 +1,68 @@
+---
+title: "Basics of Togai"
+---
+
+<Frame caption="Togai data flow">
+  <img src="/docs/images/Togai-data-flow.png" />
+</Frame>
+
+## How Togai works?
+
+Togai was built keeping in mind pricing configurability and model flexibility at its core. This means the architecture has been built ground up keeping in mind the requirements of different monetization models across pricing strategy (usage based, seat based, hybrid), GTM motions (self-serve, sales led) and payment terms (pre-paid, credits, post-paid, commitments).
+
+There are 4 building blocks in Togai to be configured that can be used to replace your entire billing stack.
+
+<Frame caption="Configurable entities in Togai">
+  <img src="/docs/images/togai-entities.png" />
+</Frame>
+
+## Quickstart guide
+
+You can follow this 5 steps to easily get started using Togai to meter and bill your customers.
+
+<Steps>
+  <Step title="Create an event schema">
+    Defining your event payload that needs to be metered is the 1st step to tracking raw usage. [Learn more](/docs/event-schemas)
+  </Step>
+  <Step title="Define your metering aggregation">
+    The next step is to aggregate the raw event data into aggregated usage metrics. [Learn more](/docs/usage-meter)
+  </Step>
+  <Step title="Configure your price plan">
+    To rate your metered usage, you should model the pricing for your products in a price plan. [Learn more](/docs/price-plans)
+  </Step>
+  <Step title="Onboard your customers">
+    Add your customers to Togai and associate a price plan to them based on your contract terms. [Learn more](/docs/customers)
+  </Step>
+  <Step title="Automate your invoicing">
+    Once you define your invoice format, your customers will receive their invoices automatically at the end of every billing cycle. [Learn more](/docs/invoice-templates)
+  </Step>
+
+</Steps>
+
+## Work backwards from your invoice
+
+<Frame caption="Working backwards from your customer invoice">
+  <img src="/docs/images/sample-invoice.png" />
+</Frame>
+
+Your invoice consists of static and dynamic fields. 
+
+* **Static fields** - Your company details, your customer's details, your line items in the invoice and tax rate
+* **Dynamic fields** - Invoice number, Date of the invoice, invoice period, quantity of the line items and price per unit of the line item
+
+The below table consists of the list of fields in your invoice mapped to the corresponding entity and configuration in Togai.
+
+| Invoice field      | Type of field | Togai entity      |
+| ------------------ | ------------- |-------------------|
+| Company details    | Static        |Billing information|
+| Customer details   | Static        |Customer -> account|
+| Line items         | Static        |Billable items     |
+| Tax rate           | Static        |Custom charges     |
+| Invoice number     | Dynamic       |Invoice sequence   |
+| Date of invoice    | Dynamic       |Price plan (Cycle start date, grace period) |
+| Invoice period     | Dynamic       |Price plan billing cycle|
+| Usage quantity     | Dynamic       |Usage meter / license quantity|
+| Price per unit     | Dynamic       |Price plan (Rate cards)|
+
+
+It is ideal to think of your customer experience (pricing and invoicing) and work backwards from there to configure the relevant entities within Togai. The event schema is defined based on how your product is instrumented. Once all the configurations are done, you can start posting the event data to Togai. The invoices are generated accurately and automatically without manual intervention.

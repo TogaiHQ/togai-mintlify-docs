@@ -2,7 +2,60 @@
 openapi: get /invoices
 ---
 
-import {listInvoiceQueryFields} from "/snippets/list-entities-query-fields.mdx";
-import {ListAPIInfo} from "/snippets/list-api-query-param-info.mdx";
+<AccordionGroup>
+<Accordion title="Query Parameters">
+<ParamField query="owner_id" type="string">
+  Unique identifier of the owner corresponding to the invoice[account_id or invoice_group_id]
+</ParamField>
+<ParamField query="customer_id" type="string">
+  Unique identifier of the customer corresponding to the invoice
+</ParamField>
+<ParamField query="price_plan_id" type="string">
+  Unique identifier of the price plan corresponding to the invoice
+</ParamField>
+<ParamField query="status" type="enum">
+  Status of the invoice (`DRAFT`, `DUE`, `PAID`, `VOID`, `UN_COLLECTIBLE`, `INITIATE_REFUND`, `REFUND_COMPLETED`, `MERGED`)
+</ParamField>
+<ParamField query="class" type="enum">
+  Class to which the invoice is categorized (`INVOICE`, `ORDER`, `BILLABLE`)
+</ParamField>
+<ParamField query="start_date" type="date_time">
+  Start date of the invoicing period
+</ParamField>
+<ParamField query="end_date" type="date_time">
+  End date of the invoicing period
+</ParamField>
+<ParamField query="created_at" type="date_time">
+  Date at which the invoice was created
+</ParamField>
+</Accordion>
+</AccordionGroup>
 
-<ListAPIInfo info={listInvoiceQueryFields} show_filter_combinations/>
+<AccordionGroup>
+<Accordion title="Filterable Combinations">
+Filterable combinations to filter the list response
+- `status`
+- `class`
+- `class`, `owner_id`
+- `status`, `class`
+- `status`, `class`, `owner_id`
+- `status`, `invoice_date`
+- `class`, `invoice_date`
+- `status`, `invoice_date`, `customer_id`
+- `class`, `invoice_date`, `customer_id`
+- `status`, `invoice_date`, `customer_id`, `owner_id`
+- `class`, `invoice_date`, `customer_id`, `owner_id`
+- `owner_id`
+- `owner_id`, `price_plan_id`
+- `owner_id`, `price_plan_id`, `start_date`
+- `owner_id`, `price_plan_id`, `start_date`, `end_date`
+</Accordion>
+<Accordion title="Sortable Fields">
+Fields with which the list response can be sorted
+
+| Property    | Default Sort Order |
+| --------    | ------------------ |
+| created_at  | DESC               |
+| id          | ASC                |
+</Accordion>
+</AccordionGroup>
