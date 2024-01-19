@@ -73,8 +73,8 @@
       "url": "changelog"
     },
     {
-      "name": "Templates",
-      "url": "templates"
+      "name": "How-To's",
+      "url": "how-tos"
     }
   ],
   "anchors": [
@@ -493,16 +493,16 @@
       ]
     },
     {
-      "group": "Templates",
+      "group": "How-To's",
       "pages": [
-        "templates/eleven-labs",
-        "templates/opus-clip",
-        "templates/hypertrack",
-        "templates/loxo",
-        "templates/typeform",
-        "templates/heygen",
-        "templates/anthropic",
-        "templates/personal-ai"
+        "how-tos/eleven-labs",
+        "how-tos/opus-clip",
+        "how-tos/hypertrack",
+        "how-tos/loxo",
+        "how-tos/typeform",
+        "how-tos/heygen",
+        "how-tos/anthropic",
+        "how-tos/personal-ai"
       ]
     }
   ],
