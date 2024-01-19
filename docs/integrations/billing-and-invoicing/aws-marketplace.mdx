@@ -2,3 +2,39 @@
 title: "AWS Marketplace"
 ---
 
+Businesses using Togai can charge their customers using AWS marketplace with Togai's AWS marketplace integration. A business can create a product offering in AWS marketplace and add the list of products that they will be charging their customers. Price of these products can be configured as fixed fees or usage based fees in AWS marketplace.
+
+Business can just send raw events to Togai and with AWS marketplace integration, Togai will periodically aggregate the data and ingest the metering into AWS marketplace based on the frequency supported by AWS marketplace. At the end of the billing cycle, AWS marketplace will charge the end customers with the aggregated usage and the granular raw events will be stored in Togai.
+
+## Install
+
+* Navigate to the No code Center section from the left navigation bar in Togai  
+* Click on `Apps` to access the list of apps with tight integration support  
+* Locate and select `AWS Marketplace` from the available apps  
+* Click on the `+Add connection` button  
+* Fill in the AWS access and secret key of an AWS IAM user which has the permissions to ingest usage events to AWS marketplace
+    * The IAM user should have these permissions to ingest events
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Sid": "VisualEditor0",
+                "Effect": "Allow",
+                "Action": [
+                    "aws-marketplace:BatchMeterUsage",
+                    "aws-marketplace:ResolveCustomer",
+                    "aws-marketplace:RegisterUsage",
+                    "aws-marketplace:MeterUsage"
+                ],
+                "Resource": "*"
+            }
+        ]
+    }
+    ```
+* [Create a setting in Togai](https://docs.togai.com/api-reference/settings/create-a-setting) with setting id as "AWSProductCode" in Togai for every usage meter.This is required to map the usage aggregations computed in Togai to AWS marketplace products.
+
+## Flows
+
+### 1. Aggregate and sync usages from Togai to Marketplace
+* This flow will be automatically triggered once an hour and fetches the usages computed in Togai for the hour and pushes the usages to AWS marketplace based on the "AWSProductCode" configured.
