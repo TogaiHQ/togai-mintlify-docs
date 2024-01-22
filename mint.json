@@ -496,6 +496,7 @@
     {
       "group": "How-To's",
       "pages": [
+        "how-tos/overview",
         "how-tos/eleven-labs",
         "how-tos/opus-clip",
         "how-tos/hypertrack",
