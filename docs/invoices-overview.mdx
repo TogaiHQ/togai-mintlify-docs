@@ -25,6 +25,8 @@ Togai automatically generates invoices for each account/group based on the follo
 * Calculate gross and net amounts and generate the final invoice based on the invoice template
 * Automatically send the generated invoice to customers
 
+<Note>Togai follows the minimum divisible currency model. If amount is `$0.001` then it gets rounded down to `$0` in the invoice and will not get synced to external payment processors but if its `$0.01` then `$0.01` will be shown in the invoice and it will get synced to external payment gateways.</Note>
+
 ## Invoice statuses
 
 * **Ongoing** - This is the status of an invoice that has 'In Arrears' rate cards during the current billing cycle.
