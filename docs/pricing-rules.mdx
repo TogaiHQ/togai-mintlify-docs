@@ -16,10 +16,12 @@ Pricing rules allow you to package and bundle your product in completely unique 
 Pricing rules in Togai are configurable using supported [javascript operators](/docs/pricing-rules#supported-javascript-operators). Computation of a pricing rule happens along with the computation of the invoice (near real-time). The following entities should be defined for a pricing rule.
 
 * **Type** - You can configure the pricing rule to be a discount or an additional charge
-* **Rule** - A rule is a condition that is based on the values of a variable in the price plan/invoice. You can use multiple variables to create a condition across multiple rate cards of the plan.
+* **Rule** - A rule is a condition that is based on the values of a variable in the price plan/invoice. You can use multiple variables to create a condition across multiple rate cards of the plan. You can define rules using the supported [javascript operators](/docs/pricing-rules#supported-javascript-operators) mentioned below.
 * **Computation** - Currently, the target action is split into computation and destination as 2 configurable values. You can define the computation as a mathematical formula using supported [javascript operators](/docs/pricing-rules#supported-javascript-operators).
 * **Add/update** - You can either add a new line item for the target computation or update an existing line item of the invoice.
 * **Order** - Here, you define the priority of computing the pricing rules since inter-dependent pricing rules will cause conflict, if parallelized.
+
+<Tip>The variables that can be used to create conditions and computations are the usage and revenue data for the different rate cards configured in the price plan. The variable names will be populated as 'drop-down suggestions' when you type `usage.` or `revenue.`  You cannot apply conditions, computations or update **In Advance** rate cards currently.</Tip>
 
 ## Supported javascript operators
 
