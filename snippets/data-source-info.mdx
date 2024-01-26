@@ -3,7 +3,6 @@ export const DataSourceInfo = ({data_sources, data_source: ds}) => {
   let data_source = data_sources.find((source) => source.name === ds)
   
   return <div>
-    <h3>{data_source.name}</h3>
     <table>
       <thead>
           <th>Field Name</th>
@@ -23,40 +22,44 @@ export const DataSourceInfo = ({data_sources, data_source: ds}) => {
   </div>
 }
 
-export const dataSources = {sources:[
+export const dataSources = {sources: [
   {
     name: 'accounts',
     columns: [
       {
         name: 'account_id',
         type: 'String',
-        description: 'Account Identifier'
+        description: 'The unique identifier of the account.',
       },
       {
         name: 'customer_id',
         type: 'String',
-        description: 'Customer Identifier'
+        description: 'The unique identifier of the customer.',
       },
       {
         name: 'name',
         type: 'String',
-        description: 'Name of the account'
+        description: 'The name of the account.',
       },
       {
         name: 'created_at',
         type: 'LocalDateTime',
+        description: 'The date and time when the account was created.',
       },
       {
         name: 'invoice_currency',
         type: 'String',
+        description: 'The currency of the account.',
       },
       {
         name: 'primary_email',
         type: 'String',
+        description: 'The primary email of the account.',
       },
       {
         name: 'tags',
         type: 'String[]',
+        description: 'The tags of the account.',
       },
     ],
     relations: ['customers'],
@@ -67,12 +70,180 @@ export const dataSources = {sources:[
       {
         name: 'id',
         type: 'String',
+        description: 'The unique identifier of the customer.',
       },
       {
         name: 'name',
         type: 'String',
+        description: 'The name of the customer.',
       },
     ],
     relations: [],
   },
-]}
+  {
+    name: 'usage',
+    columns: [
+      {
+        name: 'account_id',
+        type: 'String',
+        description: 'The unique identifier of the account.',
+      },
+      {
+        name: 'customer_id',
+        type: 'String',
+        description: 'The unique identifier of the customer.',
+      },
+      {
+        name: 'billable_id',
+        type: 'String',
+        description: 'The unique identifier of the billable.',
+      },
+      {
+        name: 'event_time',
+        type: 'LocalDateTime',
+        description: 'The date and time when the usage event occurred.',
+      },
+      {
+        name: 'usage_units',
+        type: 'String',
+        description: 'The usage units of the usage event.',
+      },
+    ],
+  },
+  {
+    name: 'events',
+    columns: [
+      {
+        name: 'event_id',
+        type: 'String',
+        description: 'The unique identifier of the event.',
+      },
+      {
+        name: 'account_id',
+        type: 'String',
+        description: 'The unique identifier of the account.',
+      },
+      {
+        name: 'customer_id',
+        type: 'String',
+        description: 'The unique identifier of the customer.',
+      },
+      {
+        name: 'event_source_time',
+        type: 'LocalDateTime',
+        description: 'The date and time when the event occurred.',
+      },
+      {
+        name: 'ingestion_status',
+        type: 'String',
+        description: 'The ingestion status of the event.',
+      },
+    ],
+  },
+  {
+    name: 'invoices',
+    columns: [
+      {
+        name: 'id',
+        type: 'String',
+        description: 'The unique identifier of the invoice.',
+      },
+      {
+        name: 'owner_id',
+        type: 'String',
+        description: 'The unique identifier of the owner.',
+      },
+      {
+        name: 'total_amount',
+        type: 'Number',
+        description: 'The total amount of the invoice.',
+      },
+      {
+        name: 'status',
+        type: 'String',
+        description: 'The status of the invoice.',
+      },
+      {
+        name: 'due_date',
+        type: 'LocalDateTime',
+        description: 'The date and time when the invoice is due.',
+      },
+      {
+        name: 'class',
+        type: 'String',
+        description: 'The class of the invoice.',
+      },
+      {
+        name: 'created_at',
+        type: 'LocalDateTime',
+        description: 'The date and time when the invoice was created.',
+      },
+    ],
+  },
+  {
+    name: "license_entries",
+    columns: [
+      {
+        name: "account_id",
+        type: "String",
+        description: "The unique identifier of the account."
+      },
+      {
+        name: "license_id",
+        type: "String",
+        description: "The unique identifier of the license."
+      },
+      {
+        name: "effective_from",
+        type: "LocalDateTime",
+        description: "The date and time when the license became effective."
+      },
+      {
+        name: "quantity",
+        type: "BigDecimal",
+        description: "The quantity of the license."
+      },
+      {
+        name: "created_at",
+        type: "LocalDateTime",
+        description: "The date and time when the license was created."
+      }
+    ]
+  },
+  {
+    name: "revenue",
+    columns: [
+     {        
+        name: "account_id",
+        type: "String",
+        description: "The unique identifier of the account."
+    },
+    {
+        name: "customer_id",
+        type: "String",
+        description: "The unique identifier of the customer."
+    },
+    {
+        name: "revenue_time",
+        type: "LocalDateTime",
+        description: "The date and time when the revenue occurred."
+    },
+    {
+        name: "revenue_invoice_currency",
+        type: "String",
+        description: "The currency of the revenue."
+    },
+    {
+        name: "billable_id",
+        type: "String",
+        description: "The unique identifier of the billable."
+    },
+    {
+        name: "revenue_base_currency",
+        type: "String",
+        description: "The base currency of the revenue."
+      }
+    ]
+  },
+]
+  }
