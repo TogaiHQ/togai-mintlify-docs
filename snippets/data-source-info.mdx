@@ -1,0 +1,78 @@
+export const DataSourceInfo = ({data_sources, data_source: ds}) => {
+  
+  let data_source = data_sources.find((source) => source.name === ds)
+  
+  return <div>
+    <h3>{data_source.name}</h3>
+    <table>
+      <thead>
+          <th>Field Name</th>
+          <th>Type</th>
+          <th>Description</th>
+      </thead>
+      <tbody>
+        {
+          data_source.columns.map(col => <tr key={col.name}>
+            <td>{col.name}</td>
+            <td>{col.type}</td>
+            <td>{col?.description}</td>
+          </tr>)
+        }
+      </tbody>
+    </table>
+  </div>
+}
+
+export const dataSources = {sources:[
+  {
+    name: 'accounts',
+    columns: [
+      {
+        name: 'account_id',
+        type: 'String',
+        description: 'Account Identifier'
+      },
+      {
+        name: 'customer_id',
+        type: 'String',
+        description: 'Customer Identifier'
+      },
+      {
+        name: 'name',
+        type: 'String',
+        description: 'Name of the account'
+      },
+      {
+        name: 'created_at',
+        type: 'LocalDateTime',
+      },
+      {
+        name: 'invoice_currency',
+        type: 'String',
+      },
+      {
+        name: 'primary_email',
+        type: 'String',
+      },
+      {
+        name: 'tags',
+        type: 'String[]',
+      },
+    ],
+    relations: ['customers'],
+  },
+  {
+    name: 'customers',
+    columns: [
+      {
+        name: 'id',
+        type: 'String',
+      },
+      {
+        name: 'name',
+        type: 'String',
+      },
+    ],
+    relations: [],
+  },
+]}
