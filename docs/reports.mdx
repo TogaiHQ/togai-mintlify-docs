@@ -2,25 +2,71 @@
 title: "Reports"
 ---
 
+## How reporting works in Togai?
+
+Togai has an extensive reporting capability that allows you to create reports and report templates. These can be used to generate ad hoc one-time reports for download or pushed to an external data source. Customers can also set up scheduled reports that can be auto-generated hourly, daily or monthly and exported or sent to an external data source. 
+
+
+<Frame caption="How reports work in Togai">
+  <img src="/docs/images/reports.png" />
+</Frame>
+
+## Tables and entities
+
 import {DataSourceInfo, dataSources} from "/snippets/data-source-info.mdx";
 
-## Accounts
+### Accounts
 <DataSourceInfo data_sources={dataSources.sources} data_source="accounts" />
 
-## Customers
+### Customers
 <DataSourceInfo data_sources={dataSources.sources} data_source="customers" />
 
-## Events
+### Events
 <DataSourceInfo data_sources={dataSources.sources} data_source="events" />
 
-## Invoices
+### Invoices
 <DataSourceInfo data_sources={dataSources.sources} data_source="invoices" />
 
-## License Entries
+### License Entries
 <DataSourceInfo data_sources={dataSources.sources} data_source="license_entries" />
 
-## Usage
+### Usage
 <DataSourceInfo data_sources={dataSources.sources} data_source="usage" />
 
-## Revenue
+### Revenue
 <DataSourceInfo data_sources={dataSources.sources} data_source="revenue" />
+
+## Supported functions
+```
+DateTruncate - "date_trunc"
+ABS - "abs"`
+```
+
+## Supported aggregations
+```
+Sum - "sum"
+Count - "count"
+Avg - "avg"
+Min - "min"
+Max - "max"
+```
+
+## Supported relative operators
+```
+> - "gt"
+< - "lt"
+>= - "gte"
+<= - "lte"
+== - "eq"
+!= - "neq"
+In - "in"
+Not In - "nin"
+```
+
+## Report templates
+Togai also provides an on-demand reporting template option which can be used to create a custom dashboard with various drag & drop widgets that can be used for business analytics to take data driven decisions around pricing.
+
+<Frame caption="Report templates and dashboard">
+  <img src="/docs/images/report-templates.png" />
+</Frame>
+

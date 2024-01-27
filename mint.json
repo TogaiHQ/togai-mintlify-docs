@@ -152,9 +152,10 @@
       ]
     },
     {
-      "group": "Insights and alerts",
+      "group": "Analytics and alerts",
       "pages": [
         "docs/insights-overview",
+        "docs/reports",
         "docs/revenue-simulator",
         "docs/alerts"
       ]
