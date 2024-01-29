@@ -176,20 +176,21 @@
         {
           "group": "Payments",
           "pages": [
+            "docs/integrations/payments/stripe",
             "docs/integrations/payments/adyen",
             "docs/integrations/payments/paystack",
-            "docs/integrations/payments/razorpay",
-            "docs/integrations/payments/stripe"
+            "docs/integrations/payments/razorpay"
+            
           ]
         },
         {
           "group": "Data sources",
           "pages": [
+            "docs/integrations/data-sources/aws-s3",  
             "docs/integrations/data-sources/aws-redshift",
-            "docs/integrations/data-sources/jdbc-overview",
+            "docs/integrations/data-sources/jdbc",
             "docs/integrations/data-sources/postgres",
             "docs/integrations/data-sources/prometheus",
-            "docs/integrations/data-sources/s3",            
             "docs/integrations/data-sources/victoria-metrics"
           ]
         },
@@ -207,25 +208,27 @@
           "pages": [
             "docs/integrations/accounting-and-erp/ms-dynamics",
             "docs/integrations/accounting-and-erp/netsuite",
-            "docs/integrations/accounting-and-erp/odoo",
             "docs/integrations/accounting-and-erp/quickbooks",
             "docs/integrations/accounting-and-erp/sage",
             "docs/integrations/accounting-and-erp/xero",
+            "docs/integrations/accounting-and-erp/odoo",
             "docs/integrations/accounting-and-erp/zohobooks"
           ]
         },
         {
           "group": "CRM & CPQ",
           "pages": [
-            "docs/integrations/crm-and-cpq/docusign",
+            "docs/integrations/crm-and-cpq/salesforce",
             "docs/integrations/crm-and-cpq/hubspot",
-            "docs/integrations/crm-and-cpq/salesforce"
+            "docs/integrations/crm-and-cpq/docusign"
+            
+            
           ]
         },
         {
           "group": "Communications",
           "pages": [
-            "docs/integrations/communications/ses",
+            "docs/integrations/communications/aws-ses",
             "docs/integrations/communications/slack",
             "docs/integrations/communications/smtp"
           ]
