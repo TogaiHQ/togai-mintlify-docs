@@ -15,6 +15,7 @@ Pricing rules allow you to package and bundle your product in completely unique 
 
 Pricing rules in Togai are configurable using supported [javascript operators](/docs/pricing-rules#supported-javascript-operators). Computation of a pricing rule happens along with the computation of the invoice (near real-time). The following entities should be defined for a pricing rule.
 
+* **Description** - This is the line item description you would like customers to see in their invoice for the pricing rule computation value.
 * **Type** - You can configure the pricing rule to be a discount or an additional charge
 * **Rule** - A rule is a condition that is based on the values of a variable in the price plan/invoice. You can use multiple variables to create a condition across multiple rate cards of the plan. You can define rules using the supported [javascript operators](/docs/pricing-rules#supported-javascript-operators) mentioned below.
 * **Computation** - Currently, the target action is split into computation and destination as 2 configurable values. You can define the computation as a mathematical formula using supported [javascript operators](/docs/pricing-rules#supported-javascript-operators).
@@ -23,7 +24,23 @@ Pricing rules in Togai are configurable using supported [javascript operators](/
 
 <Tip>The variables that can be used to create conditions and computations are the usage and revenue data for the different rate cards configured in the price plan. The variable names will be populated as 'drop-down suggestions' when you type `usage.` or `revenue.`  You cannot apply conditions, computations or update **In Advance** rate cards currently.</Tip>
 
+## Supported variable types and names
+Currently, you can use the below variables from the price plan to create conditions and computations in a pricing rule:
+
+```
+Fixed fee: <revenue>.ff.<rate_card_id>
+Usage fee: <usage/revenue>.urc.<rate_card_id>
+License fee: <usage/revenue>.lic.<rate_card_id>
+Entitlement fee: <revenue>.ber.<rate_card_id>
+Entitlement Overage fee: <usage/revenue>.eo.<rate_card_id>
+Credit Grant fee: <revenue/credit>.cg.<rate_card_id>
+Tag: <usage/revenue>.tag.<tag_name>
+Sum of all rate cards(Before credits): <revenue>.rate_card_total 
+```
+
 ## Supported javascript operators
+
+You can use the below logical and mathematical operators on the above variables while creating a pricing rule condition/computation:
 
 ```javascript
 Supported literals: 
