@@ -29,11 +29,16 @@ Togai automatically generates invoices for each account/group based on the follo
 
 ## Invoice statuses
 
-* **Ongoing** - This is the status of an invoice that has 'In Arrears' rate cards during the current billing cycle.
+* **Draft/Ongoing** - This is the status of an invoice that has 'In Arrears' rate cards during the current billing cycle. It is also the status of a custom invoice that is yet to be marked Due.
 * **Due** - As soon as the grace period ends, the Ongoing invoice becomes 'Due'
+* **Merged** - This is the status of an invoice that becomes Due but is merged into an '[Invoice Group](/docs/invoice-groups)'
 * **Paid** - This is the status of an invoice for which payment has been received
+* **Partially Paid** - This is the status of an invoice for which partial payment has been received
 * **Uncollectible** - If you have an invoice where you do not expect the customer to pay, you can mark the invoice as 'Uncollectible'
 * **Void** - You can also cancel an invoice using this option
+* **Refund Initiated** - In case an invoice is paid or partially paid, it can be refunded and this is the status of an invoice for which a refund has been initiated.
+* **Refund Complated** - This is the status of a paid/partially pad invoice for which refund has been completed.
+
 
 <Note>Paid and Void statuses are terminal states of an invoice and cannot be modified further. The rest of the statuses can be updated/modified depending on the scenarios and your actions.</Note>
 
