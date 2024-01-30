@@ -41,14 +41,65 @@ The connection URI for Oracle DB is as follows:
 jdbc:oracle:thin:<username>/<password>@<host>:<port>:<database_name>
 ```
 
+### SQL Query
+
+All the flows in this integration require a SQL query to fetch the data from the database. The query should be written in such a way that it returns the data in the format that is expected by the Togai API. The query should also be written in such a way that it returns only the data that you want to sync with Togai.
+
 ## Flows
 
-### Sync customer from Database to Togai
+### 1. Sync customer from Database to Togai
+* Provide the SQL query to fetch the customers from Database:
+    ```sql
+    SELECT 
+        <customer_id> AS "id", 
+        <customer_name> AS "name", 
+        <email> AS "primaryEmail", 
+        <address_line_1> AS "addressLine1",
+        <address_line_2> AS "addressLine2",
+        <city> AS "address_city",
+        <state> AS "address_state",
+        <country> AS "address_country",
+        <currency> AS "currency",
+        <phone> AS "phone"
+    FROM <table_name> 
+    WHERE created_at > '${startTime}' 
+    AND created_at < '${endTime}'
+    ```
 * The flow will be available to be triggered on demand from the Togai dashboard
 * It will execute a SQL query to fetch all the customers from Database
 * It will then create the customers in Togai using the `Customers` API
 
-### Sync events from Database to Togai
+### 2. Sync events from Database to Togai
+* Provide the SQL query to fetch the events from Database: 
+    ```sql
+    SELECT 
+        <event_id> AS "id", 
+        <account_id> AS "accountId", 
+        <eventName> AS "schemaName",
+        <attributes> AS "attributes",
+        <dimensions> AS "dimensions",
+        <created_at> AS "timestamp" 
+    FROM <table_name> 
+    WHERE created_at > '${startTime}' 
+    AND created_at < '${endTime}'
+    ```
+* Make sure that the `attributes` are `JSON` array and `dimensions` columns are of type `JSON`
 * The flow will be available to be triggered on demand from the Togai dashboard
 * It will execute a SQL query to fetch all the events from Database
-* It will then create the events in Togai using the `Event Ingestion` API
+* It will then create the events in Togai using the `Events Ingestion` API
+
+### 3. Sync usages from Database to Togai
+* Provide the SQL query to fetch the usages from Database: 
+    ```sql
+    SELECT 
+        <event_id> AS "id", 
+        <account_id> AS "accountId", 
+        <usage_count> AS "usage",
+        <created_at> AS "timestamp" 
+    FROM <table_name> 
+    WHERE created_at > '${startTime}' 
+    AND created_at < '${endTime}'
+    ```
+* The flow will be available to be triggered on schedule from the Togai dashboard
+* It will execute a SQL query to fetch all the usages from Database
+* It will then create the usages in Togai using the `Events Ingestion` API

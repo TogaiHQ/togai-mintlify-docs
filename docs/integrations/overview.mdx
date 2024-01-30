@@ -6,38 +6,45 @@ Togai's integrations helps easily connect Togai with other business applications
 
 Apart from using the pre-built apps & flows available in Togai's marketplace, Togai also provides the flexibility to create Flows (a sequence of actions) based on custom requirements of a business.
 
-<Frame caption="Billing orchestrator / workflow manager">
+<Frame caption="Billing orchestrator (or) Workflow manager">
   <img src="/docs/images/workflow-apps.png" />
 </Frame>
 
 # Concepts
 
+Before we dive into the details of how to use Togai's integrations, let's first understand some of the key concepts. Let's start with the building blocks of Togai's integrations - Apps and Flows.
+
 ## Apps
 
 Apps are pre-built integrations that allows Togai to seamlessly connect with other business applications.
 
-They offer `triggers`, which can be thought of as "cues" that prompt Togai to perform certain tasks. Triggers are essentially the events that Togai watches out for, and upon their occurrence, it initiates the predefined actions or workflows associated with them. 
+They offer **triggers**, which can be thought of as "cues" that prompt Togai to perform certain tasks. Triggers are essentially the events that Togai watches out for, and upon their occurrence, it initiates the predefined actions or workflows associated with them. 
 
-They also offer `actions`, which are "do" part of the integration process, where Togai carries out a particular action (such as creating invoices or updating accounts) based on a trigger or user input.
+They also offer **actions**, which are "do" part of the integration process, where Togai carries out a particular action based on a trigger or user input. 
 
 ### 1. Triggers  
-Triggers are a type of an application action in Togai that are designed to start a flow when a specific event occurs.  
-For example, a trigger could be a customer created event in Stripe, invoice generation event in Togai etc. App. developers define the list of triggers supported by the App.
+Triggers in flows are the events that start the flow. They can be either an event in Togai or an event in an external app. App Developers define the list of triggers supported by the App.
+
+For example, an external event could be a new customer created in Stripe, and an internal event could be an invoice generation event in Togai.
 
 ### 2. Actions  
-Actions are designed to perform a specific task like create an invoice in stripe, update an account in Togai, send a slack notification etc. Similar to triggers, app developers define the list of actions that are supported in the app.
+Actions in flows are the tasks that are executed after a trigger event. They are executed in the order they are defined in the flow. They take input from the trigger and other actions in the flow and perform a specific task. Similar to triggers, App Developers define the list of actions that are supported in the app. 
+
+For example, an action could be to create an invoice in Stripe, or update an account in Togai, or send a slack notification.
 
 ## Flows
 
-Flows are a sequence of actions that are executed based on a trigger event.  
-For example, when a new customer is added in Stripe, a flow can be set up to automatically create an account for the customer in Togai and send a slack notification. The flows are classified as:
+Flows are a sequence of actions that are executed when a trigger event occurs. They can be used to automate processes and workflows. Most commonly required flows are already available in Togai's marketplace out-of-the-box and they can also be created based on custom requirements of a business.
 
 ### 1. Outbound Flows  
-Outbound flows are those that start with a trigger event in Togai and then execute a series of actions in one or more external apps.  
-For example, a trigger event could be a new account creation in Togai, and the flow could automatically create a corresponding customer the account in Stripe, QuickBooks & send a slack notification.
+Outbound flows are those that start with a trigger event in Togai and then execute a series of actions in one or more external apps. 
+
+For example, an outbound flow could be to create a new customer in Stripe, QuickBooks & send a slack notification when a new account is created in Togai.
 
 ### 2. Inbound Flows  
-Inbound flows are the opposite of outbound flows. They start with an event in an external app, and then execute a series of actions. This means that inbound flows can be used to automate tasks like creating a new account in Togai when a new customer is added in Stripe, or updating a usage meter in Togai.
+Inbound flows are the opposite of outbound flows. They start with an event in an external app, and then execute a series of actions. 
+
+For example, an inbound flow could be to create a new account in Togai when a new customer is created in Stripe. Or, it could be to mark an invoice as paid in Togai when a payment is received in Stripe.
 
 ## Activity Logs
 
