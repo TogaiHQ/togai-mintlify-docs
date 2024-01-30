@@ -173,6 +173,7 @@
       "pages": [
         "docs/integrations/overview",
         "docs/integrations/supported-integrations",
+        "docs/integrations/webhooks",
         {
           "group": "Payments",
           "pages": [
