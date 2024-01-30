@@ -1,0 +1,42 @@
+---
+title: "S3"
+---
+
+Amazon S3 is an object storage service that offers industry-leading scalability, data availability, security, and performance.
+
+The integration between **Amazon S3** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `S3` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `AWS Access Key ID`
+    * `AWS Secret Access Key`
+
+### AWS Access Key ID and AWS Secret Access Key
+
+Create a new IAM user in your AWS account with access to S3 bucket that is going to act as your reports storage and copy the `AWS Access Key ID` and `AWS Secret Access Key` from the `Security credentials` section of the user with following policy:
+    ```json
+    {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": "s3:PutObject",
+                "Resource": "arn:aws:s3:::<S3_BUCKET_NAME>/*"
+            }
+        ]
+    }
+    ```
+
+## Flows
+
+### 1. Export reports to AWS S3
+
+* Provide `Bucket Name` corresponding to the reports storage bucket in your AWS account
+* The flow will be triggered when a report is generated in Togai depending on the schedule set for the report generation in Togai, either hourly or daily
+* The report will be downloaded from Togai using the Download file URL
+* The downloaded report will then be uploaded to the S3 bucket provided in the connection
+* The report will be available in the S3 bucket with the name `<REPORT_NAME>_<START_TIME>_<END_TIME>.csv`

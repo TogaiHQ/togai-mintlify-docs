@@ -238,6 +238,13 @@
           "pages": [
             "docs/integrations/marketing/first-promoter"
           ]
+        },
+        {
+          "group": "Data exports",
+          "pages": [
+            "docs/integrations/data-exports/jdbc-overview",
+            "docs/integrations/data-exports/s3"
+          ]
         }
       ]
     },

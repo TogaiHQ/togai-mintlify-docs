@@ -1,0 +1,50 @@
+---
+title: "JDBC"
+---
+
+Java Database Connectivity (JDBC) is an application programming interface which defines how a client may access a database. It provides methods to query and update data in a database, and is oriented toward relational databases. 
+
+The integration between **JDBC** and **Togai** requires only a one-time setup. Follow the steps below:
+
+## Prerequisites
+
+### Create a read-only user
+* Create a read-only user in your database
+* Grant the user access to the tables that you want to sync with Togai
+* Make sure that the user has access to the tables that you want to sync with Togai
+
+### Connection URI
+
+#### Maria DB
+
+The connection URI for Maria DB is as follows:
+```bash
+jdbc:mariadb://<host>:<port>/<database_name>?user=<username>&password=<password>
+```
+
+#### MS SQL Server
+
+The connection URI for MS SQL Server is as follows:
+```bash
+jdbc:sqlserver://<host>:<port>;databaseName=<database_name>;user=<username>;password=<password>
+```
+
+#### MySQL DB
+The connection URI for MySQL DB is as follows:
+```bash
+jdbc:mysql://<host>:<port>/<database_name>?user=<username>&password=<password>
+```
+
+#### Oracle DB
+The connection URI for Oracle DB is as follows:
+```bash
+jdbc:oracle:thin:<username>/<password>@<host>:<port>:<database_name>
+```
+
+## Flows
+
+### 1. Sync report from Togai to Database
+* The flow is triggered when a report is created in Togai
+* It requires a Connection URI and a table name to insert the report data into the database
+* The table must have the same columns as mentioned in the report template
+* If the above conditions are met, the report data is inserted into the database
