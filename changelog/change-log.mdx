@@ -6,6 +6,36 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## January 2024
 
+### 28th January 2024
+- Support for ordering of price rules
+- Scheduler app - now you can schedule flows on an hourly or daily basis automatically
+- Import usage directly via JDBC connection (Postgres, MySQL, Maria DB, Oracle, SQL Server)
+- Export reports to S3 bucket
+- Export reports to JDBC (Postgres, MySQL, Maria DB, Oracle)
+- Sync usages from Togai to AWS Marketplace 
+- Support ingesting usages directly for usage meters bypassing event schema
+- Create usage meter without schema association
+- Alerts for invoice due and overdue statuses
+- Reporting and report templates
+- Config visualizer to help you understand the data flow in Togai
+- Update events and reingest them
+
+### 21st January 2024
+
+- [Pricing rules](/docs/pricing-rules) to help you model any type of pricing
+- [Revenue simulator](/docs/revenue-simulator) helps you run backtests on actual usage data to compare business impact (revenue uplift/decline) for your pricing model or price point change
+- Tag accounts to segmet customers and run simulations on different customer segments
+- Alerts enabled for unprocessed events
+- PAID or DUE custom invoices can't be created for future date
+- Overrisde support for pricing rules
+- Configurable idempotency id based on your event schema payload. Create your own custom idempotency key using components of your event payload.
+- [Import events from S3 bucket](/docs/integrations/data-sources/aws-s3)
+- [Slack](/docs/integrations/communications/slack) notify accounts created and invoice due alerts
+- Webhooks can now be configured for any Togai event.
+
+
+
+
 ### 14th January 2024
 - Custom ad-hoc invoices are now tracked in revenue metrics
 - Alerts and communication channels launched. [Learn more](/docs/alerts)
