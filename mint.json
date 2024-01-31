@@ -189,6 +189,7 @@
           "pages": [
             "docs/integrations/data-sources/aws-s3",  
             "docs/integrations/data-sources/aws-redshift",
+            "docs/integrations/data-sources/snowflake",
             "docs/integrations/data-sources/jdbc",
             "docs/integrations/data-sources/postgres",
             "docs/integrations/data-sources/prometheus",

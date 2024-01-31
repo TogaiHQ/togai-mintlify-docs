@@ -1,0 +1,51 @@
+---
+title: "Snowflake"
+---
+With Togai's native Snowflake connector support, users can import and export data between Togai and Snowflake. Flows in Togai's "No code center" can be enabled such that periodically Togai can pull usage data from Snowflake into Togai. Similarly Togai flows can push reports from Togai to Snowflake.
+
+## Setup
+
+### App installation
+* Get below details from your snowflake setup
+  * **Account** - Account identifier . Note: The region should be added as suffix here. (Ex - "abc26863.us-east-1")
+  * **Username** - Username of the snowflake profile
+  * **Password** - Password of the snowflake profile
+  * **Database** - Database name to query or insert data.
+  * **Schema** - Snowflake schema name to query the data
+  * **Warehouse** - Warehouse name to execute queries
+  * **Role** - Role to be used while executing queries
+* Go to [Snowflake](https://app.togai.com/no-code/apps) app in Togai's no-code center and provide these details to create a connection.
+
+## Flow installation
+* Go to the [Flow List page](https://app.togai.com/no-code/flows) in Togai's no-code center and enable the pre-defined flows related to snowflake sync to export or import data.
+
+### Sync usages from Snowflake to Togai
+This predefined flow gets the usage data from Snowflake periodically and ingest them to Togai. To enable this flow, two inputs are requested from user
+
+1. SQL query to query the data from Snowflake and push to Togai. As part of query response, this flow expects these attributes in the query response - <br/>
+  a "accountId" - This represents the account to attribute the usage.<br/>
+  b "usage" - The value of the usage<br/>
+  c "timestamp" - The timestamp to when the usage should be ingested. To be in ISO format.<br/>
+  d "id" - Unique id of the usage<br/>
+ 
+  Sample query
+      ```sql
+      SELECT 
+          id AS "id", 
+          cusId AS "accountId", 
+          value AS "usage",
+          created_at AS "timestamp" 
+      FROM usages_table
+      WHERE timestamp > '${startTime}' 
+    AND timestamp < '${endTime}'
+    ```
+
+2. Togai usage meter id to ingest this usage.
+
+Create a connection with these inputs to periodically sync the usages from Snowflake to Togai.
+
+
+### Sync usages from Snowflake to Togai
+This flow syncs the reports generated from Togai to Snowflake.
+
+To enable this flow, provide snowflake table name which has all the columns configured with the same name as configured in Togai report. Once the flow is enabled, Togai will periodically sync (based on the scheduler configuration) the reports to snowflake.
