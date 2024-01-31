@@ -35,3 +35,13 @@ You can use this feature to model a pre-paid/advance wallet for your customers w
 <Frame caption="Wallet flows">
   <img src="/docs/images/wallet.png" />
 </Frame>
+
+## Wallet flow
+
+1. Customer makes payment as advance
+2. This is recorded as a wallet balance (can also be automatically triggered from a payment gateway flow)
+3. This can be assigned to an ongoing or due or partially paid invoice
+
+If the invoice unpaid value > wallet balance, then the overage amount alone is pushed to the payment gateway, if such a flow is enabled. If invoice unpaid value < wallet balance, then that is netted off and remaining amount lies in the wallet itself.
+
+The default behaviour of a wallet is netting off the invoices as they become due.
