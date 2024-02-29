@@ -24,7 +24,7 @@ When creating an event schema, it is important to understand how you have instru
 
 * Work with what you already have
 * Design with flexibility
-* Choose the right idempotency key as "event_id"
+* Choose the right idempotency key as "event_id" - You can give a unique idempotency key as the event_id when sending your event. This can be generated in your application. Togai also supports configuring your own configurable custom idempotency key based on variables (attributes and dimensions) defined in the event schema. Togai restricts users to ingest events with same id within a period of 45 days. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs
 
 <Warning>Currently, you will only be able to new attributes, dimensions or enrichments to an existing schema. You cannot delete attributes, dimensions or enrichments in an event schema once it is published.</Warning>
 
