@@ -6,16 +6,16 @@ info:
     email: engg@togai.com
   license:
     name: Apache 2.0
-    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: APIs for Togai App
 servers:
   - description: Api endpoint
-    url: 'https://api.togai.com/'
+    url: https://api.togai.com/
   - description: Sandbox api endpoint
-    url: 'https://sandbox-api.togai.com/'
+    url: https://sandbox-api.togai.com/
 externalDocs:
   description: Find out more about Togai
-  url: 'https://docs.togai.com/docs'
+  url: https://docs.togai.com/docs
 security:
   - bearerAuth: []
 tags:
@@ -29,6 +29,8 @@ tags:
     description: Usage Meter level calls
   - name: Price Plans
     description: Price Plan level calls
+  - name: Pricing Rules
+    description: Pricing Rules level calls
   - name: Settings
     description: Settings
   - name: Price Experimentation
@@ -41,16 +43,22 @@ tags:
     description: File Storage level calls
   - name: Aliases
     description: Alias level calls
+  - name: Reports
+    description: Report level calls
+  - name: ReportTemplates
+    description: Report Template level calls
+  - name: Dashboards
+    description: Dashboard level calls
   - name: Event Management
     description: APIs for getting events ingested in Togai
     externalDocs:
       description: docs
-      url: 'https://togai.com/docs/billing/events'
+      url: https://togai.com/docs/billing/events
   - name: Metrics
     description: APIs for getting Togai metrics
     externalDocs:
       description: docs
-      url: 'https://togai.com/docs/metrics'
+      url: https://togai.com/docs/metrics
   - name: Licenses
     description: APIs for getting or updating license records in Togai
   - name: Entitlements
@@ -63,6 +71,8 @@ tags:
     description: Wallet API
   - name: InvoiceTemplates
     description: InvoiceTemplates API
+  - name: InvoiceSequence
+    description: InvoiceSequence API
   - name: Payments
     description: Payments API
   - name: Authentication
@@ -116,7 +126,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/customers/{customer_id}':
+  /customers/{customer_id}:
     get:
       tags:
         - Customers
@@ -188,6 +198,32 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /customers/{customer_id}/contacts:
+    post:
+      tags:
+        - Customers
+      summary: Create a contact for the customer
+      description: This API let’s you to create a contact for the customer
+      operationId: createCustomerContact
+      parameters:
+        - $ref: '#/components/parameters/customer_id'
+      requestBody:
+        $ref: '#/components/requestBodies/CreateCustomerContactRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/CreateCustomerContactResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /accounts:
     post:
       tags:
@@ -236,7 +272,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}':
+  /accounts/{account_id}:
     get:
       tags:
         - Accounts
@@ -310,7 +346,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/add_aliases':
+  /accounts/{account_id}/add_aliases:
     post:
       tags:
         - Accounts
@@ -336,7 +372,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/account_aliases':
+  /accounts/{account_id}/account_aliases:
     get:
       tags:
         - Accounts
@@ -350,7 +386,7 @@ paths:
           $ref: '#/components/responses/AccountAliasesPaginatedResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/remove_aliases':
+  /accounts/{account_id}/remove_aliases:
     post:
       tags:
         - Accounts
@@ -376,7 +412,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/price_plans':
+  /accounts/{account_id}/price_plans:
     post:
       tags:
         - Accounts
@@ -402,7 +438,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/purchases':
+  /accounts/{account_id}/purchases:
     post:
       tags:
         - Accounts
@@ -479,7 +515,7 @@ paths:
           $ref: '#/components/responses/AliasPaginatedResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/aliases/{alias}':
+  /aliases/{alias}:
     get:
       tags:
         - Aliases
@@ -506,7 +542,7 @@ paths:
           $ref: '#/components/responses/BaseSuccessResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/purchases/{purchase_id}':
+  /purchases/{purchase_id}:
     get:
       tags:
         - Accounts
@@ -530,7 +566,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/purchase_proposals':
+  /accounts/{account_id}/purchase_proposals:
     post:
       tags:
         - Accounts
@@ -579,7 +615,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/purchase_proposals/{purchase_proposal_id}':
+  /purchase_proposals/{purchase_proposal_id}:
     get:
       tags:
         - Accounts
@@ -603,7 +639,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/edit_schedules':
+  /accounts/{account_id}/edit_schedules:
     post:
       tags:
         - Accounts
@@ -612,6 +648,7 @@ paths:
       operationId: updatePricingScheduleBatch
       parameters:
         - $ref: '#/components/parameters/account_id'
+        - $ref: '#/components/parameters/dry_run'
       requestBody:
         $ref: '#/components/requestBodies/EditPricingScheduleRequest'
       responses:
@@ -629,7 +666,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/pricing_schedules':
+  /accounts/{account_id}/pricing_schedules:
     get:
       tags:
         - Accounts
@@ -657,7 +694,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/purchase_proposals/{purchase_proposal_id}/update_status':
+  /purchase_proposals/{purchase_proposal_id}/update_status:
     post:
       tags:
         - Accounts
@@ -728,7 +765,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoice_groups/{invoice_group_id}':
+  /invoice_groups/{invoice_group_id}:
     get:
       tags:
         - InvoiceGroups
@@ -752,7 +789,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoice_groups/{invoice_group_id}/add_accounts':
+  /invoice_groups/{invoice_group_id}/add_accounts:
     post:
       tags:
         - InvoiceGroups
@@ -778,7 +815,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoice_groups/{invoice_group_id}/remove_accounts':
+  /invoice_groups/{invoice_group_id}/remove_accounts:
     post:
       tags:
         - InvoiceGroups
@@ -861,7 +898,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/event_schema/{event_schema_name}':
+  /event_schema/{event_schema_name}:
     patch:
       tags:
         - Event Schemas
@@ -918,7 +955,7 @@ paths:
       tags:
         - Event Schemas
       summary: Delete an event schema
-      description: 'To delete(archive) an event schema, you’re required to archive associated active usage meters if any.'
+      description: To delete(archive) an event schema, you’re required to archive associated active usage meters if any.
       operationId: deleteEventSchema
       parameters:
         - $ref: '#/components/parameters/event_schema_name'
@@ -937,7 +974,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/event_schema/{event_schema_name}/versions':
+  /event_schema/{event_schema_name}/versions:
     get:
       tags:
         - Event Schemas
@@ -961,7 +998,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/event_schema/{event_schema_name}/activate':
+  /event_schema/{event_schema_name}/activate:
     post:
       tags:
         - Event Schemas
@@ -985,7 +1022,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/event_schema/{event_schema_name}/deactivate':
+  /event_schema/{event_schema_name}/deactivate:
     post:
       tags:
         - Event Schemas
@@ -1078,7 +1115,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/usage_meters/{usage_meter_id}':
+  /usage_meters/{usage_meter_id}:
     get:
       tags:
         - Usage Meters
@@ -1150,7 +1187,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/usage_meters/{usage_meter_id}/activate':
+  /usage_meters/{usage_meter_id}/activate:
     post:
       tags:
         - Usage Meters
@@ -1174,7 +1211,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/usage_meters/{usage_meter_id}/deactivate':
+  /usage_meters/{usage_meter_id}/deactivate:
     post:
       tags:
         - Usage Meters
@@ -1209,6 +1246,8 @@ paths:
         This API let's you create and price plan
         Learn more about [Price Plans](https://docs.togai.com/docs/priceplan)
       operationId: createPricePlan
+      parameters:
+        - $ref: '#/components/parameters/dry_run'
       requestBody:
         $ref: '#/components/requestBodies/CreatePricePlanRequest'
       responses:
@@ -1250,7 +1289,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/price_plans/{price_plan_id}':
+  /price_plans/{price_plan_id}:
     patch:
       tags:
         - Price Plans
@@ -1302,7 +1341,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/price_plans/{price_plan_id}/activate':
+  /price_plans/{price_plan_id}/activate:
     post:
       tags:
         - Price Plans
@@ -1328,7 +1367,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/price_plans/{price_plan_id}/currencies':
+  /price_plans/{price_plan_id}/currencies:
     post:
       tags:
         - Price Plans
@@ -1354,7 +1393,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/price_plans/{price_plan_id}/currencies/{currency_id}':
+  /price_plans/{price_plan_id}/currencies/{currency_id}:
     delete:
       tags:
         - Price Plans
@@ -1367,6 +1406,31 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/PricePlanResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /price_plans/{price_plan_id}/pricing_schedules/{pricing_schedule_id}/pricing_rules:
+    get:
+      tags:
+        - Pricing Rules
+      summary: List pricing rules by price plan id and pricing schedule id
+      description: Get a list of pricing rules using price plan id and pricing schedule id
+      operationId: listPricingRulesByScheduleId
+      parameters:
+        - $ref: '#/components/parameters/price_plan_id'
+        - $ref: '#/components/parameters/pricing_schedule_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/PricingRulesPaginatedResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -1438,7 +1502,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/addons/{addon_id}':
+  /addons/{addon_id}:
     patch:
       tags:
         - AddOns
@@ -1559,7 +1623,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/features/{feature_id}':
+  /features/{feature_id}:
     patch:
       tags:
         - Feature
@@ -1663,7 +1727,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/settings/{setting_id_str}':
+  /settings/{setting_id_str}:
     get:
       tags:
         - Settings
@@ -1738,7 +1802,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/migrations/{migration_id}':
+  /migrations/{migration_id}:
     get:
       tags:
         - Migrations
@@ -1770,7 +1834,7 @@ paths:
       description: Migrates accounts which are associated to one price plan to another price plan
       operationId: migratePricePlan
       requestBody:
-        $ref: '#/components/requestBodies/CreatePricePlanMigrationRequest'
+        $ref: '#/components/requestBodies/CreateMigrationRequest'
       responses:
         '201':
           $ref: '#/components/responses/BaseSuccessResponse'
@@ -1811,7 +1875,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/files/{file_id}':
+  /files/{file_id}:
     get:
       tags:
         - File Storage
@@ -1840,7 +1904,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/files/{file_id}/download_url':
+  /files/{file_id}/download_url:
     get:
       tags:
         - File Storage
@@ -1896,7 +1960,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IngestEventResponse'
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Credential "x-api-key" is not valid. Please check the response message for failure details.
           content:
@@ -1904,7 +1968,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the events as the size of the event payload is above the supported limit. Please check our docs for the api limits - https://togai.com/docs/limits.'
+          description: Unable to process the events as the size of the event payload is above the supported limit. Please check our docs for the api limits - https://togai.com/docs/limits.
           content:
             application/json:
               schema:
@@ -1962,7 +2026,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/IngestEventResponse'
+                $ref: '#/components/schemas/ErrorResponse'
         '401':
           description: Credential "x-api-key" is not valid. Please check the response message for failure details.
           content:
@@ -1970,7 +2034,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the events as the size of the event payload is above the supported limit. Please check our docs for the api limits - https://togai.com/docs/limits.'
+          description: Unable to process the events as the size of the event payload is above the supported limit. Please check our docs for the api limits - https://togai.com/docs/limits.
           content:
             application/json:
               schema:
@@ -2031,7 +2095,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2044,27 +2108,25 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-    delete:
+  /events/{event_id}:
+    get:
       tags:
         - Event Management
-      summary: Undo ingested events.
-      description: |
-        #### This API lets you to revert the changes caused by events.
-
-        - **Usages**: Reduction of all usages associated with this event
-        - **Revenue**: Reduction of all revenues associated with this event
-        - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
-      operationId: eventCorrection
+      summary: Get an event using event id
+      description: Fetch details of a particular event using the event ID.
+      operationId: getSingleEvent
+      parameters:
+        - $ref: '#/components/parameters/event_id'
       responses:
         '200':
           description: Success response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EventsCorrectionResponse'
+                $ref: '#/components/schemas/GetEventResponse'
               examples:
-                EventsCorrectionResponse:
-                  $ref: '#/components/examples/EventsCorrectionResponse'
+                GetEventResponse:
+                  $ref: '#/components/examples/GetEventResponse'
         '400':
           description: Bad request. Please check the response message for failure details.
           content:
@@ -2091,25 +2153,32 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/events/{event_id}':
-    get:
+  /events/correction:
+    post:
       tags:
         - Event Management
-      summary: Get an usage event using event id
-      description: Fetch details of a particular event using the event ID.
-      operationId: getSingleEvent
+      summary: Correct an ingested event
+      description: |
+        #### This API lets you to revert the changes caused by events.
+
+        - **Usages**: Reduction of all usages associated with this event
+        - **Revenue**: Reduction of all revenues associated with this event
+        - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
+      operationId: eventCorrection
       parameters:
-        - $ref: '#/components/parameters/event_id'
+        - $ref: '#/components/parameters/event_correction_action'
+      requestBody:
+        $ref: '#/components/requestBodies/EventCorrectionRequest'
       responses:
         '200':
           description: Success response
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetEventResponse'
+                $ref: '#/components/schemas/EventsCorrectionResponse'
               examples:
-                GetEventResponse:
-                  $ref: '#/components/examples/GetEventResponse'
+                EventsCorrectionResponse:
+                  $ref: '#/components/examples/EventsCorrectionResponse'
         '400':
           description: Bad request. Please check the response message for failure details.
           content:
@@ -2226,7 +2295,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2276,7 +2345,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2289,7 +2358,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/license_updates/{license_id}':
+  /license_updates/{license_id}:
     patch:
       tags:
         - Licenses
@@ -2377,7 +2446,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2390,7 +2459,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/features/{feature_id}/entries':
+  /accounts/{account_id}/features/{feature_id}/entries:
     get:
       tags:
         - Entitlements
@@ -2431,7 +2500,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2444,7 +2513,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}':
+  /accounts/{account_id}/features/{feature_id}/entries/{entry_id}:
     patch:
       tags:
         - Entitlements
@@ -2503,7 +2572,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/features/{feature_id}/entries/{entry_id}/void':
+  /accounts/{account_id}/features/{feature_id}/entries/{entry_id}/void:
     post:
       tags:
         - Entitlements
@@ -2553,7 +2622,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/features/{feature_id}':
+  /accounts/{account_id}/features/{feature_id}:
     get:
       tags:
         - Entitlements
@@ -2592,7 +2661,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2605,7 +2674,7 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/entitlements/{feature_id}':
+  /accounts/{account_id}/entitlements/{feature_id}:
     get:
       tags:
         - Entitlements
@@ -2643,7 +2712,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/BaseSuccessResponse'
-  '/accounts/{account_id}/entitlements':
+  /accounts/{account_id}/entitlements:
     get:
       tags:
         - Entitlements
@@ -2706,7 +2775,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorResponse'
         '422':
-          description: 'Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.'
+          description: Unable to process the query parameters provided. Please check our docs for the api limits - https://togai.io/docs/limits.
           content:
             application/json:
               schema:
@@ -2742,7 +2811,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoices/{invoice_id}':
+  /invoices/{invoice_id}:
     get:
       tags:
         - Invoices
@@ -2751,6 +2820,31 @@ paths:
       operationId: getInvoice
       parameters:
         - $ref: '#/components/parameters/invoice_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/InvoiceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      tags:
+        - Invoices
+      summary: Update an invoice
+      description: Update an invoice[Only CUSTOM invoices in DRAFT state support updating of all fields]. Updating status can be done for all invoice.
+      operationId: updateInvoice
+      parameters:
+        - $ref: '#/components/parameters/invoice_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateInvoiceRequest'
       responses:
         '200':
           $ref: '#/components/responses/InvoiceResponse'
@@ -2776,7 +2870,7 @@ paths:
         - $ref: '#/components/parameters/invoice_id'
       responses:
         '200':
-          $ref: '#/components/responses/InvoiceResponse'
+          $ref: '#/components/responses/BaseSuccessResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
         '403':
@@ -2787,7 +2881,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoices/{invoice_id}/miscellaneous_charges':
+  /invoices/{invoice_id}/miscellaneous_charges:
     put:
       tags:
         - Invoices
@@ -2813,7 +2907,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/invoices/{invoice_id}/payments':
+  /invoices/{invoice_id}/payments:
     post:
       tags:
         - Invoices
@@ -2839,7 +2933,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/miscellaneous_charges':
+  /accounts/{account_id}/miscellaneous_charges:
     put:
       tags:
         - Invoices
@@ -2853,6 +2947,30 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/MiscellaneousChargesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /invoice/{invoice_id}/pricing_rules_logs:
+    get:
+      tags:
+        - Invoices
+      summary: List pricing rule logs
+      description: List pricing rule logs
+      operationId: listPricingRuleLogs
+      parameters:
+        - $ref: '#/components/parameters/invoice_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/PricingRulesLogsPaginatedResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -2916,7 +3034,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/credits/{credit_id}':
+  /credits/{credit_id}:
     get:
       tags:
         - Credits
@@ -2940,7 +3058,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/credits/{credit_id}/void':
+  /credits/{credit_id}/void:
     post:
       tags:
         - Credits
@@ -2964,7 +3082,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/credit_balance':
+  /accounts/{account_id}/credit_balance:
     get:
       tags:
         - Credits
@@ -2988,7 +3106,33 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/wallet':
+  /accounts/{account_id}/wallet_topup:
+    post:
+      tags:
+        - Wallet
+      summary: Top-up wallet for an account
+      description: Top-up wallet for an account
+      operationId: topUpWalletForAccount
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      requestBody:
+        $ref: '#/components/requestBodies/TopupWalletRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/WalletBalanceResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /accounts/{account_id}/wallet:
     get:
       tags:
         - Wallet
@@ -3012,7 +3156,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/accounts/{account_id}/wallet/entries':
+  /accounts/{account_id}/wallet/entries:
     get:
       tags:
         - Wallet
@@ -3086,7 +3230,7 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  '/payments/{payment_id}':
+  /payments/{payment_id}:
     get:
       tags:
         - Payments
@@ -3118,7 +3262,7 @@ paths:
       summary: Generate short lived bearer token
       description: |
         Generates and returns a bearer token. Behavior of this API differs on the basis of the auth mechanism used to make the request.
-          - For API key auth, this API generates a JWT token which is valid for 24 hours and returns it.
+          - For API key auth, this API generates a JWT token whcih is valid for 24 hours and returns it.
           - For JWT bearer auth, returns the same JWT token in response
         For information on how to generate API token, refer [Generating New API Keys](https://docs.togai.com/api-reference/authentication#generating-new-api-keys) section of docs.
       operationId: authenticate
@@ -3163,7 +3307,7 @@ components:
         primaryEmail:
           description: Primary email of the customer
           type: string
-          maxLength: 255
+          maxLength: 320
           example: admin@example.com
         address:
           $ref: '#/components/schemas/Address'
@@ -3175,6 +3319,36 @@ components:
             $ref: '#/components/schemas/CreateEntitySetting'
         account:
           $ref: '#/components/schemas/CreateAccountRequestWithoutCustomerId'
+    CreateCustomerContactRequest:
+      description: Payload to create a contact for a customer
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - email
+      properties:
+        preferredUsername:
+          type: string
+          maxLength: 50
+          pattern: ^[A-Za-z0-9]{3,50}$
+        name:
+          type: string
+          maxLength: 50
+        password:
+          type: string
+          maxLength: 100
+        email:
+          type: string
+          maxLength: 320
+          pattern: ^\S+@\S+\.\S+$
+        phone:
+          type: string
+          maxLength: 30
+        verified:
+          type: boolean
+        loginAccess:
+          type: boolean
+          default: false
     UpdateCustomerRequest:
       description: Payload to update customer
       type: object
@@ -3189,7 +3363,7 @@ components:
         primaryEmail:
           description: Primary email of the customer
           type: string
-          maxLength: 255
+          maxLength: 320
           example: admin@example.com
         address:
           $ref: '#/components/schemas/Address'
@@ -3239,7 +3413,7 @@ components:
         primaryEmail:
           description: Primary email of the account
           type: string
-          maxLength: 255
+          maxLength: 320
           example: admin@example.com
         settings:
           type: array
@@ -3259,6 +3433,18 @@ components:
           type: object
           additionalProperties:
             type: string
+        tags:
+          description: Tag for accounts are stored in lowercase
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        status:
+          description: Status of the created account defaults to ACTIVE
+          type: string
+          enum:
+            - ACTIVE
+            - DRAFT
     CreateAccountRequest:
       description: Payload to create account
       allOf:
@@ -3284,10 +3470,23 @@ components:
           maxLength: 255
           minLength: 3
           example: ACME Enterprise
+        status:
+          type: string
+          enum:
+            - ACTIVE
+            - DRAFT
+        invoiceCurrency:
+          description: |
+            [ISO_4217](https://en.wikipedia.org/wiki/ISO_4217) code of the currency in which the account must be invoiced
+            Defaults to Base currency.
+          type: string
+          minLength: 3
+          maxLength: 3
+          example: USD
         primaryEmail:
           description: Primary email of the account
           type: string
-          maxLength: 255
+          maxLength: 320
           example: admin@example.com
         address:
           $ref: '#/components/schemas/Address'
@@ -3299,6 +3498,12 @@ components:
             To remove all existing metadata, use empty object
           type: object
           additionalProperties:
+            type: string
+        tags:
+          description: Tag for accounts are stored in lowercase
+          type: array
+          uniqueItems: true
+          items:
             type: string
     AccountAlias:
       description: Account Alias
@@ -3363,11 +3568,11 @@ components:
         effectiveFrom:
           type: string
           format: date-time
-          description: 'Effective from date, if not provided, it will be set to -infinity'
+          description: Effective from date, if not provided, it will be set to -infinity
         effectiveUntil:
           type: string
           format: date-time
-          description: 'Effective until date, if not provided, it will be set to +infinity'
+          description: Effective until date, if not provided, it will be set to +infinity
     AddAccountAliasesRequest:
       description: Payload to add aliases from account
       type: object
@@ -3413,7 +3618,7 @@ components:
               from:
                 type: string
                 format: date-time
-                description: 'Alias will be deleted from this date, If not provided, it will be deleted from now'
+                description: Alias will be deleted from this date, If not provided, it will be deleted from now
     CreateEventSchemaRequest:
       description: Request to create event schema
       type: object
@@ -3427,7 +3632,7 @@ components:
           description: Name of the event. Must be unique for an organization.
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
         description:
           description: Description of the event
           type: string
@@ -3444,6 +3649,9 @@ components:
             $ref: '#/components/schemas/DimensionsSchema'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        eventIdTemplate:
+          description: Template used to generate event id based on event payload
+          type: string
     UpdateEventSchemaRequest:
       description: Request to update event schema
       type: object
@@ -3465,6 +3673,9 @@ components:
             $ref: '#/components/schemas/DimensionsSchema'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        eventIdTemplate:
+          description: Template used to generate event id based on event payload
+          type: string
     CreateUsageMeterRequest:
       description: Request to create usage meter
       type: object
@@ -3473,13 +3684,12 @@ components:
         - name
         - type
         - aggregation
-        - eventSchemaName
       properties:
         name:
           description: Name of the usage meter. Must be unique for an organization.
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
         billableName:
           description: Billable name of usage meter. Billable name takes precedence over name to display in invoice.
           type: string
@@ -3523,6 +3733,9 @@ components:
           description: Description of the usage meter
           type: string
           maxLength: 255
+        eventSchemaName:
+          description: Event Schema Identifier
+          type: string
         type:
           description: |
             Type of usage meter
@@ -3564,6 +3777,10 @@ components:
           $ref: '#/components/schemas/PricePlanType'
         pricePlanDetails:
           $ref: '#/components/schemas/CreatePricePlanDetails'
+        pricingRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreatePricingRule'
     CreatePricePlanDetails:
       type: object
       additionalProperties: false
@@ -3598,13 +3815,6 @@ components:
             $ref: '#/components/schemas/BillingEntitlementRateCard'
         minimumCommitment:
           $ref: '#/components/schemas/MinimumCommitment'
-        rateDetails:
-          $ref: '#/components/schemas/RateDetails'
-        entitlementRateCards:
-          type: array
-          maxItems: 50
-          items:
-            $ref: '#/components/schemas/EntitlementRateCard'
         creditGrantRateCards:
           type: array
           items:
@@ -3613,8 +3823,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EntitlementOverageRateCard'
-        type:
-          $ref: '#/components/schemas/PricePlanType'
         deferredRevenue:
           description: |
             This option can be enabled while creating a price plan to opt for deferred revenue finalization.
@@ -3631,6 +3839,32 @@ components:
             2. Metrics API return revenue metrics only after the grace period of the account's pricing cycle 
             (i.e, only once the invoice becomes DUE)
           type: boolean
+    CreatePricingRule:
+      type: object
+      additionalProperties: false
+      required:
+        - order
+        - name
+        - computation
+        - action
+      properties:
+        name:
+          description: Name of the pricing rule
+          type: string
+        order:
+          description: Order of the pricing rule
+          type: integer
+          format: int32
+        condition:
+          description: JSON logic condition deciding whether to compute this pricing rule or not
+          type: string
+        computation:
+          description: JSON logic to be computed
+          type: string
+        action:
+          description: JSON logic to be computed
+          title: action
+          $ref: '#/components/schemas/PricingRuleAction'
     UpdatePricePlanRequest:
       description: Request to update a price plan
       type: object
@@ -3655,6 +3889,10 @@ components:
           enum:
             - LATEST_VERSION
             - ALL_VERSION
+        pricingRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreatePricingRule'
     ActivatePricePlanRequest:
       description: Request to activate currencies of a price plan
       type: object
@@ -3696,11 +3934,11 @@ components:
                 - CUSTOM: Use the currency provided in the request
                 - ACCOUNT_INVOICE: Use the invoice currency of the given account
             currency:
-              description: 'Currency to be used, this will be considered if mode is CUSTOM'
+              description: Currency to be used, this will be considered if mode is CUSTOM
               type: string
               minLength: 1
             accountId:
-              description: 'Id of the account of which invoice currency will be used, this will be considered if mode is ACCOUNT_INVOICE'
+              description: Id of the account of which invoice currency will be used, this will be considered if mode is ACCOUNT_INVOICE
               type: string
         pricePlanDetailsConfig:
           title: PricePlanDetailsConfig
@@ -3723,19 +3961,19 @@ components:
             pricePlanDetails:
               $ref: '#/components/schemas/CreatePricePlanDetails'
             pricePlanId:
-              description: 'Id of the price plan, this will be considered if mode is PRICE_PLAN'
+              description: Id of the price plan, this will be considered if mode is PRICE_PLAN
               type: string
               minLength: 1
             accountId:
-              description: 'Id of the account, this will be considered if mode is ACCOUNT'
+              description: Id of the account, this will be considered if mode is ACCOUNT
               type: string
               minLength: 1
             effectiveOn:
-              description: 'Will be used for getting the usage rate card, only used if mode is ACCOUNT or PRICE_PLAN'
+              description: Will be used for getting the usage rate card, only used if mode is ACCOUNT or PRICE_PLAN
               type: string
               format: date-time
             pricingCycleOrdinal:
-              description: 'nth cycle, will be used to calculate revenue for the particular cycle, only used if mode is CUSTOM or PRICE_PLAN'
+              description: nth cycle, will be used to calculate revenue for the particular cycle, only used if mode is CUSTOM or PRICE_PLAN
               type: integer
         usageConfig:
           title: UsageConfig
@@ -3756,12 +3994,12 @@ components:
                 - LOOKUP_RANGE: Use the usage of a given account for the specified range
                 - LOOKUP_CYCLE: Use the usage of a given account for the specified cycle
             usageMap:
-              description: 'Map of usage meter id and usage, this will be considered if mode is CUSTOM'
+              description: Map of usage meter id and usage, this will be considered if mode is CUSTOM
               type: object
               additionalProperties:
                 type: number
             lookupRange:
-              description: 'Range of usage to be looked up, this will be considered if mode is LOOKUP_RANGE'
+              description: Range of usage to be looked up, this will be considered if mode is LOOKUP_RANGE
               type: object
               required:
                 - start
@@ -3778,7 +4016,7 @@ components:
                   type: string
                   minLength: 1
             lookupCycle:
-              description: 'Cycle of usage to be looked up, this will be considered if mode is LOOKUP_CYCLE'
+              description: Cycle of usage to be looked up, this will be considered if mode is LOOKUP_CYCLE
               type: object
               required:
                 - accountId
@@ -3808,7 +4046,7 @@ components:
                 - LOOKUP_RANGE: Use the license entries of a given account for the specified range
                 - LOOKUP_CYCLE: Use the license entries of a given account for the specified cycle
             custom:
-              description: 'List of license entries, this will be considered if mode is CUSTOM'
+              description: List of license entries, this will be considered if mode is CUSTOM
               type: array
               items:
                 type: object
@@ -3827,7 +4065,7 @@ components:
                     type: string
                     format: date-time
             lookupRange:
-              description: 'Range of license entries to be looked up, this will be considered if mode is LOOKUP_RANGE'
+              description: Range of license entries to be looked up, this will be considered if mode is LOOKUP_RANGE
               type: object
               required:
                 - start
@@ -3844,13 +4082,13 @@ components:
                   type: string
                   minLength: 1
             lookupCycle:
-              description: 'Cycle of license entries to be looked up, this will be considered if mode is LOOKUP_CYCLE'
+              description: Cycle of license entries to be looked up, this will be considered if mode is LOOKUP_CYCLE
               type: object
               required:
                 - accountId
               properties:
                 cycleEffectiveOn:
-                  description: 'Effective date of the cycle, will be used to get the license entries of the cycle'
+                  description: Effective date of the cycle, will be used to get the license entries of the cycle
                   type: string
                   format: date-time
                 accountId:
@@ -3858,7 +4096,7 @@ components:
                   minLength: 1
         prorationConfig:
           title: ProrationConfig
-          description: 'Configuration for getting the proration, if not provided no proration will be applied'
+          description: Configuration for getting the proration, if not provided no proration will be applied
           type: object
           required:
             - mode
@@ -3873,7 +4111,7 @@ components:
                 - CUSTOM: Use the proration provided in the request
                 - LOOKUP_CYCLE: Use the proration of a given account for the specified cycle
             customConfig:
-              description: 'Custom proration config, this will be considered if mode is CUSTOM'
+              description: Custom proration config, this will be considered if mode is CUSTOM
               type: object
               required:
                 - cycleStartDate
@@ -3890,7 +4128,7 @@ components:
                   type: string
                   format: date-time
             lookupCycleConfig:
-              description: 'Cycle of proration to be looked up, this will be considered if mode is LOOKUP_CYCLE'
+              description: Cycle of proration to be looked up, this will be considered if mode is LOOKUP_CYCLE
               type: object
               required:
                 - accountId
@@ -3923,7 +4161,7 @@ components:
                 - CUSTOM: Use the entitlement overages provided in the request
                 - LOOKUP_CYCLE: Use the entitlement overages of a given account for the specified cycle
             custom:
-              description: 'Quantity of entitlement overages, this will be considered if mode is CUSTOM'
+              description: Quantity of entitlement overages, this will be considered if mode is CUSTOM
               type: array
               items:
                 type: object
@@ -3938,14 +4176,14 @@ components:
                   quantity:
                     type: number
             lookupCycle:
-              description: 'Billing cycle of entitlement overages to be looked up, this will be considered if mode is LOOKUP_CYCLE'
+              description: Billing cycle of entitlement overages to be looked up, this will be considered if mode is LOOKUP_CYCLE
               type: object
               required:
                 - accountId
                 - billingCycleEndDate
               properties:
                 billingCycleEndDate:
-                  description: 'Effective date of the cycle, will be used to get the license entries of the cycle'
+                  description: Effective date of the cycle, will be used to get the license entries of the cycle
                   type: string
                   format: date-time
                 accountId:
@@ -4015,6 +4253,10 @@ components:
             Date until which the association must be effective. The date is expected in YYYY-MM-DD format
         pricePlanDetailsOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
+        pricingRulesOverride:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreatePricingRule'
         retainStartOffsets:
           type: boolean
           description: |
@@ -4073,6 +4315,10 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SlabRate'
+              rateConfig:
+                type: object
+                additionalProperties:
+                  type: string
         fixedFeeRates:
           description: Rates for fixed fee rate cards
           type: array
@@ -4104,6 +4350,10 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SlabRate'
+              rateConfig:
+                type: object
+                additionalProperties:
+                  type: string
         billingEntitlementRates:
           description: Rates for billing entitlement rate cards
           type: array
@@ -4121,14 +4371,13 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SlabRate'
+              rateConfig:
+                type: object
+                additionalProperties:
+                  type: string
         minimumCommitmentRate:
           description: Rates for minimum commitment.
           type: number
-        rateDetailsRate:
-          description: List of slab rates
-          type: array
-          items:
-            $ref: '#/components/schemas/SlabRate'
         creditGrantRates:
           description: Rates for credit grant rate card
           type: array
@@ -4148,6 +4397,10 @@ components:
                   $ref: '#/components/schemas/SlabDetail'
               creditAmount:
                 type: number
+              rateConfig:
+                type: object
+                additionalProperties:
+                  type: string
         entitlementOverageRates:
           description: Rates for entitlement overage rate cards
           type: array
@@ -4165,17 +4418,22 @@ components:
                 type: array
                 items:
                   $ref: '#/components/schemas/SlabRate'
-    CreatePricePlanMigrationRequest:
+              rateConfig:
+                type: object
+                additionalProperties:
+                  type: string
+    CreateMigrationRequest:
       description: Request to migrate all account associations of a price plan to another price plan
       type: object
       additionalProperties: false
       required:
-        - sourceId
-        - sourceVersion
-        - targetId
-        - targetVersion
-        - migrationMode
+        - migrationType
       properties:
+        migrationType:
+          type: string
+          enum:
+            - PRICE_PLAN
+            - EVENT_CORRECTIONS
         sourceId:
           description: Id of source price plan
           type: string
@@ -4214,7 +4472,29 @@ components:
                 pricing cycle configuration of the new price plan that the account needs to migrate to.
               - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
                 New association (1st Nov to 30th Nov) of different price plan with retainStartOffsets option true will
-                throw a `400 BadRequest` as no existing price plan configuration found on date of association 
+                throw a `400 BadRequest` as no existing price plan configuration found on date of association
+        eventFilters:
+          $ref: '#/components/schemas/EventFilters'
+    EventFilters:
+      description: Event filters along with actions for correcting events
+      type: object
+      additionalProperties: false
+      required:
+        - action
+        - accountId
+      properties:
+        action:
+          type: string
+          enum:
+            - UNDO
+            - REDO
+            - REDO_EVENT
+        paginationContext:
+          type: string
+        event:
+          $ref: '#/components/schemas/Event'
+        accountId:
+          type: string
     UpdateAddOnRequest:
       description: Request to update an addon
       type: object
@@ -4251,16 +4531,29 @@ components:
         - PROPOSAL_DECLINED
         - PROPOSAL_EXPIRED
       description: Status of the purchase
+    WalletTopupDetails:
+      description: Information related to wallet topup purchase
+      type: object
+      additionalProperties: false
+      required:
+        - topupAmount
+      properties:
+        purchaseAmount:
+          description: |
+            Specifies the amount to be paid to top up wallet with the specified top up amount. 
+            If left null, purchase amount will be same as top up amount
+          type: number
+        topupAmount:
+          description: Specifies the value to be topped up in the wallet
+          type: number
     CreatePurchaseRequest:
       description: Create a purchase for an account
       type: object
       additionalProperties: false
-      required:
-        - pricePlanId
       properties:
         pricePlanId:
           type: string
-          description: Id of the price plan
+          description: Id of the price plan, Required for ENTITLEMENT_GRANT, ASSOCIATION purchase
         quantity:
           type: integer
           format: int32
@@ -4274,6 +4567,8 @@ components:
           $ref: '#/components/schemas/PurchasePlanOverride'
         associationOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
+        walletTopupDetails:
+          $ref: '#/components/schemas/WalletTopupDetails'
         effectiveFrom:
           type: string
           format: date
@@ -4284,11 +4579,7 @@ components:
           type: string
           format: date-time
         type:
-          type: string
-          enum:
-            - ENTITLEMENT_GRANT
-            - ASSOCIATION
-          description: 'Specifies whether this purchase is for granting entitlements or for an association. If left null, ENTITLEMENT_GRANT is taken as default'
+          $ref: '#/components/schemas/PurchaseType'
     CreateProposalRequest:
       allOf:
         - $ref: '#/components/schemas/CreatePurchaseRequest'
@@ -4319,13 +4610,11 @@ components:
       type: object
       additionalProperties: false
       properties:
-        rateDetails:
-          $ref: '#/components/schemas/RateDetails'
-        entitlementRateCards:
+        fixedFeeRateCards:
           type: array
           maxItems: 50
           items:
-            $ref: '#/components/schemas/EntitlementRateCard'
+            $ref: '#/components/schemas/FixedFeeRateCard'
         billingEntitlementRateCards:
           type: array
           maxItems: 50
@@ -4351,6 +4640,7 @@ components:
           type: string
         email:
           type: string
+          maxLength: 320
         dailyInvoiceConsolidation:
           type: boolean
         accountIds:
@@ -4426,7 +4716,7 @@ components:
       properties:
         schemaName:
           type: string
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
         attributeName:
           type: string
     CreateBulkAliasRequest:
@@ -4477,12 +4767,16 @@ components:
       required:
         - name
         - id
+        - togaiCustomerId
         - primaryEmail
       properties:
         id:
           description: Identifier of customer
           type: string
           maxLength: 50
+        togaiCustomerId:
+          description: Unique identifier of customer
+          type: string
         name:
           description: Name of the Customer
           type: string
@@ -4491,7 +4785,7 @@ components:
         primaryEmail:
           description: Primary email of the customer
           type: string
-          maxLength: 255
+          maxLength: 320
         billingAddress:
           type: string
         address:
@@ -4516,6 +4810,41 @@ components:
           type: string
         context:
           $ref: '#/components/schemas/PaginationOptions'
+    CreateCustomerContactResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - username
+        - name
+        - verified
+        - createdAt
+        - loginAccess
+      properties:
+        username:
+          type: string
+          maxLength: 50
+        preferredUsername:
+          type: string
+          maxLength: 50
+        name:
+          type: string
+          maxLength: 50
+        email:
+          type: string
+          maxLength: 320
+        phone:
+          type: string
+          maxLength: 20
+        loginAccess:
+          type: boolean
+        createdBy:
+          type: string
+          maxLength: 50
+        createdAt:
+          type: string
+          format: date-time
+        verified:
+          type: boolean
     AccountPaginatedResponse:
       type: object
       additionalProperties: false
@@ -4597,6 +4926,10 @@ components:
             type: string
         pricePlanDetails:
           $ref: '#/components/schemas/PricePlanDetails'
+        pricingRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingRule'
         createdAt:
           type: string
           format: date-time
@@ -4640,6 +4973,16 @@ components:
           type: string
         previousToken:
           type: string
+    PricingRulesPaginatedResponse:
+      type: object
+      required:
+        - data
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingRule'
     UpdatePricingScheduleResponse:
       type: object
       additionalProperties: false
@@ -4721,14 +5064,9 @@ components:
                   revenue:
                     type: number
               licenseRevenueSummary:
-                type: object
-                title: LicenseRevenueSummary
-                additionalProperties: false
-                required:
-                  - revenue
-                properties:
-                  revenue:
-                    type: number
+                type: array
+                items:
+                  $ref: '#/components/schemas/SlabRevenueSummary'
               billingEntitlementRevenueSummary:
                 type: object
                 title: BillingEntitlementRevenueSummary
@@ -4818,6 +5156,7 @@ components:
       required:
         - name
         - id
+        - togaiCustomerId
         - primaryEmail
         - billingAddress
         - address
@@ -4829,6 +5168,9 @@ components:
           description: Identifier of customer
           type: string
           maxLength: 50
+        togaiCustomerId:
+          description: Unique identifier of customer
+          type: string
         name:
           description: Name of the Customer
           type: string
@@ -4837,12 +5179,12 @@ components:
         primaryEmail:
           description: Primary email of the customer
           type: string
-          maxLength: 255
+          maxLength: 320
         billingAddress:
           description: billing address of the customer
           type: string
           maxLength: 1000
-          example: '201 Boulevard, WA 53123'
+          example: 201 Boulevard, WA 53123
         address:
           $ref: '#/components/schemas/Address'
         status:
@@ -4865,14 +5207,21 @@ components:
       required:
         - name
         - id
+        - togaiAccountId
+        - togaiCustomerId
         - status
-        - invoiceCurrency
         - customerId
       properties:
         id:
           description: Identifier of the account
           type: string
           maxLength: 50
+        togaiAccountId:
+          description: Unique identifier of the account
+          type: string
+        togaiCustomerId:
+          description: Unique identifier of the customer
+          type: string
         name:
           description: Name of the Account
           type: string
@@ -4906,13 +5255,14 @@ components:
         primaryEmail:
           description: Primary email of the customer
           type: string
-          maxLength: 255
+          maxLength: 320
           example: admin@example.com
         status:
           description: Status of the account
           type: string
           enum:
             - ACTIVE
+            - DRAFT
             - ARCHIVED
           example: ACTIVE
         settings:
@@ -4929,6 +5279,12 @@ components:
             Example: GSTN, VATN
           type: object
           additionalProperties:
+            type: string
+        tags:
+          description: Tag for accounts are stored in lowercase
+          type: array
+          uniqueItems: true
+          items:
             type: string
     EventSchemaVersionsResponse:
       description: Response for event schema versions
@@ -4949,8 +5305,6 @@ components:
         - type
         - updatedAt
         - status
-        - sourceId
-        - targetId
         - totalMigrationEntries
         - pendingMigrationEntries
         - failedMigrationEntries
@@ -5036,7 +5390,7 @@ components:
           description: Name of the event. Must be unique for an organization.
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
         description:
           description: Description of the event
           type: string
@@ -5077,6 +5431,9 @@ components:
           $ref: '#/components/schemas/FeatureDetails'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        eventIdTemplate:
+          description: Template used to generate event id based on event payload
+          type: string
         eventLevelRevenue:
           type: boolean
         createdAt:
@@ -5108,7 +5465,7 @@ components:
           description: Name of the event attribute.
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
           example: distance
         defaultUnit:
           description: Unit for the attribute
@@ -5126,7 +5483,7 @@ components:
           description: Name of the event dimension
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
           example: city
     Enrichments:
       type: object
@@ -5205,7 +5562,7 @@ components:
           description: Name of the usage meter
           type: string
           maxLength: 50
-          pattern: '^[\sa-zA-Z0-9_-]*$'
+          pattern: ^[\sa-zA-Z0-9_-]*$
           example: rides-usage
         billableName:
           description: Billable name of addon. Billable name takes precedence over name to display in invoice.
@@ -5308,7 +5665,7 @@ components:
             - DESC
     PlanOverride:
       type: object
-      description: 'Represents effectiveness period and config of a price plan. i.e, price plan bound by time.'
+      description: Represents effectiveness period and config of a price plan. i.e, price plan bound by time.
       additionalProperties: false
       required:
         - id
@@ -5325,6 +5682,10 @@ components:
           type: string
         pricePlanDetailsOverride:
           $ref: '#/components/schemas/PricePlanDetailsOverride'
+        pricingRulesOverride:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingRule'
         startDate:
           type: string
           format: date-time
@@ -5379,6 +5740,13 @@ components:
           type: string
         dataType:
           $ref: '#/components/schemas/SettingDataType'
+    PurchaseType:
+      type: string
+      description: Specifies whether this purchase is for granting entitlements or for an association or for wallet topup. If left null, ENTITLEMENT_GRANT is taken as default
+      enum:
+        - ENTITLEMENT_GRANT
+        - ASSOCIATION
+        - WALLET_TOPUP
     Purchase:
       type: object
       description: Represents a Purchase
@@ -5386,8 +5754,6 @@ components:
       required:
         - id
         - accountId
-        - pricePlanId
-        - pricePlanVersion
         - createdAt
         - status
         - type
@@ -5398,6 +5764,7 @@ components:
           type: string
           minLength: 1
         pricePlanId:
+          description: Id of the price plan, Required for ENTITLEMENT_GRANT, ASSOCIATION purchase
           type: string
           minLength: 1
         quantity:
@@ -5416,6 +5783,8 @@ components:
           $ref: '#/components/schemas/PricePlanDetailsOverride'
         associationOverride:
           $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
+        walletTopupDetails:
+          $ref: '#/components/schemas/WalletTopupDetails'
         createdAt:
           type: string
           format: date-time
@@ -5440,10 +5809,7 @@ components:
         status:
           $ref: '#/components/schemas/PurchaseStatus'
         type:
-          type: string
-          enum:
-            - ENTITLEMENT_GRANT
-            - ASSOCIATION
+          $ref: '#/components/schemas/PurchaseType'
         comment:
           type: string
     Proposal:
@@ -5472,7 +5838,7 @@ components:
             invoiceCurrency:
               type: string
             purchasePlan:
-              $ref: '#/components/schemas/PurchasePlanOverride'
+              $ref: '#/components/schemas/PricePlanDetails'
             features:
               type: array
               items:
@@ -5516,11 +5882,7 @@ components:
       additionalProperties: false
       required:
         - id
-        - pricePlanId
-        - pricePlanName
-        - pricePlanVersion
         - status
-        - purchasePlan
         - createdAt
         - type
       properties:
@@ -5545,7 +5907,9 @@ components:
         idempotencyKey:
           type: string
         purchasePlan:
-          $ref: '#/components/schemas/PurchasePlanOverride'
+          $ref: '#/components/schemas/PricePlanDetails'
+        walletTopupDetails:
+          $ref: '#/components/schemas/WalletTopupDetails'
         price:
           type: number
         invoiceCurrency:
@@ -5557,19 +5921,13 @@ components:
           type: string
           format: date-time
         type:
-          type: string
-          enum:
-            - ENTITLEMENT_GRANT
-            - ASSOCIATION
+          $ref: '#/components/schemas/PurchaseType'
     ProposalsListResponse:
       type: object
       description: Represents a Proposal for List Response
       additionalProperties: false
       required:
         - id
-        - pricePlanId
-        - pricePlanName
-        - pricePlanVersion
         - status
         - createdAt
         - updatedAt
@@ -5587,6 +5945,10 @@ components:
           format: int32
         status:
           $ref: '#/components/schemas/PurchaseStatus'
+        walletTopupDetails:
+          $ref: '#/components/schemas/WalletTopupDetails'
+        idempotencyKey:
+          type: string
         createdAt:
           type: string
           format: date-time
@@ -5602,10 +5964,7 @@ components:
             - PREPAID
             - POSTPAID
         type:
-          type: string
-          enum:
-            - ENTITLEMENT_GRANT
-            - ASSOCIATION
+          $ref: '#/components/schemas/PurchaseType'
     PurchasePaginatedListData:
       type: object
       additionalProperties: false
@@ -5648,6 +6007,7 @@ components:
           type: string
         email:
           type: string
+          maxLength: 320
         dailyInvoiceConsolidation:
           type: boolean
         netTermDays:
@@ -5857,23 +6217,48 @@ components:
           description: Contact number
           type: string
         line1:
-          description: 'Address line 1 (eg. Street, PO Box, Company Name)'
+          description: Address line 1 (eg. Street, PO Box, Company Name)
           type: string
         line2:
-          description: 'Address line 2 (eg. apartment, suite, unit or building)'
+          description: Address line 2 (eg. apartment, suite, unit or building)
           type: string
         postalCode:
           description: ZIP or postal code
           type: string
         city:
-          description: 'City, district, suburb, town or village'
+          description: City, district, suburb, town or village
           type: string
         state:
-          description: 'State, county, province or region'
+          description: State, county, province or region
           type: string
         country:
-          description: 'Two letter country code [ISO-3166-1 Alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)'
+          description: Two letter country code [ISO-3166-1 Alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2)
           type: string
+    Attribute:
+      description: Metric to be recorded
+      type: object
+      additionalProperties: false
+      required:
+        - name
+        - value
+      properties:
+        name:
+          description: Name of the event attribute
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: message
+        value:
+          description: Value of the event attribute
+          type: string
+          pattern: ^-?\d{1,512}(\.\d+)?$
+          example: 100
+        unit:
+          description: Unit with which the attribute value was measured. Natively supported units - "Meters, Miles, Kilometers, Grams, Kilograms, ounces, Pounds, Minutes, Hours, Seconds, Milliseconds, Microseconds, None". Clients are free to add any other custom units.
+          type: string
+          minLength: 1
+          maxLength: 50
+          example: characters
     BillingConfig:
       type: object
       properties:
@@ -5888,30 +6273,39 @@ components:
           format: int64
           example: 5
     BillingEntitlementRateCard:
-      allOf:
-        - $ref: '#/components/schemas/EntitlementRateCard'
-        - type: object
-          required:
-            - ratePlan
-            - rateValues
-            - invoiceTiming
-          properties:
-            tag:
-              type: string
-              description: A tag string to group rate cards
-            invoiceTiming:
-              $ref: '#/components/schemas/InvoiceTiming'
-            displayName:
-              type: string
-              description: 'Name your rate card, this will be used in invoice'
-            ratePlan:
-              $ref: '#/components/schemas/RatePlan'
-            rateValues:
-              type: array
-              items:
-                $ref: '#/components/schemas/RateValue'
-            recurrenceConfig:
-              $ref: '#/components/schemas/RecurrenceConfig'
+      description: Billing Entitlement rate card
+      type: object
+      additionalProperties: false
+      required:
+        - featureId
+        - featureConfigs
+        - ratePlan
+        - rateValues
+        - invoiceTiming
+      properties:
+        featureId:
+          type: string
+        featureConfigs:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/FeatureConfig'
+        tag:
+          type: string
+          description: A tag string to group rate cards
+        invoiceTiming:
+          $ref: '#/components/schemas/InvoiceTiming'
+        displayName:
+          type: string
+          description: Name your rate card, this will be used in invoice
+        ratePlan:
+          $ref: '#/components/schemas/RatePlan'
+        rateValues:
+          type: array
+          items:
+            $ref: '#/components/schemas/RateValue'
+        recurrenceConfig:
+          $ref: '#/components/schemas/RecurrenceConfig'
     CreateAddOnRequest:
       description: Request to create an addon
       type: object
@@ -5963,13 +6357,6 @@ components:
             $ref: '#/components/schemas/LicenseRateCard'
         minimumCommitment:
           $ref: '#/components/schemas/MinimumCommitment'
-        rateDetails:
-          $ref: '#/components/schemas/RateDetails'
-        entitlementRateCards:
-          type: array
-          maxItems: 50
-          items:
-            $ref: '#/components/schemas/EntitlementRateCard'
         creditGrantRateCards:
           type: array
           items:
@@ -6049,6 +6436,19 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/SlabDetail'
+        rateConfig:
+          type: object
+          additionalProperties:
+            type: string
+    Dimensions:
+      description: Dimensions are tags/labels associated with the events.
+      type: object
+      additionalProperties:
+        type: string
+        minLength: 1
+        maxLength: 50
+        example:
+          Country: India
     EntitlementOverageRateCard:
       type: object
       required:
@@ -6068,7 +6468,7 @@ components:
           description: A tag string to group rate cards
         maxQuantity:
           type: number
-          description: 'Maximum quantity allowed for the feature, if not specified, unlimited quantity is allowed'
+          description: Maximum quantity allowed for the feature, if not specified, unlimited quantity is allowed
         ratePlan:
           $ref: '#/components/schemas/RatePlan'
         rateValues:
@@ -6077,22 +6477,49 @@ components:
             $ref: '#/components/schemas/RateValue'
         billingConfig:
           $ref: '#/components/schemas/BillingConfig'
-          description: 'Represents the billing config of the entitlement overage rate card. If not specified interval:1 and startOffset:0 is taken as default value'
-    EntitlementRateCard:
-      description: Entitlement type rate card
+          description: Represents the billing config of the entitlement overage rate card. If not specified interval:1 and startOffset:0 is taken as default value
+    Event:
+      description: Contents of the event
       type: object
       additionalProperties: false
       required:
-        - featureId
-        - featureConfigs
+        - schemaName
+        - timestamp
+        - accountId
+        - attributes
+        - dimensions
       properties:
-        featureId:
+        schemaName:
+          description: |
+            Name of the Event Schema. 
+            Know more about [event schema](https://docs.togai.com/docs/event-schemas)
           type: string
-        featureConfigs:
+          minLength: 1
+          maxLength: 50
+        id:
+          description: Togai restricts users to ingest events with same id within a period of *45 days*. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs
+          type: string
+          maxLength: 512
+          example: c0b1306d-f506-43a6-856b-69221efaee6b
+        timestamp:
+          description: Source time stamp of the event. This timestamp must be in ISO 8601 format.
+          type: string
+          format: date-time
+          example: '2022-06-15T07:30:35.123'
+        accountId:
+          description: The event will be associated with the provided account
+          type: string
+          maxLength: 512
+          example: 1
+        attributes:
+          description: Attributes are numeric values. It can be usage metric which you push to Togai
           type: array
-          minItems: 1
+          minItems: 0
+          maxItems: 10
           items:
-            $ref: '#/components/schemas/FeatureConfig'
+            $ref: '#/components/schemas/Attribute'
+        dimensions:
+          $ref: '#/components/schemas/Dimensions'
     ExpiryType:
       type: string
       description: Expiry type of grant
@@ -6327,13 +6754,6 @@ components:
             $ref: '#/components/schemas/EntitlementOverageRateCard'
         minimumCommitment:
           $ref: '#/components/schemas/MinimumCommitment'
-        rateDetails:
-          $ref: '#/components/schemas/RateDetails'
-        entitlementRateCards:
-          type: array
-          maxItems: 50
-          items:
-            $ref: '#/components/schemas/EntitlementRateCard'
         creditGrantRateCards:
           type: array
           items:
@@ -6356,7 +6776,6 @@ components:
       type: string
       description: Type of price plan
       enum:
-        - ENTITLEMENT
         - BILLING
         - PURCHASE
     PriceType:
@@ -6473,9 +6892,64 @@ components:
       enum:
         - TIERED
         - VOLUME
+    PricingRule:
+      type: object
+      description: Represents pricing rules of a price plan. i.e, price plan bound by time.
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - version
+        - order
+        - computation
+        - action
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        version:
+          type: integer
+          format: int32
+          minimum: 1
+        order:
+          type: integer
+          format: int32
+          minimum: 1
+        condition:
+          description: JSON logic condition deciding whether to compute this pricing rule or not
+          type: string
+        computation:
+          description: JSON logic to be computed
+          type: string
+        action:
+          description: JSON logic to be computed
+          title: action
+          $ref: '#/components/schemas/PricingRuleAction'
+    PricingRuleAction:
+      type: object
+      additionalProperties: false
+      required:
+        - type
+      properties:
+        type:
+          type: string
+          enum:
+            - ADD
+            - UPDATE
+        target:
+          type: string
+        id:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
     PricingSchedule:
       type: object
-      description: 'Represents effectiveness period and config of a price plan. i.e, price plan bound by time.'
+      description: Represents effectiveness period and config of a price plan. i.e, price plan bound by time.
       additionalProperties: false
       required:
         - id
@@ -6497,26 +6971,17 @@ components:
           type: integer
           format: int32
           minimum: 1
+        pricingRules:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingRule'
     ProratedRefundMode:
       type: string
       enum:
         - NONE
         - CREDITS
         - PAYMENT
-    RateDetails:
-      type: object
-      description: rate details for a price plan
-      additionalProperties: false
-      required:
-        - rateValues
-        - ratePlan
-      properties:
-        rateValues:
-          type: array
-          items:
-            $ref: '#/components/schemas/RateValue'
-        ratePlan:
-          $ref: '#/components/schemas/RatePlan'
+        - WALLET
     RatePlan:
       type: object
       description: Contains all rate related configurations
@@ -6546,6 +7011,10 @@ components:
           minItems: 1
           items:
             $ref: '#/components/schemas/SlabRate'
+        rateConfig:
+          type: object
+          additionalProperties:
+            type: string
     RecurrenceConfig:
       type: object
       properties:
@@ -6635,7 +7104,7 @@ components:
       properties:
         displayName:
           type: string
-          description: 'Name your rate card, this will be displayed in the Togai App'
+          description: Name your rate card, this will be displayed in the Togai App
         tag:
           type: string
           description: A tag string to group usageRateCards
@@ -6687,83 +7156,6 @@ components:
           type: string
         details:
           type: object
-    Attribute:
-      description: Metric to be recorded
-      type: object
-      additionalProperties: false
-      required:
-        - name
-        - value
-      properties:
-        name:
-          description: Name of the event attribute
-          type: string
-          minLength: 1
-          maxLength: 50
-          example: message
-        value:
-          description: Value of the event attribute
-          type: string
-          pattern: '^-?\d{1,512}(\.\d+)?$'
-          example: 100
-        unit:
-          description: 'Unit with which the attribute value was measured. Natively supported units - "Meters, Miles, Kilometers, Grams, Kilograms, ounces, Pounds, Minutes, Hours, Seconds, Milliseconds, Microseconds, None". Clients are free to add any other custom units.'
-          type: string
-          minLength: 1
-          maxLength: 50
-          example: characters
-    Dimensions:
-      description: Dimensions are tags/labels associated with the events.
-      type: object
-      additionalProperties:
-        type: string
-        minLength: 1
-        maxLength: 50
-        example:
-          Country: India
-    Event:
-      description: Contents of the event
-      type: object
-      additionalProperties: false
-      required:
-        - id
-        - schemaName
-        - timestamp
-        - accountId
-        - attributes
-        - dimensions
-      properties:
-        schemaName:
-          description: |
-            Name of the Event Schema. 
-            Know more about [event schema](https://docs.togai.com/docs/event-schemas)
-          type: string
-          minLength: 1
-          maxLength: 50
-        id:
-          description: 'Togai restricts users to ingest events with same id within a period of *45 days*. This restriction is common for [/entitled API](/api-reference/entitlements/ingest-event-if-a-user-is-entitled-to-a-feature), [/ingest API](/api-reference/event-ingestion/ingest-events-to-togai) and [/ingestBatch API](/api-reference/event-ingestion/ingest-events-to-togai-in-batch). i.e, an id used on /ingest API will not be allowed on /ingestBatch or /entitled APIs'
-          type: string
-          maxLength: 512
-          example: c0b1306d-f506-43a6-856b-69221efaee6b
-        timestamp:
-          description: Source time stamp of the event. This timestamp must be in ISO 8601 format.
-          type: string
-          format: date-time
-          example: '2022-06-15T07:30:35.123'
-        accountId:
-          description: The event will be associated with the provided account
-          type: string
-          maxLength: 512
-          example: 1
-        attributes:
-          description: Attributes are numeric values. It can be usage metric which you push to Togai
-          type: array
-          minItems: 0
-          maxItems: 10
-          items:
-            $ref: '#/components/schemas/Attribute'
-        dimensions:
-          $ref: '#/components/schemas/Dimensions'
     GetEventResponse:
       description: Get single event response
       type: object
@@ -6775,6 +7167,13 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventWithStatusAndEventPipelineInfo'
+    EventCorrectionRequest:
+      description: Event Correction Payload for event correction
+      type: object
+      additionalProperties: false
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
     GetEventsResponse:
       description: Get batch events response
       type: object
@@ -7078,6 +7477,7 @@ components:
               description: Status of the event requested for correction
               enum:
                 - REVERTED
+                - REVERTED_AND_REINGESTED
                 - FAILED
             reason:
               type: string
@@ -7104,6 +7504,7 @@ components:
             - INGESTION_FAILED_PAST_GRACE_PERIOD
             - INGESTION_FAILED_ACCOUNT_NOT_FOUND
             - INGESTION_FAILED_DUPLICATE_EVENT
+            - INGESTION_FAILED_NO_EVENT_ID
             - REVERTED
             - UNKNOWN
           example: INGESTION_COMPLETED
@@ -7376,7 +7777,7 @@ components:
           $ref: '#/components/schemas/MetricName'
         aggregationPeriod:
           type: string
-          description: 'Set the aggregation period. Allowed periods are HOUR, DAY, WEEK, MONTH'
+          description: Set the aggregation period. Allowed periods are HOUR, DAY, WEEK, MONTH
           enum:
             - HOUR
             - DAY
@@ -7594,6 +7995,15 @@ components:
           example: USD
         totalAmount:
           type: number
+    TopupWalletRequest:
+      type: object
+      description: Payload to topup wallet of an account
+      additionalProperties: false
+      required:
+        - topupAmount
+      properties:
+        topupAmount:
+          type: number
     ExternalPaymentReference:
       type: object
       description: external payment reference object
@@ -7713,7 +8123,7 @@ components:
             - PAID
             - VOID
             - UN_COLLECTIBLE
-            - INITIATE_REFUND
+            - REFUND_INITIATED
             - REFUND_COMPLETED
           example: PAID
     CreateCustomInvoiceRequest:
@@ -7722,14 +8132,19 @@ components:
       additionalProperties: false
       required:
         - accountId
-        - invoiceTime
+        - startDate
+        - endDate
         - status
         - lineItems
       properties:
         accountId:
           type: string
           example: ACC001
-        invoiceTime:
+        startDate:
+          type: string
+          format: date-time
+          example: '2020-06-04T12:00:00.000Z'
+        endDate:
           type: string
           format: date-time
           example: '2020-07-04T12:00:00.000Z'
@@ -7751,6 +8166,51 @@ components:
           maxItems: 50
           items:
             $ref: '#/components/schemas/CustomInvoiceLineItem'
+        autoAdvance:
+          type: boolean
+          description: |
+            This property defines the behaviour of status updates of invoices in scenarios like:
+            * Invoice created for future or past
+
+            Enabling this property to true auto updates the status of custom invoice to DUE or PAID accordingly
+
+            But disabling the property of left null does not auto update the custom status
+        applyCredits:
+          type: boolean
+          description: |
+            This property defines the behaviour of whether or not to use credits to net off with the invoice amount. Default: true
+        applyWalletBalance:
+          type: boolean
+          description: |
+            This property defines the behaviour of whether or not to use wallet amount to net off with the invoice amount. Default: true
+    UpdateInvoiceRequest:
+      description: Payload to update an invoice
+      type: object
+      additionalProperties: false
+      properties:
+        startDate:
+          type: string
+          format: date-time
+          example: '2020-06-04T12:00:00.000Z'
+        endDate:
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        status:
+          description: Status of invoice
+          type: string
+          enum:
+            - DUE
+            - PAID
+            - VOID
+            - UN_COLLECTIBLE
+          example: DUE
+        lineItems:
+          type: array
+          minItems: 1
+          maxItems: 50
+          items:
+            $ref: '#/components/schemas/CustomInvoiceLineItem'
     MiscellaneousChargesResponse:
       description: Miscellaneous charges response
       type: object
@@ -7760,6 +8220,57 @@ components:
       properties:
         data:
           $ref: '#/components/schemas/MiscellaneousCharges'
+    PricingRulesLogsPaginatedResponse:
+      description: Pricing Rules Logs response
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PricingRulesLog'
+    PricingRulesLog:
+      description: Pricing Rules Logs
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - ruleId
+        - order
+        - changes
+      properties:
+        id:
+          type: string
+        ruleId:
+          type: string
+        order:
+          type: integer
+          format: int32
+        changes:
+          $ref: '#/components/schemas/PricingRuleChangesLog'
+    PricingRuleChangesLog:
+      description: Pricing Rules Logs Changes
+      type: object
+      additionalProperties: false
+      required:
+        - key
+        - oldRevenue
+        - newRevenue
+      properties:
+        key:
+          type: string
+        oldRevenue:
+          type: number
+        newRevenue:
+          type: number
+        oldUsage:
+          type: number
+        newUsage:
+          type: number
+        errorMessage:
+          type: string
     ListInvoicesResponse:
       description: List invoices response
       type: object
@@ -7772,7 +8283,7 @@ components:
           minItems: 0
           maxItems: 50
           items:
-            $ref: '#/components/schemas/Invoice'
+            $ref: '#/components/schemas/InvoiceSummary'
         nextToken:
           type: string
           maxLength: 500
@@ -7953,6 +8464,104 @@ components:
         closingBalance:
           type: number
           example: 200
+    InvoiceSummary:
+      description: Structure of invoice response
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - status
+        - invoiceDate
+        - updatedAt
+        - invoiceClass
+        - invoiceType
+        - totalAmount
+        - paidAmount
+      properties:
+        id:
+          description: Identifier of invoice
+          type: string
+          maxLength: 50
+        customerId:
+          type: string
+        ownerId:
+          type: string
+        pricePlanId:
+          type: string
+        status:
+          description: Status of the invoice
+          type: string
+          enum:
+            - DRAFT
+            - DUE
+            - PAID
+            - VOID
+            - UN_COLLECTIBLE
+            - REFUND_INITIATED
+            - REFUND_COMPLETED
+            - MERGED
+            - PARTIALLY_PAID
+          example: DUE
+        invoiceClass:
+          description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
+          type: string
+          enum:
+            - INVOICE
+            - ORDER
+            - BILLABLE
+          example: INVOICE
+        invoiceType:
+          description: Represents the type of entity(STANDARD/AD_HOC/COMPOSITE)
+          type: string
+          enum:
+            - STANDARD
+            - AD_HOC
+            - CUSTOM
+            - COMPOSITE
+          example: STANDARD
+        startDate:
+          description: Start date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        endDate:
+          description: End date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        endDateInclusive:
+          description: Inclusive end date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-03T11:59:59.999Z'
+        invoiceDate:
+          description: Invoice date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        dueDate:
+          description: Due date of the invoice
+          type: string
+          format: date-time
+          example: '2020-07-04T12:00:00.000Z'
+        generatedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        sequenceId:
+          type: string
+          description: Sequence id of the invoice
+        pdfUrl:
+          description: Download URL of the pdf file corresponding to the invoice
+          type: string
+        totalAmount:
+          type: number
+        paidAmount:
+          type: number
+        invoiceDetails:
+          $ref: '#/components/schemas/InvoiceDetails'
     Invoice:
       description: Structure of invoice
       type: object
@@ -7964,6 +8573,8 @@ components:
         - updatedAt
         - invoiceClass
         - invoiceType
+        - totalAmount
+        - paidAmount
       properties:
         id:
           description: Identifier of invoice
@@ -7992,7 +8603,7 @@ components:
             - PAID
             - VOID
             - UN_COLLECTIBLE
-            - INITIATE_REFUND
+            - REFUND_INITIATED
             - REFUND_COMPLETED
             - MERGED
             - PARTIALLY_PAID
@@ -8011,6 +8622,7 @@ components:
           enum:
             - STANDARD
             - AD_HOC
+            - CUSTOM
             - COMPOSITE
           example: STANDARD
         startDate:
@@ -8068,6 +8680,10 @@ components:
         pdfUrl:
           description: Download URL of the pdf file corresponding to the invoice
           type: string
+        totalAmount:
+          type: number
+        paidAmount:
+          type: number
     Payment:
       description: Payment object
       type: object
@@ -8140,6 +8756,7 @@ components:
             - ENTITLEMENT_OVERAGE_RATE_CARD_AMOUNT
             - ENTITLEMENT_OVERAGE_RATE_CARD_SLAB_AMOUNT
             - LICENSE_RATE_CARD_AMOUNT
+            - LICENSE_RATE_CARD_SLAB_AMOUNT
             - USAGE_RATE_CARD_AMOUNT
             - USAGE_RATE_CARD_SLAB_AMOUNT
             - TOTAL_CREDITS
@@ -8155,6 +8772,11 @@ components:
             - TOTAL_PURCHASE_AMOUNT
             - CUSTOM_AMOUNT
             - CUSTOM_TAG
+            - TOTAL_PRICING_RULE_ADDITION_AMOUNT
+            - PRICING_RULE_ADDITION_AMOUNT
+            - PRICING_RULE_REVENUE_UPDATE_AMOUNT
+            - PRICING_RULE_USAGE_UPDATE_AMOUNT
+            - RATE_CONFIG_ADJUSTMENT_AMOUNT
           description: |
             Type of the line item
             - GRAND_TOTAL_AMOUNT: Sum of all total amount of individual invoices in a grouped(composite) invoice
@@ -8186,6 +8808,10 @@ components:
             - TOTAL_PURCHASE_AMOUNT: Net revenue all rate cards in a purchase plan
             - CUSTOM_AMOUNT: Custom amount added a DRAFT invoice
             - CUSTOM_TAG: User defined tags given to each rate card
+            - TOTAL_PRICING_RULE_ADDITION_AMOUNT: Sum of all line items added by applying pricing rules
+            - PRICING_RULE_ADDITION_AMOUNT: Amount added to invoice as a result of applying a pricing rule
+            - PRICING_RULE_REVENUE_UPDATE_AMOUNT: Difference in revenue(value) obtained as a result of applying a pricing rule
+            - PRICING_RULE_USAGE_UPDATE_AMOUNT: Difference in usage(quantity) obtained as a result of applying a pricing rule
         valuePerQuantity:
           type: number
         quantity:
@@ -8374,6 +9000,8 @@ components:
           example: CREDITED
         invoiceId:
           type: string
+        entityId:
+          type: string
         amount:
           type: number
           example: 200
@@ -8384,17 +9012,24 @@ components:
       type: array
       items:
         title: MiscellaneousCharge
-        description: Miscellaneous charges are the charges that can be added to the invoice
+        description: Miscellaneous charges are the charges that can be added to the invoice. A charge must either have rate and quantity or value. In case of rate and quantity, the value must not be provided as it is automatically calculated as (rate * quantity).
         type: object
         additionalProperties: false
         required:
           - name
-          - value
         properties:
           name:
             description: Name of the miscellaneous charge
             type: string
             example: Charge 1
+          rate:
+            description: Rate of the charge
+            type: number
+            example: 20
+          quantity:
+            description: Quantity of the charge
+            type: number
+            example: 10
           value:
             description: |
               Value of the charge
@@ -8461,6 +9096,15 @@ components:
           examples:
             CustomerPaginatedResponse:
               $ref: '#/components/examples/CustomerPaginatedResponse'
+    CreateCustomerContactResponse:
+      description: Response for CreateCustomerContactRequest
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCustomerContactResponse'
+          examples:
+            User:
+              $ref: '#/components/examples/CreateCustomerContactResponse'
     AccountPaginatedResponse:
       description: Response for list customers request
       content:
@@ -8596,6 +9240,15 @@ components:
           examples:
             PricingSchedulePaginatedResponse:
               $ref: '#/components/examples/PricingSchedulePaginatedResponse'
+    PricingRulesPaginatedResponse:
+      description: Response for create/list pricing rules request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PricingRulesPaginatedResponse'
+          examples:
+            PricingRulesPaginatedResponse:
+              $ref: '#/components/examples/PricePlanPaginatedResponse'
     UpdatePricingScheduleResponse:
       description: Response for dis/associate price plan request
       content:
@@ -8678,7 +9331,7 @@ components:
           schema:
             $ref: '#/components/schemas/Purchase'
           examples:
-            ConfirmPurchaseResponse:
+            CreatePurchaseResponse:
               $ref: '#/components/examples/CreatePurchaseResponse'
     GetPurchaseResponse:
       description: Response for getting a specific purchase detail of an account
@@ -8687,8 +9340,6 @@ components:
           schema:
             $ref: '#/components/schemas/GetPurchaseResponse'
           examples:
-            GetPurchaseForEntitlementPlanResponse:
-              $ref: '#/components/examples/GetPurchaseForEntitlementPlanResponse'
             GetPurchaseForPurchasePlanResponse:
               $ref: '#/components/examples/GetPurchaseForPurchasePlanResponse'
     PurchasePaginatedResponse:
@@ -8859,6 +9510,15 @@ components:
           examples:
             MiscellaneousChargesResponse:
               $ref: '#/components/examples/MiscellaneousChargesResponse'
+    PricingRulesLogsPaginatedResponse:
+      description: Response for list Invoice Pricing Rules Logs Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/PricingRulesLogsPaginatedResponse'
+          examples:
+            PricingRulesLogsPaginatedResponse:
+              $ref: '#/components/examples/PricingRulesLogsPaginatedResponse'
     TokenResponse:
       description: Response with token
       content:
@@ -8920,6 +9580,13 @@ components:
       schema:
         type: string
         example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    dry_run:
+      in: query
+      name: dry_run
+      required: false
+      schema:
+        type: boolean
+        example: false
     includeGroupDetails:
       in: query
       name: includeGroupDetails
@@ -8964,6 +9631,14 @@ components:
         type: string
         maxLength: 50
         example: pp.1zYnCiM9Bpg.lv25y
+    pricing_schedule_id:
+      in: path
+      name: pricing_schedule_id
+      required: true
+      schema:
+        type: string
+        maxLength: 50
+        example: sch.1zYnCiM9Bpg.lv25y
     purchase_id:
       in: path
       name: purchase_id
@@ -9074,6 +9749,18 @@ components:
         type: string
         maxLength: 50
         example: f4a52f2d-b798-4e08-8b24-db0a5a468ba3
+    event_correction_action:
+      in: query
+      description: Action to perform in event correction
+      name: action
+      required: true
+      schema:
+        type: string
+        enum:
+          - UNDO
+          - REDO
+          - REDO_EVENT
+        example: UNDO
     filter_next_page_token:
       in: query
       description: Pagination token used as a marker to get records from next page.
@@ -9239,24 +9926,6 @@ components:
         schemaAssocitions:
           - event_schema1
           - event_schema3
-    CreatePurchaseForEntitlementPlanRequest:
-      value:
-        pricePlanId: pp.20dINmd0lBg.05sKa
-        type: ENTITLEMENT_GRANT
-        quantity: 1
-        purchasePlanOverrides:
-          rateValues:
-            - CurrencyRateValue:
-                currency: USD
-                rate: 10
-            - CurrencyRateValue:
-                currency: INR
-                rate: 150
-          entitlementRateCards:
-            - EntitlementRateCard:
-                featureId: feature.1zYnCiM9Bpg.lv25y
-                featureCredits: 100
-                expiryDurationSeconds: 1000
     CreatePurchaseForPurchasePlanRequest:
       value:
         pricePlanId: pp.20txw0FrqjQ.byM8V
@@ -9399,8 +10068,6 @@ components:
             rateValues:
               - currency: USD
                 rate: 0
-          rateDetails: null
-          entitlementRateCards: null
           creditGrantRateCards:
             - id: addon.20ufMNoJoAC.TUzRi
               type: RECURRING
@@ -9451,6 +10118,11 @@ components:
                 applicableEntityIds: []
               invoiceTiming: IN_ADVANCE
               recurrenceConfig: null
+    CreatePurchaseForWalletTopupRequest:
+      value:
+        type: WALLET_TOPUP
+        walletTopupDetails:
+          topupAmount: 50
     CreateProposalForOneTimePurchasePlanRequest:
       value:
         pricePlanId: pp.20dINmd0lBg.05sKa
@@ -9458,18 +10130,27 @@ components:
         paymentMode: PREPAID
         quantity: 1
         purchasePlanOverrides:
-          rateValues:
-            - CurrencyRateValue:
-                currency: USD
-                rate: 10
-            - CurrencyRateValue:
-                currency: INR
-                rate: 150
-          entitlementRateCards:
-            - EntitlementRateCard:
-                featureId: feature.1zYnCiM9Bpg.lv25y
-                featureCredits: 100
-                expiryDurationSeconds: 1000
+          billingEntitlementRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              featureConfigs:
+                - featureCreditLimit: 100
+                  effectiveUntil: P20D
+              invoiceTiming: IN_ADVANCE
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
     CreateProposalForAssociationRequest:
       value:
         pricePlanId: pp.20v1Tgjuwlc.O55xo
@@ -9608,8 +10289,6 @@ components:
             rateValues:
               - currency: USD
                 rate: 0
-          rateDetails: null
-          entitlementRateCards: null
           creditGrantRateCards:
             - id: addon.20ufMNoJoAC.TUzRi
               type: RECURRING
@@ -9701,6 +10380,8 @@ components:
             dataType: STRING
         account:
           id: ACC00001
+          togaiAccountId: account.safdla.c234ds
+          togaiCustomerId: customer.savass.11e1a
           name: Primary Account
           invoiceCurrency: USD
           aliases:
@@ -9724,6 +10405,15 @@ components:
           city: Florence
           state: South Carolina
           country: US
+    CreateCustomerContactRequest:
+      summary: A sample create contact for a customer request
+      value:
+        name: Lorem Ipsum
+        password: nii2du35bdtuethntv3q7416
+        email: bob@acme.com
+        phone: '+1234071628'
+        verified: true
+        loginAccess: true
     CreateAccountRequest:
       value:
         id: ACC00001
@@ -9886,6 +10576,9 @@ components:
                     - order: 1
                       rate: 10
                       slabRateConfig: {}
+                  rateConfig:
+                    minimumRate: 1
+                    maximumRate: 10
               tag: '1'
           fixedFeeRateCards:
             - id: addon.20sidL2HJ7o.vvzDT
@@ -9931,6 +10624,9 @@ components:
                     - order: 1
                       rate: 15
                       slabRateConfig: {}
+                  rateConfig:
+                    minimumRate: 1
+                    maximumRate: 10
               displayName: license
               tag: '2'
               config: null
@@ -10073,8 +10769,6 @@ components:
               tag: null
               maxQuantity: null
               billingConfig: null
-          rateDetails: null
-          entitlementRateCards: null
           type: BILLING
         description: null
     CreateAnniversaryBillingPricePlanRequest:
@@ -10293,8 +10987,6 @@ components:
               tag: null
               maxQuantity: null
               billingConfig: null
-          rateDetails: null
-          entitlementRateCards: null
           type: BILLING
         description: null
     CreatePurchasePricePlanRequest:
@@ -10481,7 +11173,7 @@ components:
         value: '{"USD":"1"}'
         name: Base_Currency
         dataType: JSON
-    CreatePricePlanMigrationRequest:
+    CreateMigrationRequest:
       value:
         sourceId: pp.1zYnCiM9Bpg.lv25y
         sourceVersion: 1
@@ -10530,6 +11222,8 @@ components:
             dataType: STRING
         account:
           id: G234DZZKBKACATFFGVGEMERFH
+          togaiAccountId: account.safdla.c234ds
+          togaiCustomerId: customer.savass.11e1a
           name: ACME Enterprise - Account
           invoiceCurrency: USD
           status: ACTIVE
@@ -10562,6 +11256,16 @@ components:
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
+    CreateCustomerContactResponse:
+      value:
+        username: 3d9e0a90-38d5-49d8-b34d-fdbe2e6cf8f2
+        name: Lorem Ipsum
+        email: bob@acme.com
+        verified: true
+        phone: '+1234071628'
+        loginAccess: true
+        createdBy: hrn:Xghfdksd::iam-user/johnny314
+        createdAt: {}
     AccountPaginatedResponse:
       value:
         data:
@@ -10741,6 +11445,8 @@ components:
       summary: A sample Account
       value:
         id: G234DZZKBKACATFFGVGEMERFI
+        togaiAccountId: account.safdla.c234ds
+        togaiCustomerId: customer.savass.11e1a
         name: ACME Enterprise - Account2
         invoiceCurrency: USD
         address:
@@ -10953,8 +11659,6 @@ components:
                 rateValues:
                   - currency: USD
                     rate: 0
-              rateDetails: null
-              entitlementRateCards: null
               creditGrantRateCards:
                 - id: addon.20ufMNoJoAC.TUzRi
                   type: RECURRING
@@ -11144,49 +11848,27 @@ components:
         idempotencyKey: AAAAAABBBEEEDDSS23
         pricePlanVersion: 1
         purchasePlanOverrides:
-          rateValues:
-            - CurrencyRateValue:
-                currency: USD
-                rate: 10
-            - CurrencyRateValue:
-                currency: INR
-                rate: 150
-          entitlementRateCards:
-            - EntitlementRateCard:
-                featureId: feature.1zYnCiM9Bpg.lv25y
-                featureCredits: 100
-                expiryDurationSeconds: 1000
-        createdAt: '2020-01-01T00:00:00Z'
-        updatedAt: '2020-01-01T00:00:00Z'
-    GetPurchaseForEntitlementPlanResponse:
-      value:
-        id: purchase.1zYnCiM9Bpg.lv25y
-        accountId: G234DZZKBKACATFFGVGEMERFI
-        pricePlanId: pp.1zYnCiM9Bpg.lv25y
-        quantity: 1
-        idempotencyKey: AAAAABBBDDIIEOO42
-        pricePlanVersion: 1
-        purchasePlan:
-          rateValues:
-            - CurrencyRateValue:
-                currency: USD
-                rate: 10
-            - CurrencyRateValue:
-                currency: INR
-                rate: 150
-          entitlementRateCards:
-            - EntitlementRateCard:
-                featureId: feature.1zYnCiM9Bpg.lv25y
-                featureCredits: 100
-                expiryDurationSeconds: 1000
-        features:
-          - id: feature.1zYnCiM9Bpg.lv25y
-            name: DiscountCredits
-            description: Discount Credits Feature
-            effectiveUntil: '2020-01-01T00:00:00Z'
-            grantedCredits: 100
-            credits: 100
-            updatedAt: '2020-01-01T00:00:00Z'
+          billingEntitlementRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              featureConfigs:
+                - featureCreditLimit: 100
+                  effectiveUntil: P20D
+              invoiceTiming: IN_ADVANCE
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
         createdAt: '2020-01-01T00:00:00Z'
         updatedAt: '2020-01-01T00:00:00Z'
     GetProposalResponse:
@@ -11198,18 +11880,27 @@ components:
         idempotencyKey: AAAAAABBBEEEDDSS23
         pricePlanVersion: 1
         purchasePlanOverrides:
-          rateValues:
-            - CurrencyRateValue:
-                currency: USD
-                rate: 10
-            - CurrencyRateValue:
-                currency: INR
-                rate: 150
-          entitlementRateCards:
-            - EntitlementRateCard:
-                featureId: feature.1zYnCiM9Bpg.lv25y
-                featureCredits: 100
-                expiryDurationSeconds: 1000
+          billingEntitlementRateCards:
+            - featureId: feature.20jxa18BdUW.d4XQw
+              featureConfigs:
+                - featureCreditLimit: 100
+                  effectiveUntil: P20D
+              invoiceTiming: IN_ADVANCE
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - order: 1
+                    startAfter: 0
+                    priceType: PER_UNIT
+                    slabConfig: {}
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 1
+                      slabRateConfig: null
+              displayName: feature1
+              tag: null
         createdAt: '2020-01-01T00:00:00Z'
         updatedAt: '2020-01-01T00:00:00Z'
     GetPurchaseForPurchasePlanResponse:
@@ -11278,8 +11969,6 @@ components:
             pricePlanVersion: 1
             status: SUCCESS
             purchasePlan:
-              rateDetails: null
-              entitlementRateCards: null
               billingEntitlementRateCards:
                 - featureId: feature.20txvOAhiIS.m3X3d
                   featureConfigs:
@@ -11345,7 +12034,7 @@ components:
           pageSize: 10
     FileDownloadUrlResponse:
       value:
-        downloadUrl: 'https://s3.amazonaws.com/...'
+        downloadUrl: https://s3.amazonaws.com/...
     AliasResponse:
       value:
         value: acme_primary
@@ -11847,7 +12536,22 @@ components:
           - name: charge 1
             value: '100'
           - name: charge 2
+            rate: 20
+            quantity: 10
             value: '200'
+    PricingRulesLogsPaginatedResponse:
+      summary: A sample PricingRulesLogsPaginatedResponse
+      value:
+        data:
+          - id: rule_log.21x6RLQxnpg.1DHMH
+            ruleId: pp_rule.21wpdBGbhRI.L26uj
+            order: 1
+            changes:
+              key: urc.um.21wpFfFWtw0.PDfXy
+              oldUsage: 100
+              newUsage: 200
+              oldRevenue: 200
+              newRevenue: 400
     CreateCreditRequest:
       summary: A sample for CreateCreditRequest
       value:
@@ -11880,14 +12584,19 @@ components:
           - togaiId: cred.236.12efwe
             amount: 200
             type: CREDIT
+    TopupWalletRequest:
+      summary: A sample for TopupWalletRequest
+      value:
+        topupAmount: 50
     ManageMiscellaneousChargesRequest:
       summary: A sample for ManageMiscellaneousChargesRequest
       value:
         items:
           - name: charge 1
             value: '100'
-          - name: charge 2
-            value: '200'
+          - name: qty & rate charge
+            rate: 20
+            quantity: 10
           - name: json logic charge
             value: '{"var": "um.linitem.id"}'
     InvoicePaymentsRequest:
@@ -11935,8 +12644,21 @@ components:
       summary: A sample for CreateCustomInvoiceRequest
       value:
         accountId: ACC001
-        invoiceDate: '2020-07-04T12:00:00.000Z'
+        startDate: '2020-06-04T12:00:00.000Z'
+        endDate: '2020-07-04T12:00:00.000Z'
         idempotencyKey: '1234567890'
+        status: DRAFT
+        lineItems:
+          - description: Payout IMPS
+            type: CUSTOM_AMOUNT
+            valuePerQuantity: 0.001
+            quantity: 32109
+            units: USD
+    UpdateInvoiceRequest:
+      summary: A sample for UpdateInvoiceRequest
+      value:
+        startDate: '2020-06-04T12:00:00.000Z'
+        endDate: '2020-07-04T12:00:00.000Z'
         status: DRAFT
         lineItems:
           - description: Payout IMPS
@@ -11956,12 +12678,12 @@ components:
           schema:
             $ref: '#/components/schemas/CreatePurchaseRequest'
           examples:
-            CreatePurchaseForEntitlementPlanRequest:
-              $ref: '#/components/examples/CreatePurchaseForEntitlementPlanRequest'
             CreatePurchaseForPurchasePlanRequest:
               $ref: '#/components/examples/CreatePurchaseForPurchasePlanRequest'
             CreatePurchaseForAssociationRequest:
               $ref: '#/components/examples/CreatePurchaseForAssociationRequest'
+            CreatePurchaseForWalletTopupRequest:
+              $ref: '#/components/examples/CreatePurchaseForWalletTopupRequest'
     CreateProposalRequest:
       description: Payload to initiate a proposal
       required: true
@@ -12014,6 +12736,16 @@ components:
           examples:
             CreateCustomerRequest:
               $ref: '#/components/examples/CreateCustomerRequest'
+    CreateCustomerContactRequest:
+      description: Payload to create a contact for a customer
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateCustomerContactRequest'
+          examples:
+            CreateCustomerRequest:
+              $ref: '#/components/examples/CreateCustomerContactRequest'
     UpdateCustomerRequest:
       description: Payload to update customer
       required: true
@@ -12215,16 +12947,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateAddOnRequest'
-    CreatePricePlanMigrationRequest:
+    CreateMigrationRequest:
       description: Payload to update organization setting
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreatePricePlanMigrationRequest'
+            $ref: '#/components/schemas/CreateMigrationRequest'
           examples:
-            CreatePricePlanMigrationRequest:
-              $ref: '#/components/examples/CreatePricePlanMigrationRequest'
+            CreateMigrationRequest:
+              $ref: '#/components/examples/CreateMigrationRequest'
     CreateFeatureRequest:
       description: Payload to create a Feature along the association with event_schemas
       required: true
@@ -12291,6 +13023,11 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/IngestEventRequest'
+    EventCorrectionRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/EventCorrectionRequest'
     UpdateFeatureCreditsRequest:
       content:
         application/json:
@@ -12372,6 +13109,15 @@ components:
           examples:
             CreatePaymentRequest:
               $ref: '#/components/examples/CreatePaymentRequest'
+    TopupWalletRequest:
+      description: Payload to topup wallet of an account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TopupWalletRequest'
+          examples:
+            CreatePaymentRequest:
+              $ref: '#/components/examples/TopupWalletRequest'
     ManageMiscellaneousChargesRequest:
       description: Payload to update custom line items
       content:
@@ -12400,6 +13146,15 @@ components:
           examples:
             CreateCustomInvoiceRequest:
               $ref: '#/components/examples/CreateCustomInvoiceRequest'
+    UpdateInvoiceRequest:
+      description: Payload to update an invoice
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateInvoiceRequest'
+          examples:
+            UpdateInvoiceRequest:
+              $ref: '#/components/examples/UpdateInvoiceRequest'
   securitySchemes:
     bearerAuth:
       type: http
