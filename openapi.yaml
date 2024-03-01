@@ -2159,11 +2159,15 @@ paths:
         - Event Management
       summary: Correct an ingested event
       description: |
-        #### This API lets you to revert the changes caused by events.
-
+        #### This API lets you to correct events. Available in both synchronous and asynchronous mode
         - **Usages**: Reduction of all usages associated with this event
         - **Revenue**: Reduction of all revenues associated with this event
         - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
+        
+        ### Possible Actions:
+        - UNDO: Undo all usages, revenue and entitlements associated with an event
+        - REDO: Performs UNDO and re-ingests the same event
+        - REDO_EVENT: Performs UNDO and re-ingests the correction payload of the event
       operationId: eventCorrection
       parameters:
         - $ref: '#/components/parameters/event_correction_action'

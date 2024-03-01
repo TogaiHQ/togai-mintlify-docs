@@ -1,10 +1,11 @@
 ---
-openapi: delete /events
+openapi: post /events/correction
 ---
 
 ## Query Parameters: Allowed filter combinations
-<Warning>All matching events will be considered for deletion</Warning>
-<Info>Maximum of 5 events will be deleted per request. This behavior might change in future</Info>
+<Warning>All matching events will be considered for correction</Warning>
+<Info>Sync mode: Maximum of 5 events matching the filters can be corrected in a request.\
+Async mode: Maximum of 100 events matching the filters can be corrected and takes place in background.</Info>
 
 <AccordionGroup>
 <Accordion title="Query Parameters">
