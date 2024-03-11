@@ -4,6 +4,31 @@ icon: clipboard
 ---
 This Change Log provides a consolidated list of features and enhancements to Togai's metering and billing platform on an ongoing basis. This Change Log will be updated weekly to reflect the pace of new features and changes that are being taken live within Togai. If you have any feature asks, please send a mail to engg@togai.com and we will accommodate it in our roadmap.
 
+
+## March 2024
+
+{/* Front end pending stuff - customization of customer portal, bulk reingest events, prepaid type, named license addon, auto ingest events upon attaching price plan */}
+
+### 10th March 2024
+- [Support for bulk event void, update and reingestion based on certain query parameters](/api-reference/event-management/correct-an-ingested-event)
+- Pricing can now be configured in negative units (to account for automated refunds or failed orders)
+- Wallet balance will now be automatially refreshed along with the invoice refresh (every 15 minutes)
+- License entries can now be managed under the License entries tab within an account
+- You can now test events in the dashboard by sending a custom timestamp. If no timestamp is given, current timestamp will be taken as the default value.
+- UI enhancements - moved reports to the Insights section, customer portal link available on the main left navigation panel, added refresh buttons in the List invoices screen
+- Added multiple actions and flows for Hubspot - Create customer when deal is 'Won', Sync invoices from Togai to Hubspot, create payment intent in Stripe if payment method is added in Hubspot
+- You can now add/remove licenses without creating a customer account
+
+
+
+### 3rd March 2024
+- Launched customer portal for end users to view and manage their usage, billing and payment related information.
+- No-code center now supports triggers that listen to Pricing cycle start, pricing end and purchase payload
+- Flow to add credits on start of a pricing cycle
+- Minimum and maximum pricing values (commitment and ceiling) can now be configured at a rate card level, in addition to a slab level
+- Price plan info (name and desc) will now be sent in Pricing Schedule API response
+- Uniqueness check is added for contact email ids within a customer
+
 ## February 2024
 
 ### 25th February 2024
