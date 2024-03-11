@@ -679,6 +679,7 @@ paths:
         - $ref: '#/components/parameters/account_id'
         - $ref: '#/components/parameters/start_date'
         - $ref: '#/components/parameters/end_date'
+        - $ref: '#/components/parameters/include_price_plan_info'
       responses:
         '200':
           $ref: '#/components/responses/PricingSchedulePaginatedResponse'
@@ -1802,18 +1803,18 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /migrations/{migration_id}:
+  /jobs/{job_id}:
     get:
       tags:
-        - Migrations
-      summary: Get the status of a migration
-      description: Get the status of a migration
-      operationId: getMigrationStatus
+        - Jobs
+      summary: Get the status of a job
+      description: Get the status of a job
+      operationId: getJobStatus
       parameters:
-        - $ref: '#/components/parameters/migration_id'
+        - $ref: '#/components/parameters/job_id'
       responses:
         '200':
-          $ref: '#/components/responses/GetMigrationResponse'
+          $ref: '#/components/responses/GetJobResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -1826,15 +1827,15 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /migrations/price_plan:
+  /jobs:
     post:
       tags:
-        - Migrations
-      summary: Migrates accounts which are associated to one price plan to another price plan
-      description: Migrates accounts which are associated to one price plan to another price plan
-      operationId: migratePricePlan
+        - Jobs
+      summary: Create a job
+      description: Jobs in Togai are bulk requests that are carried out in an async flow
+      operationId: createJob
       requestBody:
-        $ref: '#/components/requestBodies/CreateMigrationRequest'
+        $ref: '#/components/requestBodies/CreateJobRequest'
       responses:
         '201':
           $ref: '#/components/responses/BaseSuccessResponse'
@@ -1850,19 +1851,66 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /migrations:
     get:
       tags:
-        - Migrations
-      summary: List migrations
-      description: Returns a list of migrations with pagination and sort.
-      operationId: getMigrations
+        - Jobs
+      summary: List jobs
+      description: Returns a list of jobs with pagination and sort.
+      operationId: getJobs
       parameters:
         - $ref: '#/components/parameters/next_token'
         - $ref: '#/components/parameters/page_size'
       responses:
         '200':
-          $ref: '#/components/responses/MigrationsPaginatedResponse'
+          $ref: '#/components/responses/JobsPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /jobs/{job_id}/confirm:
+    post:
+      tags:
+        - Jobs
+      summary: Confirm a job
+      description: Confirm a job
+      operationId: confirmJob
+      parameters:
+        - $ref: '#/components/parameters/job_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetJobResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /jobs/{job_id}/entries:
+    get:
+      tags:
+        - Jobs
+      summary: List job entries
+      description: List individual job entries and current state of processing
+      operationId: getJobEntries
+      parameters:
+        - $ref: '#/components/parameters/job_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/JobEntriesPaginatedResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -2163,7 +2211,7 @@ paths:
         - **Usages**: Reduction of all usages associated with this event
         - **Revenue**: Reduction of all revenues associated with this event
         - **Entitlements**: Entitlements(Feature Credits) consumed by this event are granted back to the account.
-        
+
         ### Possible Actions:
         - UNDO: Undo all usages, revenue and entitlements associated with an event
         - REDO: Performs UNDO and re-ingests the same event
@@ -2171,6 +2219,7 @@ paths:
       operationId: eventCorrection
       parameters:
         - $ref: '#/components/parameters/event_correction_action'
+        - $ref: '#/components/parameters/require_confirmation'
       requestBody:
         $ref: '#/components/requestBodies/EventCorrectionRequest'
       responses:
@@ -2875,6 +2924,59 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/BaseSuccessResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /invoices/bill_runs:
+    post:
+      tags:
+        - Invoices
+      summary: Create a bill run migration request
+      description: Create a bill run migration request
+      operationId: createInvoiceBillRun
+      parameters:
+        - $ref: '#/components/parameters/require_confirmation'
+      responses:
+        '200':
+          $ref: '#/components/responses/BaseSuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Invoices
+      summary: List invoices eligible for bill run
+      description: List invoices eligible for bill run
+      operationId: listInvoicesForBillRun
+      parameters:
+        - $ref: '#/components/parameters/filter_next_page_token'
+        - $ref: '#/components/parameters/filter_status'
+        - $ref: '#/components/parameters/filter_owner_id'
+        - $ref: '#/components/parameters/filter_customer_id'
+        - $ref: '#/components/parameters/filter_page_size'
+        - $ref: '#/components/parameters/filter_start_time'
+        - $ref: '#/components/parameters/filter_end_time'
+      responses:
+        '200':
+          $ref: '#/components/responses/ListInvoicesResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
         '401':
           $ref: '#/components/responses/ErrorResponse'
         '403':
@@ -4098,6 +4200,76 @@ components:
                 accountId:
                   type: string
                   minLength: 1
+        namedLicenseEntriesConfig:
+          title: NamedLicenseEntriesConfig
+          description: Configuration for getting the named license entries
+          type: object
+          required:
+            - mode
+          properties:
+            mode:
+              type: string
+              enum:
+                - CUSTOM
+                - LOOKUP_RANGE
+                - LOOKUP_CYCLE
+              description: |
+                Mode to get the named license entries for the license rate cards
+                - CUSTOM: Use the named license entries provided in the request
+                - LOOKUP_RANGE: Use the named license entries of a given account for the specified range
+                - LOOKUP_CYCLE: Use the named license entries of a given account for the specified cycle
+            custom:
+              description: List of named license entries, this will be considered if mode is CUSTOM
+              type: array
+              items:
+                type: object
+                title: NamedLicenseEntry
+                required:
+                  - licenseId
+                  - name
+                  - effectiveFrom
+                properties:
+                  licenseId:
+                    type: string
+                    minLength: 1
+                  name:
+                    type: integer
+                  effectiveFrom:
+                    type: string
+                    format: date-time
+                  effectiveUntil:
+                    type: string
+                    format: date-time
+            lookupRange:
+              description: Range of named license entries to be looked up, this will be considered if mode is LOOKUP_RANGE
+              type: object
+              required:
+                - start
+                - end
+                - accountId
+              properties:
+                start:
+                  type: string
+                  format: date-time
+                end:
+                  type: string
+                  format: date-time
+                accountId:
+                  type: string
+                  minLength: 1
+            lookupCycle:
+              description: Cycle of named license entries to be looked up, this will be considered if mode is LOOKUP_CYCLE
+              type: object
+              required:
+                - accountId
+              properties:
+                cycleEffectiveOn:
+                  description: Effective date of the cycle, will be used to get the named license entries of the cycle
+                  type: string
+                  format: date-time
+                accountId:
+                  type: string
+                  minLength: 1
         prorationConfig:
           title: ProrationConfig
           description: Configuration for getting the proration, if not provided no proration will be applied
@@ -4426,18 +4598,40 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CreateMigrationRequest:
-      description: Request to migrate all account associations of a price plan to another price plan
+    CreateJobRequest:
+      description: Request to create job request
       type: object
       additionalProperties: false
       required:
-        - migrationType
+        - jobType
       properties:
-        migrationType:
+        jobType:
           type: string
           enum:
             - PRICE_PLAN
             - EVENT_CORRECTIONS
+            - BILL_RUN
+        requireConfirmation:
+          description: |
+            This field specifies whether to process job or to wait till the job is confirmed. Default value: false
+          type: boolean
+        pricePlanMigrationConfig:
+          $ref: '#/components/schemas/pricePlanMigrationConfig'
+        eventCorrectionConfig:
+          $ref: '#/components/schemas/eventCorrectionConfig'
+        invoicesBillRunConfig:
+          $ref: '#/components/schemas/invoicesBillRunConfig'
+    pricePlanMigrationConfig:
+      description: Migrate all account associations of a price plan to another price plan
+      type: object
+      additionalProperties: false
+      required:
+        - sourceId
+        - sourceVersion
+        - targetId
+        - targetVersion
+        - migrationMode
+      properties:
         sourceId:
           description: Id of source price plan
           type: string
@@ -4477,9 +4671,7 @@ components:
               - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
                 New association (1st Nov to 30th Nov) of different price plan with retainStartOffsets option true will
                 throw a `400 BadRequest` as no existing price plan configuration found on date of association
-        eventFilters:
-          $ref: '#/components/schemas/EventFilters'
-    EventFilters:
+    eventCorrectionConfig:
       description: Event filters along with actions for correcting events
       type: object
       additionalProperties: false
@@ -4498,6 +4690,13 @@ components:
         event:
           $ref: '#/components/schemas/Event'
         accountId:
+          type: string
+    invoicesBillRunConfig:
+      description: Filters for invoices bill run request
+      type: object
+      additionalProperties: false
+      properties:
+        paginationContext:
           type: string
     UpdateAddOnRequest:
       description: Request to update an addon
@@ -4965,6 +5164,17 @@ components:
           properties:
             pricePlanId:
               type: string
+            pricePlanInfo:
+              type: object
+              title: PricePlanInfo
+              additionalProperties: false
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
     PricingSchedulePaginatedResponse:
       type: object
       additionalProperties: false
@@ -5301,7 +5511,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/EventSchema'
-    GetMigrationResponse:
+    GetJobResponse:
       type: object
       additionalProperties: false
       required:
@@ -5309,43 +5519,40 @@ components:
         - type
         - updatedAt
         - status
-        - totalMigrationEntries
-        - pendingMigrationEntries
-        - failedMigrationEntries
-        - completedMigrationEntries
+        - totalJobEntries
+        - pendingJobEntries
+        - failedJobEntries
+        - completedJobEntries
       properties:
         id:
           type: string
         type:
           type: string
+        confirmedAt:
+          type: string
+          format: date-time
         updatedAt:
           type: string
           format: date-time
         status:
           type: string
-        sourceId:
-          type: string
-        sourceVersion:
+        totalJobEntries:
           type: integer
           format: int32
-        targetId:
-          type: string
-        targetVersion:
+        pendingJobEntries:
           type: integer
           format: int32
-        totalMigrationEntries:
+        failedJobEntries:
           type: integer
           format: int32
-        pendingMigrationEntries:
+        completedJobEntries:
           type: integer
           format: int32
-        failedMigrationEntries:
-          type: integer
-          format: int32
-        completedMigrationEntries:
-          type: integer
-          format: int32
-    MigrationsWithoutStatusInfo:
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    JobsWithoutStatusInfoResponse:
       type: object
       additionalProperties: false
       required:
@@ -5363,14 +5570,54 @@ components:
         updatedAt:
           type: string
           format: date-time
-    MigrationsPaginatedResponse:
+    JobsPaginatedResponse:
       type: object
       additionalProperties: false
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/MigrationsWithoutStatusInfo'
+            $ref: '#/components/schemas/JobsWithoutStatusInfoResponse'
+        nextToken:
+          type: string
+        context:
+          $ref: '#/components/schemas/PaginationOptions'
+    JobEntriesResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - entityId
+        - jobId
+        - status
+        - createdAt
+        - comments
+      properties:
+        entityId:
+          type: string
+        jobId:
+          type: string
+        status:
+          type: string
+          enum:
+            - PENDING
+            - IN_PROGRESS
+            - COMPLETED
+            - FAILED
+        createdAt:
+          type: string
+          format: date-time
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    JobEntriesPaginatedResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/JobEntriesResponse'
         nextToken:
           type: string
         context:
@@ -5746,11 +5993,12 @@ components:
           $ref: '#/components/schemas/SettingDataType'
     PurchaseType:
       type: string
-      description: Specifies whether this purchase is for granting entitlements or for an association or for wallet topup. If left null, ENTITLEMENT_GRANT is taken as default
+      description: Specifies whether this purchase is for granting entitlements or for an association or for wallet topup or prepaid purchase. If left null, ENTITLEMENT_GRANT is taken as default
       enum:
         - ENTITLEMENT_GRANT
         - ASSOCIATION
         - WALLET_TOPUP
+        - PREPAID
     Purchase:
       type: object
       description: Represents a Purchase
@@ -6208,10 +6456,12 @@ components:
         - LICENSE
         - FIXED_FEE
         - CREDIT_GRANT
+        - NAMED_LICENSE
       description: |
         LICENSE: Addon can be used in license rate cards
         FIXED_FEE: Addon can be used in fixed fee rate cards
         CREDIT_GRANT: Addon can be used in credit grant rate cards
+        NAMED_LICENSE: Addon can be used in license rate cards
     Address:
       description: billing address of the customer
       type: object
@@ -6610,12 +6860,15 @@ components:
       enum:
         - IN_ADVANCE
         - IN_ARREARS
+        - PREPAID
       x-enum-varnames:
         - IN_ADVANCE
         - IN_ARREARS
+        - PREPAID
       description: |
-        If IN_ADVANCE, the fixed fee will be invoiced in the previous billing cycle.
-        If IN_ARREARS, the fixed fee will be invoiced in the current billing cycle.
+        If IN_ADVANCE, the rate card will be invoiced in the previous billing cycle.
+        If IN_ARREARS, the rate card will be invoiced in the current billing cycle.
+        If PREPAID, credits/entitlements will be granted only after invoice is paid
     LicenseRateCard:
       title: LicenseRateCard
       type: object
@@ -7509,6 +7762,7 @@ components:
             - INGESTION_FAILED_ACCOUNT_NOT_FOUND
             - INGESTION_FAILED_DUPLICATE_EVENT
             - INGESTION_FAILED_NO_EVENT_ID
+            - INGESTION_FAILED_INVALID_NAMED_LICENSE_EVENT
             - REVERTED
             - UNKNOWN
           example: INGESTION_COMPLETED
@@ -8173,12 +8427,10 @@ components:
         autoAdvance:
           type: boolean
           description: |
-            This property defines the behaviour of status updates of invoices in scenarios like:
-            * Invoice created for future or past
-
-            Enabling this property to true auto updates the status of custom invoice to DUE or PAID accordingly
-
-            But disabling the property of left null does not auto update the custom status
+            This property defines the behaviour of status transition of the invoice.
+            If true, invoice auto transitions from `DRAFT` to `DUE` or `PAID` at the end of pricing cycle.
+            If false, the invoice’s state doesn’t automatically advance without an explicit action.
+            Default: false
         applyCredits:
           type: boolean
           description: |
@@ -8215,6 +8467,12 @@ components:
           maxItems: 50
           items:
             $ref: '#/components/schemas/CustomInvoiceLineItem'
+        autoAdvance:
+          type: boolean
+          description: |
+            This property defines the behaviour of status updates of invoices like:
+            Enabling this property to true auto updates the status of invoice to DUE or PAID accordingly
+            But disabling this property of left null does not auto update the custom status
     MiscellaneousChargesResponse:
       description: Miscellaneous charges response
       type: object
@@ -8816,6 +9074,7 @@ components:
             - PRICING_RULE_ADDITION_AMOUNT: Amount added to invoice as a result of applying a pricing rule
             - PRICING_RULE_REVENUE_UPDATE_AMOUNT: Difference in revenue(value) obtained as a result of applying a pricing rule
             - PRICING_RULE_USAGE_UPDATE_AMOUNT: Difference in usage(quantity) obtained as a result of applying a pricing rule
+            - RATE_CONFIG_ADJUSTMENT_AMOUNT: Difference in revenue obtained as a result of applying rate config['minimumRate', 'maximumRate'] at rate card level
         valuePerQuantity:
           type: number
         quantity:
@@ -9298,15 +9557,24 @@ components:
           examples:
             SettingPaginatedResponse:
               $ref: '#/components/examples/SettingPaginatedResponse'
-    GetMigrationResponse:
-      description: Response for get migration status request
+    GetJobResponse:
+      description: Response for get job status request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/GetMigrationResponse'
+            $ref: '#/components/schemas/GetJobResponse'
           examples:
-            GetMigrationResponse:
-              $ref: '#/components/examples/GetMigrationResponse'
+            GetJobResponse:
+              $ref: '#/components/examples/GetJobResponse'
+    JobEntriesPaginatedResponse:
+      description: Response for list job entries request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/JobEntriesPaginatedResponse'
+          examples:
+            GetJobResponse:
+              $ref: '#/components/examples/JobEntriesPaginatedResponse'
     AddOnResponse:
       description: Response for Create and Get addons requests
       content:
@@ -9319,15 +9587,15 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/AddOnPaginatedResponse'
-    MigrationsPaginatedResponse:
+    JobsPaginatedResponse:
       description: Response for list customers request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/MigrationsPaginatedResponse'
+            $ref: '#/components/schemas/JobsPaginatedResponse'
           examples:
-            MigrationsPaginatedResponse:
-              $ref: '#/components/examples/MigrationsPaginatedResponse'
+            JobsPaginatedResponse:
+              $ref: '#/components/examples/JobsPaginatedResponse'
     CreatePurchaseResponse:
       description: Response for initiation of a purchase of entitlement plan for an account
       content:
@@ -9436,6 +9704,15 @@ components:
           examples:
             Invoice:
               $ref: '#/components/examples/Invoice'
+    ListInvoicesResponse:
+      description: Response for Get invoice requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ListInvoicesResponse'
+          examples:
+            ListInvoicesResponse:
+              $ref: '#/components/examples/ListInvoicesResponse'
     ListCreditsResponse:
       description: Response for Get invoice requests
       content:
@@ -9706,9 +9983,9 @@ components:
       schema:
         type: string
         example: setting.USER.success_threshold.ACCOUNT.G234DZZKBKACATFFGVGEMERFI
-    migration_id:
+    job_id:
       in: path
-      name: migration_id
+      name: job_id
       required: true
       schema:
         type: string
@@ -9727,6 +10004,13 @@ components:
       schema:
         type: string
         example: custom_value
+    include_price_plan_info:
+      in: query
+      name: include_price_plan_info
+      required: false
+      schema:
+        type: boolean
+        example: true
     account_id:
       in: path
       description: account_id corresponding to an account
@@ -9844,6 +10128,14 @@ components:
           value: PROCESSED
         in_progress:
           value: IN_PROGRESS
+    require_confirmation:
+      in: query
+      name: require_confirmation
+      description: Specifies whether to start a migration only after a confirmation
+      required: false
+      schema:
+        type: boolean
+        example: false
     invoice_id:
       in: path
       name: invoice_id
@@ -11177,13 +11469,16 @@ components:
         value: '{"USD":"1"}'
         name: Base_Currency
         dataType: JSON
-    CreateMigrationRequest:
+    CreateJobRequest:
       value:
-        sourceId: pp.1zYnCiM9Bpg.lv25y
-        sourceVersion: 1
-        targetId: pp.2zYnCiM9Bpg.bfeu2
-        targetVersion: 2
-        migrationMode: IMMEDIATE
+        type: PRICE_PLAN
+        requireConfirmation: true
+        pricePlanMigrationConfig:
+          sourceId: pp.1zYnCiM9Bpg.lv25y
+          sourceVersion: 1
+          targetId: pp.2zYnCiM9Bpg.bfeu2
+          targetVersion: 2
+          migrationMode: IMMEDIATE
     CreateBulkAliasRequest:
       value:
         aliases:
@@ -11823,7 +12118,7 @@ components:
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
-    GetMigrationResponse:
+    GetJobResponse:
       value:
         id: mig.20aUyEZSuYq.SoGbS
         type: PRICE_PLAN
@@ -11831,14 +12126,22 @@ components:
         status: COMPLETED
         sourceId: pp.njrjk314hfr
         targetId: pp.rhk32h4dsfq
-        totalMigrationEntries: 100
-        pendingMigrationEntries: 40
-        failedMigrationEntries: 20
-        completedMigrationEntries: 40
-    MigrationsPaginatedResponse:
+        totalJobEntries: 100
+        pendingJobEntries: 40
+        failedJobEntries: 20
+        completedJobEntries: 40
+    JobEntriesPaginatedResponse:
       value:
         data:
-          - migrationId: mig.20aUyEZSuYq.SoGbS
+          entityId: inv.423535.afe325
+          type: BILL_RUN
+          createdAt: '2080-10-04T00:00:00Z'
+          status: COMPLETED
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    JobsPaginatedResponse:
+      value:
+        data:
+          - jobId: mig.20aUyEZSuYq.SoGbS
             status: COMPLETED
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
@@ -12951,16 +13254,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateAddOnRequest'
-    CreateMigrationRequest:
-      description: Payload to update organization setting
+    CreateJobRequest:
+      description: Payload to create job request
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateMigrationRequest'
+            $ref: '#/components/schemas/CreateJobRequest'
           examples:
-            CreateMigrationRequest:
-              $ref: '#/components/examples/CreateMigrationRequest'
+            CreateJobRequest:
+              $ref: '#/components/examples/CreateJobRequest'
     CreateFeatureRequest:
       description: Payload to create a Feature along the association with event_schemas
       required: true
