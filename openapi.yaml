@@ -1444,6 +1444,32 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /price_plans/migration:
+    post:
+      tags:
+        - Price Plans
+      summary: Create a price plan migration
+      description: |
+        Migrates accounts across price plans. This is an asynchronous process functioning on top of Togai's Jobs 
+        framework. Status of the created migrations can be obtained using the [Jobs APIs](https://docs.togai.com/api-reference/jobs/get-the-status-of-a-job)
+      operationId: pricePlanMigration
+      requestBody:
+        $ref: '#/components/requestBodies/CreatePricePlanMigrationRequest'
+      responses:
+        '201':
+          $ref: '#/components/responses/BaseSuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /addons:
     post:
       tags:
@@ -1828,29 +1854,6 @@ paths:
         default:
           $ref: '#/components/responses/ErrorResponse'
   /jobs:
-    post:
-      tags:
-        - Jobs
-      summary: Create a job
-      description: Jobs in Togai are bulk requests that are carried out in an async flow
-      operationId: createJob
-      requestBody:
-        $ref: '#/components/requestBodies/CreateJobRequest'
-      responses:
-        '201':
-          $ref: '#/components/responses/BaseSuccessResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
     get:
       tags:
         - Jobs
@@ -1882,6 +1885,30 @@ paths:
       summary: Confirm a job
       description: Confirm a job
       operationId: confirmJob
+      parameters:
+        - $ref: '#/components/parameters/job_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/GetJobResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /jobs/{job_id}/reject:
+    post:
+      tags:
+        - Jobs
+      summary: Reject a job
+      description: Reject a job
+      operationId: rejectJob
       parameters:
         - $ref: '#/components/parameters/job_id'
       responses:
@@ -2458,6 +2485,25 @@ paths:
                 $ref: '#/components/schemas/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /named_license_updates:
+    get:
+      tags:
+        - Licenses
+      summary: Get a list of named licenses updates
+      description: This API let’s you to fetch a list of named licenses updates with multiple query parameters
+      operationId: getNamedLicenseUpdates
+      responses:
+        '200':
+          description: Success response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NamedLicenseUpdatesPaginatedResponse'
+              examples:
+                NamedLicenseUpdatesPaginatedResponse:
+                  $ref: '#/components/examples/NamedLicenseUpdatesPaginatedResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /entitled:
     post:
       tags:
@@ -2938,8 +2984,8 @@ paths:
     post:
       tags:
         - Invoices
-      summary: Create a bill run migration request
-      description: Create a bill run migration request
+      summary: Create a bill run job request
+      description: Create a bill run job request
       operationId: createInvoiceBillRun
       parameters:
         - $ref: '#/components/parameters/require_confirmation'
@@ -3175,7 +3221,7 @@ paths:
         - $ref: '#/components/parameters/credit_id'
       responses:
         '200':
-          $ref: '#/components/responses/CreateCreditResponse'
+          $ref: '#/components/responses/VoidCreditResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -3589,6 +3635,9 @@ components:
           minLength: 3
           maxLength: 3
           example: USD
+        netTermDays:
+          type: integer
+          format: int32
         primaryEmail:
           description: Primary email of the account
           type: string
@@ -4598,29 +4647,16 @@ components:
                 type: object
                 additionalProperties:
                   type: string
-    CreateJobRequest:
-      description: Request to create job request
-      type: object
-      additionalProperties: false
-      required:
-        - jobType
-      properties:
-        jobType:
-          type: string
-          enum:
-            - PRICE_PLAN
-            - EVENT_CORRECTIONS
-            - BILL_RUN
-        requireConfirmation:
-          description: |
-            This field specifies whether to process job or to wait till the job is confirmed. Default value: false
-          type: boolean
-        pricePlanMigrationConfig:
-          $ref: '#/components/schemas/pricePlanMigrationConfig'
-        eventCorrectionConfig:
-          $ref: '#/components/schemas/eventCorrectionConfig'
-        invoicesBillRunConfig:
-          $ref: '#/components/schemas/invoicesBillRunConfig'
+    CreatePricePlanMigrationRequest:
+      description: Request to create price plan migration request
+      allOf:
+        - $ref: '#/components/schemas/pricePlanMigrationConfig'
+        - type: object
+          properties:
+            requireConfirmation:
+              description: |
+                This field specifies whether to process job or to wait till the job is confirmed. Default value: false
+              type: boolean
     pricePlanMigrationConfig:
       description: Migrate all account associations of a price plan to another price plan
       type: object
@@ -4671,33 +4707,6 @@ components:
               - Ongoing plan (1st Oct to 30th Oct) - {dayOffset: 1, monthOffset: NIL}
                 New association (1st Nov to 30th Nov) of different price plan with retainStartOffsets option true will
                 throw a `400 BadRequest` as no existing price plan configuration found on date of association
-    eventCorrectionConfig:
-      description: Event filters along with actions for correcting events
-      type: object
-      additionalProperties: false
-      required:
-        - action
-        - accountId
-      properties:
-        action:
-          type: string
-          enum:
-            - UNDO
-            - REDO
-            - REDO_EVENT
-        paginationContext:
-          type: string
-        event:
-          $ref: '#/components/schemas/Event'
-        accountId:
-          type: string
-    invoicesBillRunConfig:
-      description: Filters for invoices bill run request
-      type: object
-      additionalProperties: false
-      properties:
-        paginationContext:
-          type: string
     UpdateAddOnRequest:
       description: Request to update an addon
       type: object
@@ -5464,6 +5473,9 @@ components:
               alias:
                 type: string
                 maxLength: 50
+        netTermDays:
+          type: integer
+          format: int32
         address:
           $ref: '#/components/schemas/Address'
         primaryEmail:
@@ -5528,7 +5540,11 @@ components:
           type: string
         type:
           type: string
-        confirmedAt:
+          enum:
+            - PRICE_PLAN
+            - EVENT_CORRECTIONS
+            - BILL_RUN
+        settledAt:
           type: string
           format: date-time
         updatedAt:
@@ -5536,6 +5552,15 @@ components:
           format: date-time
         status:
           type: string
+          enum:
+            - SCHEDULED
+            - PENDING
+            - INITIALIZED
+            - WAITING_FOR_CONFIRMATION
+            - IN_PROGRESS
+            - COMPLETED
+            - FAILED
+            - CANCELLED
         totalJobEntries:
           type: integer
           format: int32
@@ -5603,6 +5628,7 @@ components:
             - IN_PROGRESS
             - COMPLETED
             - FAILED
+            - CANCELLED
         createdAt:
           type: string
           format: date-time
@@ -6882,6 +6908,8 @@ components:
           description: Unique Identifier of the attached AddOn
           type: string
           maxLength: 50
+        type:
+          $ref: '#/components/schemas/AddOnType'
         displayName:
           type: string
           description: Name of the attached AddOn
@@ -7592,6 +7620,65 @@ components:
               type: string
               format: date-time
               example: '2021-03-04T14:25:10Z'
+    NamedLicenseUpdate:
+      description: Named License update response
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - licenseId
+        - accountId
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          maxLength: 50
+          example: named_license_entry.20rvWRx.0ZwPG
+        licenseId:
+          type: string
+          maxLength: 50
+          example: addon.fdjsl.313
+        accountId:
+          type: string
+          maxLength: 50
+          example: '123'
+        name:
+          type: string
+          maxLength: 50
+          example: user1
+        effectiveFrom:
+          type: string
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+        effectiveUntil:
+          type: string
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+        createdAt:
+          type: string
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+        updatedAt:
+          type: string
+          format: date-time
+          example: '2021-03-04T14:25:10Z'
+    NamedLicenseUpdatesPaginatedResponse:
+      description: Named License updates paginated response
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/NamedLicenseUpdate'
+        nextToken:
+          type: string
+          maxLength: 500
+          example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEyMywgInNvcnRPcmRlciI6ICJhc2MifQ==
     GetFeatureCreditsResponse:
       description: Get feature credits response
       type: object
@@ -8398,6 +8485,11 @@ components:
         accountId:
           type: string
           example: ACC001
+        ownerType:
+          type: string
+          enum:
+            - ACCOUNT
+            - INVOICE_GROUP
         startDate:
           type: string
           format: date-time
@@ -8648,6 +8740,9 @@ components:
           type: string
           example: ACC001
         balance:
+          description: |
+            This amount is the difference of total credited amount and sum of consumed, hold amount.
+            ie. credit amount - (consumed amount + hold amount)
           type: number
           example: 500
         creditUnit:
@@ -8887,6 +8982,9 @@ components:
             - CUSTOM
             - COMPOSITE
           example: STANDARD
+        autoAdvance:
+          type: boolean
+          example: true
         startDate:
           description: Start date of the invoice
           type: string
@@ -9749,6 +9847,15 @@ components:
           examples:
             Credit:
               $ref: '#/components/examples/CreateCreditResponse'
+    VoidCreditResponse:
+      description: Response for Void credit request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Credit'
+          examples:
+            Credit:
+              $ref: '#/components/examples/VoidCreditResponse'
     CreditDetailsResponse:
       description: Response for Fetch Credit Details request. This contains Credit Transactions
       content:
@@ -10676,8 +10783,6 @@ components:
             dataType: STRING
         account:
           id: ACC00001
-          togaiAccountId: account.safdla.c234ds
-          togaiCustomerId: customer.savass.11e1a
           name: Primary Account
           invoiceCurrency: USD
           aliases:
@@ -11469,16 +11574,14 @@ components:
         value: '{"USD":"1"}'
         name: Base_Currency
         dataType: JSON
-    CreateJobRequest:
+    CreatePricePlanMigrationRequest:
       value:
-        type: PRICE_PLAN
         requireConfirmation: true
-        pricePlanMigrationConfig:
-          sourceId: pp.1zYnCiM9Bpg.lv25y
-          sourceVersion: 1
-          targetId: pp.2zYnCiM9Bpg.bfeu2
-          targetVersion: 2
-          migrationMode: IMMEDIATE
+        sourceId: pp.1zYnCiM9Bpg.lv25y
+        sourceVersion: 1
+        targetId: pp.2zYnCiM9Bpg.bfeu2
+        targetVersion: 2
+        migrationMode: IMMEDIATE
     CreateBulkAliasRequest:
       value:
         aliases:
@@ -12629,6 +12732,17 @@ components:
             value: true
           - featureId: feat.fdjsl.314
             value: custom
+    NamedLicenseUpdatesPaginatedResponse:
+      value:
+        data:
+          - id: named_license_entry.20rvWRx.0ZwPG
+            licenseId: addon.fdjsl.313
+            accountId: '123'
+            name: user1
+            effectiveFrom: '2021-03-04T14:25:10Z'
+            effectiveUntil: '2021-03-04T14:25:10Z'
+            createdAt: '2021-03-04T14:25:10Z'
+            updatedAt: '2021-03-04T14:25:10Z'
     Payment:
       summary: A sample Payment
       value:
@@ -12818,6 +12932,26 @@ components:
           consumedAmount: 400
           priority: 1
           createdAt: '2020-08-04T12:00:00.000Z'
+    VoidCreditResponse:
+      summary: A sample Credit
+      value:
+        accountId: biswa
+        purpose: credits
+        effectiveFrom: '2024-03-06'
+        priority: 1
+        id: cred.22LLLScunZg.om5kC
+        customerId: biswa
+        status: VOIDED
+        createdAt: '2024-03-13T12:33:39.986252Z'
+        applicableEntityIds: []
+        effectiveUntil: null
+        creditAmount: 10
+        grantorId: addon.22IZs2ZVEnw.0zDFe
+        idempotencyKey: null
+        creditUnit: USD
+        holdAmount: 0
+        consumedAmount: 0
+        updatedAt: '2024-03-13T12:42:33.489822Z'
     ListCreditsResponse:
       summary: A sample Credits List
       value:
@@ -12876,6 +13010,7 @@ components:
         notes: Invoice payment
         currency: USD
         accountId: acc123
+        totalAmount: 10000
         externalPaymentReference:
           sourceName: XYZ Company
           sourceType: CARD
@@ -13051,7 +13186,7 @@ components:
           schema:
             $ref: '#/components/schemas/CreateCustomerContactRequest'
           examples:
-            CreateCustomerRequest:
+            CreateCustomerContactRequest:
               $ref: '#/components/examples/CreateCustomerContactRequest'
     UpdateCustomerRequest:
       description: Payload to update customer
@@ -13254,16 +13389,16 @@ components:
         application/json:
           schema:
             $ref: '#/components/schemas/UpdateAddOnRequest'
-    CreateJobRequest:
-      description: Payload to create job request
+    CreatePricePlanMigrationRequest:
+      description: Payload to create price plan migration request
       required: true
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/CreateJobRequest'
+            $ref: '#/components/schemas/CreatePricePlanMigrationRequest'
           examples:
-            CreateJobRequest:
-              $ref: '#/components/examples/CreateJobRequest'
+            CreatePricePlanMigrationRequest:
+              $ref: '#/components/examples/CreatePricePlanMigrationRequest'
     CreateFeatureRequest:
       description: Payload to create a Feature along the association with event_schemas
       required: true
