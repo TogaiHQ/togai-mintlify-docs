@@ -4,8 +4,14 @@ openapi: post /events/correction
 
 ## Query Parameters: Allowed filter combinations
 <Warning>All matching events will be considered for correction</Warning>
-<Info>Sync mode: Maximum of 5 events matching the filters can be corrected in a request.\
-Async mode: Events matching the filters can be corrected and takes place in background.</Info>
+<Info>
+<ul>
+  <li>**Sync mode:** Maximum of 5 events matching the filters can be corrected in a request. </li>
+  <li>**Async mode:** Events matching the filters will be considered for correction and takes place in background. \
+  Status of background job can be obtained using [List Jobs API](api-reference/jobs/list-jobs)</li>
+</ul>
+</Info>
+
 
 <AccordionGroup>
 <Accordion title="Query Parameters">
