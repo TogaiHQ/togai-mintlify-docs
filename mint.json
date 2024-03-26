@@ -391,7 +391,8 @@
             "api-reference/price-plans/update-a-price-plan",
             "api-reference/price-plans/activate-a-price-plan",
             "api-reference/price-plans/add-currencies-to-a-price-plan",
-            "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan"
+            "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan",
+            "api-reference/price-plans/create-a-price-plan-migration"
           ]
         },
         {
@@ -412,10 +413,10 @@
         {
           "group": "Jobs",
           "pages": [
-            "api-reference/jobs/create-a-job-request",
             "api-reference/jobs/get-the-status-of-a-job",
             "api-reference/jobs/list-jobs",
             "api-reference/jobs/confirm-a-job",
+            "api-reference/jobs/reject-a-job",
             "api-reference/jobs/list-job-entries"
           ]
         },
