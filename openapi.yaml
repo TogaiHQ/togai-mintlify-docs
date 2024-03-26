@@ -2578,7 +2578,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetFeatureCreditEntriesPaginatedResponse'
               examples:
-                GetFeatureCreditsResponse:
+                GetFeatureCreditEntriesPaginatedResponse:
                   $ref: '#/components/examples/GetFeatureCreditEntriesPaginatedResponse'
         '400':
           description: Bad request. Please check the response message for failure details.
@@ -2828,7 +2828,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/GetEntitlementValuesResponse'
               examples:
-                GetEntitlementsResponse:
+                GetEntitlementValuesResponse:
                   $ref: '#/components/examples/GetEntitlementValuesResponse'
   /invoices:
     get:
@@ -5137,7 +5137,7 @@ components:
           items:
             type: string
         pricePlanDetails:
-          $ref: '#/components/schemas/PricePlanDetails'
+          $ref: '#/components/schemas/PricePlanDetailsWithoutRateCards'
         pricingRules:
           type: array
           items:
@@ -6111,10 +6111,6 @@ components:
         - type: object
           additionalProperties: false
           properties:
-            price:
-              type: number
-            invoiceCurrency:
-              type: string
             purchasePlan:
               $ref: '#/components/schemas/PricePlanDetails'
             features:
@@ -7057,6 +7053,31 @@ components:
               minItems: 1
               items:
                 $ref: '#/components/schemas/FixedFeeRateCard'
+    PricePlanDetailsWithoutRateCards:
+      type: object
+      required:
+        - supportedCurrencies
+        - activeCurrencies
+      properties:
+        supportedCurrencies:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+        activeCurrencies:
+          type: array
+          uniqueItems: true
+          readOnly: true
+          items:
+            type: string
+        pricingCycleConfig:
+          $ref: '#/components/schemas/PricingCycleConfig'
+        minimumCommitment:
+          $ref: '#/components/schemas/MinimumCommitment'
+        type:
+          $ref: '#/components/schemas/PricePlanType'
+        deferredRevenue:
+          type: boolean
     PricePlanType:
       type: string
       description: Type of price plan
@@ -7805,7 +7826,7 @@ components:
           required:
             - eventPipelineInfo
           properties:
-            EventPipelineInfo:
+            eventPipelineInfo:
               $ref: '#/components/schemas/EventPipelineInfo'
     EventCorrectionInfo:
       allOf:
@@ -8859,6 +8880,11 @@ components:
             - MERGED
             - PARTIALLY_PAID
           example: DUE
+        finalizingStatus:
+          type: string
+          enum:
+            - FINALIZING
+            - FINALIZED
         invoiceClass:
           description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
           type: string
@@ -8965,6 +8991,11 @@ components:
             - MERGED
             - PARTIALLY_PAID
           example: DUE
+        finalizingStatus:
+          type: string
+          enum:
+            - FINALIZING
+            - FINALIZED
         invoiceClass:
           description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
           type: string
@@ -9137,6 +9168,8 @@ components:
             - PRICING_RULE_REVENUE_UPDATE_AMOUNT
             - PRICING_RULE_USAGE_UPDATE_AMOUNT
             - RATE_CONFIG_ADJUSTMENT_AMOUNT
+            - TOTAL_TAX_AMOUNT
+            - TAX_AMOUNT
           description: |
             Type of the line item
             - GRAND_TOTAL_AMOUNT: Sum of all total amount of individual invoices in a grouped(composite) invoice
@@ -9482,7 +9515,7 @@ components:
           schema:
             $ref: '#/components/schemas/Account'
           examples:
-            Customer:
+            Account:
               $ref: '#/components/examples/Account'
     CreateProposalResponse:
       description: Response to create proposal request
@@ -9563,7 +9596,7 @@ components:
           schema:
             $ref: '#/components/schemas/UsageMeter'
           examples:
-            Customer:
+            UsageMeter:
               $ref: '#/components/examples/UsageMeter'
     UsageMeterPaginatedResponse:
       description: Response for list usage_meters request
@@ -9609,7 +9642,7 @@ components:
             $ref: '#/components/schemas/PricingRulesPaginatedResponse'
           examples:
             PricingRulesPaginatedResponse:
-              $ref: '#/components/examples/PricePlanPaginatedResponse'
+              $ref: '#/components/examples/PricingRulesPaginatedResponse'
     UpdatePricingScheduleResponse:
       description: Response for dis/associate price plan request
       content:
@@ -9671,7 +9704,7 @@ components:
           schema:
             $ref: '#/components/schemas/JobEntriesPaginatedResponse'
           examples:
-            GetJobResponse:
+            JobEntriesPaginatedResponse:
               $ref: '#/components/examples/JobEntriesPaginatedResponse'
     AddOnResponse:
       description: Response for Create and Get addons requests
@@ -10319,14 +10352,13 @@ components:
     CreateFeatureRequest:
       value:
         name: DiscountCredits
-        description: Discount Credits feature
-        schemaAssocitions:
+        schemaAssociations:
           - event_schema1
           - event_schema2
     UpdateFeatureRequest:
       value:
         name: DiscountCredits
-        schemaAssocitions:
+        schemaAssociations:
           - event_schema1
           - event_schema3
     CreatePurchaseForPurchasePlanRequest:
@@ -10378,9 +10410,6 @@ components:
               tag: '1'
               invoiceTiming: IN_ARREARS
               type: RECURRING
-              recurrenceConfig:
-                interval: null
-                offset: null
             - id: addon.20sidQxYRjs.4oBSU
               rateValues:
                 - currency: USD
@@ -10391,8 +10420,8 @@ components:
               invoiceTiming: IN_ARREARS
               type: RECURRING
               recurrenceConfig:
-                interval: null
-                offset: null
+                interval: 2
+                offset: 1
             - id: addon.20sidzySWoa.Bzrcc
               rateValues:
                 - currency: USD
@@ -10403,8 +10432,8 @@ components:
               invoiceTiming: IN_ADVANCE
               type: RECURRING
               recurrenceConfig:
-                interval: null
-                offset: null
+                interval: 1
+                offset: 0
           licenseRateCards:
             - id: addon.20darMuJ6C8.bdgRj
               enableProration: false
@@ -10424,7 +10453,7 @@ components:
               displayName: license
               tag: '2'
               config:
-                maxQuantity: null
+                maxQuantity: 100
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -10443,9 +10472,8 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
             - featureId: feature.20uE1xqEudk.MMVH8
               featureConfigs:
                 - featureCreditLimit: 200
@@ -10463,9 +10491,8 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
           minimumCommitment:
             displayName: Minimum Commitment
             rateValues:
@@ -10489,7 +10516,6 @@ components:
                 expiryType: NO_EXPIRY
                 applicableEntityIds: []
               invoiceTiming: IN_ADVANCE
-              recurrenceConfig: null
             - id: addon.20ufMNoJoAC.TUzRi
               type: RECURRING
               displayName: Credit2
@@ -10499,7 +10525,6 @@ components:
                   - currency: USD
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -10508,7 +10533,6 @@ components:
                   - currency: INR
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -10517,10 +10541,8 @@ components:
               grantDetails:
                 priority: 1
                 expiryType: NO_EXPIRY
-                expiryDuration: null
                 applicableEntityIds: []
               invoiceTiming: IN_ADVANCE
-              recurrenceConfig: null
     CreatePurchaseForWalletTopupRequest:
       value:
         type: WALLET_TOPUP
@@ -10532,7 +10554,7 @@ components:
         type: ENTITLEMENT_GRANT
         paymentMode: PREPAID
         quantity: 1
-        purchasePlanOverrides:
+        purchasePlanOverride:
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -10551,9 +10573,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+              tag: tag 1
     CreateProposalForAssociationRequest:
       value:
         pricePlanId: pp.20v1Tgjuwlc.O55xo
@@ -10600,8 +10622,8 @@ components:
               invoiceTiming: IN_ARREARS
               type: RECURRING
               recurrenceConfig:
-                interval: null
-                offset: null
+                interval: 2
+                offset: 1
             - id: addon.20sidQxYRjs.4oBSU
               rateValues:
                 - currency: USD
@@ -10611,9 +10633,6 @@ components:
               tag: '2'
               invoiceTiming: IN_ARREARS
               type: RECURRING
-              recurrenceConfig:
-                interval: null
-                offset: null
             - id: addon.20sidzySWoa.Bzrcc
               rateValues:
                 - currency: USD
@@ -10623,9 +10642,6 @@ components:
               tag: '1'
               invoiceTiming: IN_ADVANCE
               type: RECURRING
-              recurrenceConfig:
-                interval: null
-                offset: null
           licenseRateCards:
             - id: addon.20darMuJ6C8.bdgRj
               enableProration: false
@@ -10644,8 +10660,7 @@ components:
                       slabRateConfig: {}
               displayName: license
               tag: '2'
-              config:
-                maxQuantity: null
+              config: null
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -10664,9 +10679,8 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
             - featureId: feature.20uE1xqEudk.MMVH8
               featureConfigs:
                 - featureCreditLimit: 200
@@ -10684,9 +10698,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
+              tag: tag_acme
           minimumCommitment:
             displayName: Minimum Commitment
             rateValues:
@@ -10722,7 +10736,6 @@ components:
                   - currency: USD
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -10731,7 +10744,6 @@ components:
                   - currency: INR
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -10740,7 +10752,6 @@ components:
               grantDetails:
                 priority: 1
                 expiryType: PRICING_CYCLE
-                expiryDuration: null
                 applicableEntityIds: []
               invoiceTiming: IN_ARREARS
               recurrenceConfig:
@@ -10755,7 +10766,6 @@ components:
         accountIds:
           - ACC0001
           - ACC0002
-        gracePeriod: 3
         netTermDays: 30
     UpdateInvoiceGroupAccounts:
       value:
@@ -10950,10 +10960,10 @@ components:
       value:
         name: grantCheck
         type: BILLING
+        description: Starter plan
         pricePlanDetails:
           supportedCurrencies:
             - USD
-          activeCurrencies: []
           pricingCycleConfig:
             interval: MONTHLY
             startOffset:
@@ -10978,8 +10988,8 @@ components:
                       rate: 10
                       slabRateConfig: {}
                   rateConfig:
-                    minimumRate: 1
-                    maximumRate: 10
+                    minimumRate: '1'
+                    maximumRate: '10'
               tag: '1'
           fixedFeeRateCards:
             - id: addon.20sidL2HJ7o.vvzDT
@@ -11026,11 +11036,11 @@ components:
                       rate: 15
                       slabRateConfig: {}
                   rateConfig:
-                    minimumRate: 1
-                    maximumRate: 10
+                    minimumRate: '1'
+                    maximumRate: '10'
               displayName: license
               tag: '2'
-              config: null
+              config: {}
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -11049,9 +11059,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+              tag: tag_acme
             - featureId: feature.20uE1xqEudk.MMVH8
               featureConfigs:
                 - featureCreditLimit: 200
@@ -11069,9 +11079,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
+              tag: tag_acme
           minimumCommitment:
             displayName: Minimum Commitment
             rateValues:
@@ -11107,7 +11117,6 @@ components:
                   - currency: USD
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -11116,7 +11125,6 @@ components:
                   - currency: INR
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -11125,7 +11133,6 @@ components:
               grantDetails:
                 priority: 1
                 expiryType: PRICING_CYCLE
-                expiryDuration: null
                 applicableEntityIds: []
               invoiceTiming: IN_ARREARS
               recurrenceConfig:
@@ -11145,9 +11152,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+              tag: tag_acme
               maxQuantity: 50
               billingConfig:
                 interval: 1
@@ -11165,24 +11172,20 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
-              maxQuantity: null
-              billingConfig: null
-          type: BILLING
-        description: null
+              tag: tag_acme
+              maxQuantity: 50
     CreateAnniversaryBillingPricePlanRequest:
       value:
         name: grantCheck
+        description: Anniversary price plan
         type: BILLING
         pricePlanDetails:
           supportedCurrencies:
             - USD
-          activeCurrencies: []
           pricingCycleConfig:
             interval: MONTHLY
-            startOffset: null
             gracePeriod: 1
             anniversaryCycle: true
           usageRateCards:
@@ -11248,7 +11251,6 @@ components:
                       slabRateConfig: {}
               displayName: license
               tag: '2'
-              config: null
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -11267,9 +11269,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+              tag: tag_acme
             - featureId: feature.20uE1xqEudk.MMVH8
               featureConfigs:
                 - featureCreditLimit: 200
@@ -11287,9 +11289,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
+              tag: tag_acme
           minimumCommitment:
             displayName: Minimum Commitment
             rateValues:
@@ -11325,7 +11327,6 @@ components:
                   - currency: USD
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -11334,7 +11335,6 @@ components:
                   - currency: INR
                     slabDetails:
                       - rate: 11
-                        endAt: null
                         priceType: FLAT
                         startAfter: 0
                         slabConfig: {}
@@ -11343,7 +11343,6 @@ components:
               grantDetails:
                 priority: 1
                 expiryType: PRICING_CYCLE
-                expiryDuration: null
                 applicableEntityIds: []
               invoiceTiming: IN_ARREARS
               recurrenceConfig:
@@ -11363,9 +11362,9 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+              tag: tag_acme
               maxQuantity: 50
               billingConfig:
                 interval: 1
@@ -11383,19 +11382,14 @@ components:
                   slabRates:
                     - order: 1
                       rate: 2
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature2
-              tag: null
-              maxQuantity: null
-              billingConfig: null
-          type: BILLING
-        description: null
+              tag: tag_acme
     CreatePurchasePricePlanRequest:
       value:
         name: Purchase Plan
         type: PURCHASE
         pricePlanDetails:
-          type: PURCHASE
           billingEntitlementRateCards:
             - featureId: feature.20txvOAhiIS.m3X3d
               featureConfigs:
@@ -11422,9 +11416,7 @@ components:
               enableProration: false
               displayName: normal
               tag: '1'
-              invoiceTiming: null
-              type: null
-              recurrenceConfig: null
+              type: ONE_TIME
             - id: addon.20sidQxYRjs.4oBSU
               rateValues:
                 - currency: USD
@@ -11432,9 +11424,7 @@ components:
               enableProration: false
               displayName: anotherNormal
               tag: '2'
-              invoiceTiming: null
               type: ONE_TIME
-              recurrenceConfig: null
           supportedCurrencies:
             - USD
     UpdatePricePlanRequest:
@@ -11448,7 +11438,7 @@ components:
               monthOffset: NIL
             gracePeriod: 3
             anniversaryCycle: true
-        mode: IMMEDIATE_IGNORE_OVERRIDE
+        migrationMode: IMMEDIATE_IGNORE_OVERRIDE
     ActivatePricePlanRequest:
       value:
         currencies:
@@ -11464,12 +11454,18 @@ components:
         pricePlanDetailsConfig:
           mode: PRICE_PLAN
           pricePlanId: pp.fdhkf.djf
-          effectiveOn: {}
+          effectiveOn: '2020-01-01T00:00:00Z'
           pricingCycleOrdinal: 1
         usageConfig:
           mode: CUSTOM
           usageMap:
             um.1zcgWalbM2y.qaX5j: 100
+        licenseEntriesConfig:
+          mode: CUSTOM
+          custom:
+            - licenseId: license.1zcgWalbM2y.qaX5j
+              quantity: 10
+              effectiveFrom: '2020-01-01T00:00:00Z'
         entitlementOverageConfig:
           mode: CUSTOM
           custom:
@@ -11514,14 +11510,20 @@ components:
         usageConfig:
           mode: LOOKUP_RANGE
           lookupRange:
-            start: {}
-            end: {}
+            start: '2020-01-01T00:00:00Z'
+            end: '2020-01-31T00:00:00Z'
+            accountId: ACC00001
+        licenseEntriesConfig:
+          mode: LOOKUP_RANGE
+          lookupRange:
+            start: '2020-01-01T00:00:00Z'
+            end: '2020-01-31T00:00:00Z'
             accountId: ACC00001
         entitlementOverageConfig:
           mode: LOOKUP_CYCLE
           lookupCycle:
             accountId: ACC0001
-            billingCycleEndDate: {}
+            billingCycleEndDate: '2020-01-31T00:00:00Z'
     ThirdCalculateRevenueRequestExample:
       value:
         currencyConfig:
@@ -11530,12 +11532,17 @@ components:
         pricePlanDetailsConfig:
           mode: ACCOUNT
           accountId: ACC00001
-          effectiveOn: {}
+          effectiveOn: '2020-01-01T00:00:00Z'
         usageConfig:
           mode: LOOKUP_CYCLE
           lookupCycle:
             accountId: ACC00001
-            cycleEffectiveOn: {}
+            cycleEffectiveOn: '2020-01-01T00:00:00Z'
+        licenseEntriesConfig:
+          mode: LOOKUP_CYCLE
+          lookupCycle:
+            accountId: ACC00001
+            cycleEffectiveOn: '2020-01-01T00:00:00Z'
       description: |
         Example request for calculate revenue API on a already associated price plan of the account  with currency as the invoice currency of an existing account, and existing usage of a account over a certain pricing cycle
     UpdatePricingScheduleAssociateRequest:
@@ -11567,7 +11574,7 @@ components:
             slabRates:
               - order: 0
                 rate: 100
-                config:
+                rateConfig:
                   minimumValue: 0
     UpdateSettingRequest:
       value:
@@ -11590,6 +11597,7 @@ components:
       summary: A sample Customer
       value:
         id: 01BX5ZZKBKACTAV9WEVGEMMVRZ
+        togaiCustomerId: customer.dsvvre314.dcs14
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
@@ -11600,12 +11608,14 @@ components:
           city: Florence
           state: South Carolina
           country: US
+        billingAddress: 2281 Broadway Street, G-31, 29501, Florence, South Carolina, US
         status: ACTIVE
         updatedAt: '2020-07-04T12:00:00.000Z'
         createdAt: '2020-07-04T12:00:00.000Z'
     CreateCustomerResponse:
       value:
         id: 01BX5ZZKBKACTAV9WEVGEMMVRZ
+        togaiCustomerId: customer.dsvvre314.dcs314
         name: ACME Enterprise
         primaryEmail: admin@example.com
         address:
@@ -11625,6 +11635,7 @@ components:
         account:
           id: G234DZZKBKACATFFGVGEMERFH
           togaiAccountId: account.safdla.c234ds
+          customerId: 01BX5ZZKBKACTAV9WEVGEMMVRZ
           togaiCustomerId: customer.savass.11e1a
           name: ACME Enterprise - Account
           invoiceCurrency: USD
@@ -11642,6 +11653,7 @@ components:
       value:
         data:
           - id: 01BX5ZZKBKACTAV9WEVGEMMVRZ
+            togaiCustomerId: customer.dsvvre314.dcs314
             name: ACME Enterprise
             primaryEmail: admin@example.com
             address:
@@ -11652,9 +11664,10 @@ components:
               city: Florence
               state: South Carolina
               country: US
+            billingAddress: 2281 Broadway Street, G-31, 29501, Florence, South Carolina, US
             status: ACTIVE
-            createdAt: {}
-            updatedAt: {}
+            createdAt: '2020-01-01T10:10:22Z'
+            updatedAt: '2020-01-01T10:10:22Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
@@ -11667,18 +11680,19 @@ components:
         phone: '+1234071628'
         loginAccess: true
         createdBy: hrn:Xghfdksd::iam-user/johnny314
-        createdAt: {}
+        createdAt: '2020-01-01T00:00:00Z'
     AccountPaginatedResponse:
       value:
         data:
           - id: G234DZZKBKACATFFGVGEMERFI
+            togaiAccountId: account.dsvvre314.dcs314
+            customerId: ACME_CUSTOMER_1
+            togaiCustomerId: customer.dsvvre314.dcs314
             name: ACME Enterprise - Account2
             status: ACTIVE
             aliases:
               - alias: account2@acme.com
-                status: ACTIVE
               - alias: '+1234567890'
-                status: ARCHIVED
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
@@ -11687,23 +11701,27 @@ components:
         id: purchase.20rvWRxQcQK.0ZwPG
         accountId: account2394
         pricePlanId: pp.20rqb4MK9ia.TD0eG
-        createdAt: {}
+        createdAt: '2023-07-26T12:36:56.58015Z'
+        type: ASSOCIATION
         status: PROPOSAL_ACTIVE
-        pricePlanOverride:
+        paymentMode: PREPAID
+        associationOverride:
           pricingCycleConfig:
             interval: MONTHLY
             startOffset:
-              dayOffset: 2
+              dayOffset: '2'
               monthOffset: NIL
             gracePeriod: 3
             anniversaryCycle: false
-        updatedAt: {}
-        effectiveFrom: {}
-        effectiveUntil: {}
+        updatedAt: '2023-07-26T12:36:56.58015Z'
+        effectiveFrom: '2023-06-30'
+        effectiveUntil: '2023-08-30'
         comment: Proposal Approved
     InvoiceGroups:
       value:
         id: inv_group.20rvWRxQcQK.0ZwPG
+        name: Invoice Group 1
+        email: acme@acme.com
         dailyInvoiceConsolidation: true
         accountsCount: 2
         gracePeriod: 3
@@ -11717,10 +11735,14 @@ components:
           city: Florence
           state: South Carolina
           country: US
+        createdAt: '2023-07-26T12:36:56.58015Z'
+        updatedAt: '2023-07-26T12:36:56.58015Z'
     InvoiceGroupPaginatedResponse:
       value:
         data:
           - id: inv_group.20rvWRxQcQK.0ZwPG
+            name: Invoice Group 1
+            email: acme@acme.com
             dailyInvoiceConsolidation: true
             accountsCount: 2
             gracePeriod: 3
@@ -11734,11 +11756,14 @@ components:
               city: Florence
               state: South Carolina
               country: US
+            createdAt: '2023-07-26T12:36:56.58015Z'
+            updatedAt: '2023-07-26T12:36:56.58015Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
     InvoiceGroupAccountsPaginatedResponse:
       value:
         id: inv_group.20rvWRxQcQK.0ZwPG
         name: Invoice Group 1
+        email: acme@acme.com
         dailyInvoiceConsolidation: true
         accountsCount: 2
         accounts:
@@ -11755,7 +11780,9 @@ components:
           city: Florence
           state: South Carolina
           country: US
-          nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+        createdAt: '2023-07-26T12:36:56.58015Z'
+        updatedAt: '2023-07-26T12:36:56.58015Z'
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
     EventSchemaListPaginatedResponse:
       value:
         data:
@@ -11778,6 +11805,7 @@ components:
         data:
           - id: 01BX5ZZKBKACTAV9WEVG
             name: Rides
+            displayName: Rides Usage
             description: Cab rides
             type: COUNTER
             aggregation: COUNT
@@ -11793,6 +11821,7 @@ components:
                       ]
                     ]
                   }
+                order: 1
                 computation: '1'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
@@ -11802,14 +11831,56 @@ components:
         accountId: G234DZZKBKACATFFGVGEMERFI
         accountName: ACME Enterprise - Account2
         pricingSchedules:
-          - pricePlanId: pp.1zYnCiM9Bpg.lv25y
+          - id: sch.4325kbjedsc.34dww
+            pricePlanId: pp.1zYnCiM9Bpg.lv25y
+            pricePlanName: ENTERPRISE_PLAN
             startDate: '2022-12-02T00:00:00Z'
             endDate: '9999-01-01T00:00:00Z'
     CalculateRevenueResponse:
       value:
         currency: USD
+        pricePlanDetails:
+          supportedCurrencies:
+            - USD
+          activeCurrencies:
+            - USD
+          pricingCycleConfig:
+            interval: MONTHLY
+            startOffset:
+              dayOffset: '1'
+              monthOffset: NIL
+            gracePeriod: 1
+            anniversaryCycle: false
+          usageRateCards:
+            - displayName: AfterShip Shipments1
+              usageMeterId: um.1zcgWalbM2y.qaX5j
+              ratePlan:
+                pricingModel: TIERED
+                slabs:
+                  - priceType: PER_UNIT
+                    startAfter: 0
+                    order: 1
+                  - priceType: PACKAGE
+                    startAfter: 2
+                    order: 2
+                    slabConfig:
+                      packageSize: '10'
+              rateValues:
+                - currency: USD
+                  slabRates:
+                    - order: 1
+                      rate: 10
+                      slabRateConfig:
+                        minimumRate: '1'
+                        maximumRate: '10'
+                    - order: 2
+                      rate: 20
+              tag: '1'
+          type: BILLING
         revenueInfo:
-          - usageRateCard:
+          - usages:
+              um.fdjal.kdajf: 10
+            usageRateCard:
               displayName: AfterShip Shipments1
               usageMeterId: um.1zcgWalbM2y.qaX5j
               ratePlan:
@@ -11822,7 +11893,7 @@ components:
                     startAfter: 2
                     order: 2
                     slabConfig:
-                      packageSize: 10
+                      packageSize: '10'
               rateValues:
                 - currency: USD
                   slabRates:
@@ -11833,21 +11904,19 @@ components:
                         maximumRate: 10
                     - order: 2
                       rate: 20
-          - revenueSummary:
-              usages:
-                um.fdjal.kdajf: 10
-              slabRevenues:
-                - order: 1
-                  usage: 10
-                  revenue: 100
-                - order: 2
-                  usage: 0
-                  revenue: 0
+            slabRevenueSummaries:
+              - order: 1
+                usage: 10
+                revenue: 100
+              - order: 2
+                usage: 0
+                revenue: 0
     Account:
       summary: A sample Account
       value:
         id: G234DZZKBKACATFFGVGEMERFI
         togaiAccountId: account.safdla.c234ds
+        customerId: ACME
         togaiCustomerId: customer.savass.11e1a
         name: ACME Enterprise - Account2
         invoiceCurrency: USD
@@ -11862,9 +11931,7 @@ components:
         primaryEmail: admin@example.com
         aliases:
           - alias: account2@acme.com
-            status: ACTIVE
           - alias: '+1234567890'
-            status: ACTIVE
         status: ACTIVE
     EventSchema:
       summary: A sample event schema
@@ -11872,7 +11939,6 @@ components:
         name: ride_completed
         description: Cab ride completed
         version: 1
-        status: DRAFT
         attributes:
           - name: distance
           - name: time
@@ -11917,6 +11983,7 @@ components:
                   ]
                 ]
               }
+            order: 1
             computation: '1'
     PricePlan:
       value:
@@ -11968,9 +12035,6 @@ components:
                   tag: '1'
                   invoiceTiming: IN_ARREARS
                   type: RECURRING
-                  recurrenceConfig:
-                    interval: null
-                    offset: null
                 - id: addon.20sidQxYRjs.4oBSU
                   rateValues:
                     - currency: USD
@@ -11981,8 +12045,8 @@ components:
                   invoiceTiming: IN_ARREARS
                   type: RECURRING
                   recurrenceConfig:
-                    interval: null
-                    offset: null
+                    interval: 2
+                    offset: 1
                 - id: addon.20sidzySWoa.Bzrcc
                   rateValues:
                     - currency: USD
@@ -11992,9 +12056,6 @@ components:
                   tag: '1'
                   invoiceTiming: IN_ADVANCE
                   type: RECURRING
-                  recurrenceConfig:
-                    interval: null
-                    offset: null
               licenseRateCards:
                 - id: addon.20darMuJ6C8.bdgRj
                   enableProration: false
@@ -12014,7 +12075,7 @@ components:
                   displayName: license
                   tag: '2'
                   config:
-                    maxQuantity: null
+                    maxQuantity: 100
               billingEntitlementRateCards:
                 - featureId: feature.20jxa18BdUW.d4XQw
                   featureConfigs:
@@ -12033,9 +12094,7 @@ components:
                       slabRates:
                         - order: 1
                           rate: 1
-                          slabRateConfig: null
                   displayName: feature1
-                  tag: null
                 - featureId: feature.20uE1xqEudk.MMVH8
                   featureConfigs:
                     - featureCreditLimit: 200
@@ -12053,9 +12112,7 @@ components:
                       slabRates:
                         - order: 1
                           rate: 2
-                          slabRateConfig: null
                   displayName: feature2
-                  tag: null
               minimumCommitment:
                 displayName: Minimum Commitment
                 rateValues:
@@ -12091,7 +12148,6 @@ components:
                       - currency: USD
                         slabDetails:
                           - rate: 11
-                            endAt: null
                             priceType: FLAT
                             startAfter: 0
                             slabConfig: {}
@@ -12100,7 +12156,6 @@ components:
                       - currency: INR
                         slabDetails:
                           - rate: 11
-                            endAt: null
                             priceType: FLAT
                             startAfter: 0
                             slabConfig: {}
@@ -12109,18 +12164,19 @@ components:
                   grantDetails:
                     priority: 1
                     expiryType: PRICING_CYCLE
-                    expiryDuration: null
                     applicableEntityIds: []
                   invoiceTiming: IN_ARREARS
                   recurrenceConfig:
                     offset: 0
                     interval: 1
               type: BILLING
-        description: null
+        description: Starter plan
     PricePlanPaginatedResponse:
       value:
         data:
           - id: um.1zYnCiM9Bpg.lv25y
+            version: 1
+            type: BILLING
             name: Rides - Pro plan
             description: ''
             status: DRAFT
@@ -12135,32 +12191,34 @@ components:
                   monthOffset: NIL
                 gracePeriod: 3
                 anniversaryCycle: false
-              usageRateCards:
-                - displayName: Local Rides
-                  pricingModel: TIERED
-                  rateConfig:
-                    usageMeterId: um.1zYnCiM9Bpg.1zYn
-                    slabs:
-                      - rate: 100
-                        priceType: PER_UNIT
-                        startAfter: 0
-                        order: 1
-                      - rate: 40
-                        priceType: PER_UNIT
-                        startAfter: 10
-                        order: 2
-                      - rate: 10
-                        priceType: PER_UNIT
-                        startAfter: 50
-                        order: 3
+              supportedCurrencies:
+                - USD
+              activeCurrencies:
+                - USD
             updatedAt: '2020-01-01T00:00:00Z'
             createdAt: '2020-01-01T00:00:00Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    PricingRulesPaginatedResponse:
+      value:
+        data:
+          - id: um.1zYnCiM9Bpg.lv25y
+            name: Rule 1
+            version: 1
+            order: 1
+            computation: |
+              {"+": [{"var": "revenue.urc.um.21lmjsfcXPs.d929R"}, {"var": "usage.urc.um.21lmjObpMV6.9XeFl"}]}
+            condition: |
+              {">": [{"+": [{"var": "revenue.urc.um.21lmjObpMV6.9XeFl"}, {"var": "usage.urc.um.21lmjObpMV6.9XeFl"}]}, 100]}
+            action:
+              type: UPDATE
+              target: revenue.ff.addon.21ERXMFJ83s.9EM5S
     PricingSchedulePaginatedResponse:
       value:
         data:
-          - pricePlanId: pp.bs8932bf328
-          - startDate: '2080-10-04T00:00:00Z'
+          - id: sch.4325kbjedsc.34dww
+            pricePlanId: pp.bs8932bf328
+            version: 1
+            startDate: '2080-10-04T00:00:00Z'
             endDate: '2099-10-04T00:00:00Z'
             pricePlanDetails:
               supportedCurrencies:
@@ -12191,6 +12249,7 @@ components:
               fixedFeeRateCards:
                 - id: addon.2077efUBMXo.DyzlZ
                   displayName: Maintenance
+                  enableProration: false
                   rateValues:
                     - currency: USD
                       rate: 10
@@ -12218,34 +12277,38 @@ components:
             entityId: XlK5h64gND
             namespace: togai
             name: Settings Name
+            dataType: STRING
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
     GetJobResponse:
       value:
-        id: mig.20aUyEZSuYq.SoGbS
+        id: job.20aUyEZSuYq.SoGbS
         type: PRICE_PLAN
         updatedAt: '2080-10-04T00:00:00Z'
         status: COMPLETED
-        sourceId: pp.njrjk314hfr
-        targetId: pp.rhk32h4dsfq
         totalJobEntries: 100
         pendingJobEntries: 40
         failedJobEntries: 20
         completedJobEntries: 40
+        metadata:
+          sourceId: pp.njrjk314hfr
+          targetId: pp.rhk32h4dsfq
     JobEntriesPaginatedResponse:
       value:
         data:
-          entityId: inv.423535.afe325
-          type: BILL_RUN
-          createdAt: '2080-10-04T00:00:00Z'
-          status: COMPLETED
+          - entityId: inv.423535.afe325
+            jobId: job.20aUyEZSuYq.SoGbS
+            createdAt: '2080-10-04T00:00:00Z'
+            status: COMPLETED
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
     JobsPaginatedResponse:
       value:
         data:
-          - jobId: mig.20aUyEZSuYq.SoGbS
+          - id: mig.20aUyEZSuYq.SoGbS
+            type: PRICE_PLAN
             status: COMPLETED
+            updatedAt: '2080-10-04T00:00:00Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
         context:
           pageSize: 10
@@ -12257,7 +12320,7 @@ components:
         quantity: 1
         idempotencyKey: AAAAAABBBEEEDDSS23
         pricePlanVersion: 1
-        purchasePlanOverrides:
+        purchasePlanOverride:
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -12276,9 +12339,10 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
+                      slabRateConfig: {}
               displayName: feature1
-              tag: null
+        type: ENTITLEMENT_GRANT
+        status: SUCCESS
         createdAt: '2020-01-01T00:00:00Z'
         updatedAt: '2020-01-01T00:00:00Z'
     GetProposalResponse:
@@ -12289,7 +12353,10 @@ components:
         quantity: 1
         idempotencyKey: AAAAAABBBEEEDDSS23
         pricePlanVersion: 1
-        purchasePlanOverrides:
+        type: ENTITLEMENT_GRANT
+        status: PROPOSAL_ACTIVE
+        paymentMode: PREPAID
+        purchasePlanOverride:
           billingEntitlementRateCards:
             - featureId: feature.20jxa18BdUW.d4XQw
               featureConfigs:
@@ -12308,9 +12375,7 @@ components:
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
               displayName: feature1
-              tag: null
         createdAt: '2020-01-01T00:00:00Z'
         updatedAt: '2020-01-01T00:00:00Z'
     GetPurchaseForPurchasePlanResponse:
@@ -12320,6 +12385,7 @@ components:
         pricePlanId: pp.20txw0FrqjQ.byM8V
         pricePlanVersion: 1
         createdAt: '2023-07-31T15:49:25.007848Z'
+        type: ENTITLEMENT_GRANT
         status: SUCCESS
         purchasePlan:
           billingEntitlementRateCards:
@@ -12335,15 +12401,17 @@ components:
                   - order: 1
                     startAfter: 0
                     priceType: PER_UNIT
-                    slabConfig: null
+                    slabConfig: {}
               rateValues:
                 - currency: USD
                   slabRates:
                     - order: 1
                       rate: 1
-                      slabRateConfig: null
-              tag: null
               displayName: feature1
+          supportedCurrencies:
+            - USD
+          activeCurrencies:
+            - USD
         features:
           - id: feature.20txvOAhiIS.m3X3d
             name: feature1
@@ -12352,11 +12420,8 @@ components:
             updatedAt: '2023-07-31T15:47:52.570011Z'
             effectiveFrom: '2023-07-31T15:51:34.308371Z'
             effectiveUntil: '2023-08-20T15:51:34.308371Z'
-        quantity: null
         rateCardQuantities:
           feature.20txvOAhiIS.m3X3d: 1.2
-        idempotencyKey: null
-        planOverride: null
         updatedAt: '2023-07-31T15:51:35.093598Z'
         price: 120
         invoiceId: inv.20txx3jeQU4.nlMQh
@@ -12369,6 +12434,7 @@ components:
             pricePlanName: Entitlement Plan
             quantity: 1
             pricePlanVersion: 1
+            type: ENTITLEMENT_GRANT
             status: SUCCESS
             idempotencyKey: AAAAABBBBDDDD7730
             createdAt: '2020-01-01T00:00:00Z'
@@ -12377,6 +12443,7 @@ components:
             pricePlanId: pp.20txw0FrqjQ.byM8V
             pricePlanName: pp_feature_purchase
             pricePlanVersion: 1
+            type: ENTITLEMENT_GRANT
             status: SUCCESS
             purchasePlan:
               billingEntitlementRateCards:
@@ -12392,16 +12459,18 @@ components:
                       - order: 1
                         startAfter: 0
                         priceType: PER_UNIT
-                        slabConfig: null
+                        slabConfig: {}
                   rateValues:
                     - currency: USD
                       slabRates:
                         - order: 1
                           rate: 1
-                          slabRateConfig: null
                   displayName: feature1
+              supportedCurrencies:
+                - USD
+              activeCurrencies:
+                - USD
             createdAt: '2023-07-31T15:49:25.007848Z'
-            quantity: null
             rateCardQuantities:
               feature.20txvOAhiIS.m3X3d: 1.2
             price: 120
@@ -12413,6 +12482,9 @@ components:
           - id: purchase.1zYnCiM9Bpg.lv25y
             pricePlanId: pp.20dINmd0lBg.05sKa
             pricePlanName: Advanced Tier
+            type: ASSOCIATION
+            status: PROPOSAL_ACTIVE
+            paymentMode: PREPAID
             pricePlanVersion: 2
             createdAt: '2020-01-01T00:00:00Z'
             updatedAt: '2020-01-01T00:00:00Z'
@@ -12421,10 +12493,11 @@ components:
         id: feature.1zYnCiM9Bpg.lv25y
         name: DiscountCredits
         displayName: DiscountCredits
-        description: Discount Credits Feature
         schemaAssociations:
-          - event_schema1
-          - event_schema2
+          - schemaName: event_schema1
+            attributeName: distance
+          - schemaName: event_schema2
+            attributeName: time
         createdAt: '2020-01-01T00:00:00Z'
         updatedAt: '2020-01-01T00:00:00Z'
     FeaturePaginatedResponse:
@@ -12433,10 +12506,7 @@ components:
           - id: feature.1zYnCiM9Bpg.lv25y
             name: DiscountCredits
             displayName: DiscountCredits
-            description: Discount Credits Feature
-            schemaAssociations:
-              - event_schema1
-              - event_schema2
+            schemaCount: 2
             createdAt: '2020-01-01T00:00:00Z'
             updatedAt: '2020-01-01T00:00:00Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
@@ -12448,12 +12518,12 @@ components:
     AliasResponse:
       value:
         value: acme_primary
-        createAt: '2020-01-01T00:00:00Z'
+        createdAt: '2020-01-01T00:00:00Z'
     AliasPaginatedResponse:
       value:
         data:
           - value: acme_primary
-            createAt: '2020-01-01T00:00:00Z'
+            createdAt: '2020-01-01T00:00:00Z'
     IngestEventRequest:
       summary: example event ingestion request
       value:
@@ -12514,18 +12584,19 @@ components:
           - eventPayload:
               timestamp: '2023-02-23T14:25:10Z'
               schemaName: travelCompletedEvent
+              referenceId: event.dsvhk32.234n3
               id: c0b1306d-f506-43a6-856b-69221efaee6b
               accountId: '1'
               attributes:
                 - name: distanceTravelled
-                  value: 50
+                  value: '50'
                   unit: Miles
                 - name: timeSpent
-                  value: 60
+                  value: '60'
                   unit: Minutes
               dimensions:
                 location: Seattle
-                costCenterCode: 1234
+                costCenterCode: '1234'
                 travelType: Business
             eventPipelineInfo:
               eventSchema:
@@ -12552,8 +12623,9 @@ components:
               customer:
                 id: acme_inc
             ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+              status: INGESTION_COMPLETED_EVENT_NOT_METERED
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+            createdAt: '2021-03-04T14:25:10Z'
     EventsCorrectionResponse:
       summary: Example event correction response
       value:
@@ -12566,17 +12638,17 @@ components:
               accountId: '1'
               attributes:
                 - name: distanceTravelled
-                  value: 50
+                  value: '50'
                   unit: Miles
                 - name: timeSpent
-                  value: 60
+                  value: '60'
                   unit: Minutes
               dimensions:
                 location: Seattle
-                costCenterCode: 1234
+                costCenterCode: '1234'
                 travelType: Business
             ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+              status: INGESTION_COMPLETED_EVENT_NOT_METERED
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
             customerId: CUS0001
             source:
@@ -12593,10 +12665,11 @@ components:
               accountId: '1'
               attributes:
                 - name: smsCount
-                  value: 50
+                  value: '50'
                   unit: count
+              dimensions: {}
             ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+              status: INGESTION_COMPLETED_EVENT_NOT_METERED
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
             customerId: CUS0001
             source:
@@ -12608,7 +12681,7 @@ components:
     GetLicenseUpdatesResponse:
       summary: example get license updates response
       value:
-        licenseUpdates:
+        data:
           - licenseId: lic.fdjsl.313
             accountId: acc.fdjsl.313
             quantity: 10
@@ -12621,7 +12694,7 @@ components:
         accountId: acc.fdjsl.313
         quantity: 10
         effectiveFrom: '2020-01-01T00:00:00Z'
-        createAt: '2021-03-04T14:25:10Z'
+        createdAt: '2021-03-04T14:25:10Z'
     GetFeatureCreditsResponse:
       summary: example get feature credits response
       value:
@@ -12635,29 +12708,31 @@ components:
       summary: example update feature credits response
       value:
         id: purchase.20rvWRxQcQK.0ZwPG$1
-        source: PURCHASE
-        accountId: acc.fdjsl.313
-        featureId: feat.fdjsl.313
+        status: ACTIVE
+        source: ENTITLEMENT
+        effectiveFrom: '2020-01-01T00:00:00Z'
+        effectiveUntil: '2025-01-01T00:00:00Z'
         granted: 15
         balance: 10
-        overageLimit: 20
-        usedOverage: 15
+        used: 5
     GetFeatureCreditEntriesPaginatedResponse:
       summary: example list feature credit entries response
       value:
         data:
           - id: purchase.20rvWRxQcQK.0ZwPG
-            source: PURCHASE
+            source: ENTITLEMENT
             status: ACTIVE
             granted: 10
             balance: 5
+            used: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
             effectiveUntil: '2021-03-04T14:25:10Z'
           - id: purchase.20rvWRxQcQK.0ZwPG
-            source: PURCHASE
+            source: ENTITLEMENT
             status: ACTIVE
             granted: 10
             balance: 5
+            used: 5
             effectiveFrom: '2020-01-01T00:00:00Z'
             effectiveUntil: '2021-03-04T14:25:10Z'
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
@@ -12671,40 +12746,44 @@ components:
               timestamp: '2023-02-23T14:25:10Z'
               schemaName: travelCompletedEvent
               id: c0b1306d-f506-43a6-856b-69221efaee6b
+              referenceId: event.dsvhk32.234n3
               accountId: '1'
               attributes:
                 - name: distanceTravelled
-                  value: 50
+                  value: '50'
                   unit: Miles
                 - name: timeSpent
-                  value: 60
+                  value: '60'
                   unit: Minutes
               dimensions:
                 location: Seattle
-                costCenterCode: 1234
+                costCenterCode: '1234'
                 travelType: Business
             ingestionStatus:
-              status: INGESTION_COMPLETED_EVENT_NOT_BILLED
+              status: INGESTION_COMPLETED_EVENT_NOT_METERED
               statusDescription: Event ingestion completed successfully but the event is not associated with any bill plan.
+            createdAt: '2021-03-04T14:25:10Z'
           - eventPayload:
               timestamp: '2023-02-23T14:25:10Z'
               schemaName: sendMessageEvent
+              referenceId: event.dsvhk32.234n4
               id: c0b1306d-f506-43a6-856b-69221efaee6c
               accountId: '1'
               attributes:
                 - name: messageSentCount
-                  value: 50
+                  value: '50'
                   unit: None
                 - name: sizeOfMessage
-                  value: 60
+                  value: '60'
                   unit: KiloBytes
               dimensions:
                 location: Seattle
-                costCenterCode: 1234
+                costCenterCode: '1234'
                 messageProviderName: Twilio
             ingestionStatus:
-              status: INGESTION_COMPLETED
+              status: INGESTION_COMPLETED_EVENT_METERED
               statusDescription: Ingestion completed successfully
+            createdAt: '2021-03-04T14:25:10Z'
     GetMetricsResponse:
       summary: example get metrics response
       value:
@@ -12712,24 +12791,24 @@ components:
           - id: m1
             name: EVENTS
             data:
-              timestamps:
-                - '2017-07-21T00:00:00Z'
-                - '2017-07-22T00:00:00Z'
-              metricValues:
-                - 53
-                - 32
+              - timestamps:
+                  - '2017-07-21T00:00:00Z'
+                  - '2017-07-22T00:00:00Z'
+                metricValues:
+                  - 53
+                  - 32
           - id: m2
             name: USAGE
             data:
-              timestamps:
-                - '2017-07-01T00:00:00Z'
-              metricValues:
-                - 123.45
+              - timestamps:
+                  - '2017-07-01T00:00:00Z'
+                metricValues:
+                  - 123.45
     GetEntitlementValuesResponse:
       value:
         data:
           - featureId: feat.fdjsl.313
-            value: true
+            value: 'true'
           - featureId: feat.fdjsl.314
             value: custom
     NamedLicenseUpdatesPaginatedResponse:
@@ -13104,10 +13183,8 @@ components:
         status: DRAFT
         lineItems:
           - description: Payout IMPS
-            type: CUSTOM_AMOUNT
             valuePerQuantity: 0.001
             quantity: 32109
-            units: USD
     TokenResponse:
       value:
         token: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
