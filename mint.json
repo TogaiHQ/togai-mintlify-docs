@@ -370,7 +370,8 @@
           "group": "Licenses",
           "pages": [
             "api-reference/licenses/get-a-list-of-licenses-updates",
-            "api-reference/licenses/update-a-license-entry"
+            "api-reference/licenses/update-a-license-entry",
+            "api-reference/licenses/get-a-list-of-named-licenses-updates"
           ]
         },
         {
