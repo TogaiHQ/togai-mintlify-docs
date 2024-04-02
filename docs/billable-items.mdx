@@ -36,11 +36,19 @@ We explained what a [usage meter](/docs/usage-meter) is and how you can create o
 
 This is a type of billable item you can use to model seat based pricing or license based pricing. You would be able to define price per unit for every seat or license when you create your price plan and based on the quantity allotted (number of seats/licenses), the customer will be invoiced accordingly.
 
+### Named license add-on
+This is a type of item that can be used to track unique seats/users/licenses. You can provide a unique license id that can be used to understand how many unique users are using a feature or your product and then price them accordingly. For example, Slack's pricing is based on unique active users and this add-on type can be used to model the same.
+
+<Tip>To setup pricing for a Named license billable item, please use the License rate card configuration while creating a price plan. You can use Togai's event ingestion API to send named license entries as events.</Tip>
+
+
 ### Fixed fee add-on
 This type is used to model a flat pricing without any input quantity. Fixed fees can be one-time fees (eg: professional services, setup fees) or recurring fees (platform monthly/annual fee). This configuration is provided when defining the price plan.
 
 ### Credit add-on
 This billable item type serves two purposes - one to give promotional credits that can be used to model discounts or marketing promotions. Another purpose is to model minimum commitments for any individual line item/group of line items/entire invoice.
+
+
 
 ### Features
 Features are a billable item type that are used to model [entitlements](https://www.togai.com/blog/togai-entitlements/). When a customer purchases/subscribes to a software product, they are essentially getting access to use a product's set of features for a defined time period. Entitlements are this individual list of features or a group of packaged features that can be associated to a customer. Features and entitlements are used in 2 main scenarios - 

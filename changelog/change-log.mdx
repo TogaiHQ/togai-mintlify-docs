@@ -7,7 +7,43 @@ This Change Log provides a consolidated list of features and enhancements to Tog
 
 ## March 2024
 
-{/* Front end pending stuff - customization of customer portal, bulk reingest events, prepaid type, named license addon, auto ingest events upon attaching price plan */}
+### 31st March 2024
+- Customer portal can now be customized with logos and color schemes as per the organization's requirements
+- Events can be corrected and re-ingested in bulk via API or the UI
+- A new type of invoice timing configuration - 'Prepaid' for credit grant and entitlement rate cards - This requires a payment to be associated with an order before the corresponding credits or entitlements can be granted to the customer
+- Ingest named license entries via the event ingestion API
+- You can now send events without creating a corresponding customer account. When the account is created for those events and a price plan is attached for that account, the default behaviour now is those events will be automatically re-processed and rated and accounted for invoicing within 24 hours. This configuration can be disabled as well if required.
+- Auto advance invoice configuration - Disabling this option will allow the user to manually review a 'Draft' invoice before marking it as 'Due'
+- You can now create 'Bill runs' in the billing section that allows you to filter based on a time range, customer and price plan to view invoices that are pending review, preview them, make edits wherever required and approve them to be marked as 'Due'
+- You can now input rate and quantity in a custom charge in an invoice
+- You can now preview and download an Invoice group pdf
+- Invoice sequence number is now displayed in invoice detail
+- Stripe payment widget is now live with a Togai url. It is available in the end customer's portal to make payments through Stripe.
+
+
+### 24th March 2024
+- Proposals can be created with prorated rate cards
+- UI enhancement - Extensive filters for events list
+- UI enhancement - Extensive filters for invoice list
+- Named license entries list: refresh on demand
+- Provision to execute flows between invoice Finalization and Due states. This helps to add taxes, e-invoicing, and PG sync before invoice goes to DUE.
+- Added authorization support in marketplace to validate permissions of user before serving requests.
+
+
+### 17th March 2024
+- Named license meter and add-on launched - this allows you to track unique license entries and apply different rating capabilities to this usage metric
+- [APIs to fetch named license entries](/api-reference/licenses/get-a-list-of-named-licenses-updates)
+- Filter support for named license entries
+- Invoice template support for invoice groups
+- Draft Usage meters can be created with draft event schema now
+- Support for adding minimum commitment to few currencies in a price plan rather to all currencies
+- Change status of negative invoice to REFUND_COMPLETED
+- Custom charges can now be applied in custom invoices
+- Creating custom invoice for invoice group is supported now
+- New payment gateway - Verifone
+- You can now use Stripe’s payment intent instead of stripe invoice for payment collection
+- Creation of togai native payment links using stripe on togai invoice DUE
+
 
 ### 10th March 2024
 - [Support for bulk event void, update and reingestion based on certain query parameters](/api-reference/event-management/correct-an-ingested-event)
