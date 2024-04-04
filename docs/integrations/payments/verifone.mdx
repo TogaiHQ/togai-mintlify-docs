@@ -1,0 +1,36 @@
+---
+title: "Verifone"
+---
+
+Verifone provides technology for electronic payment transactions and value-added services at the point-of-sale. Sells merchant-operated, consumer-facing and self-service payment systems to the financial, retail, hospitality, petroleum, government and healthcare industries.
+
+The integration between Verifone and Togai requires only a one-time setup. Follow the steps below:
+
+## Install
+* Navigate to the Integrations section from the left navigation bar in Togai
+* Click on `Apps` to access the list of apps with integration support
+* Select `Verifone` from the available apps
+* Click on the `+Add connection` button 
+* Provide a name for the connection and paste your:
+    * `Base Url`
+    * `User UID`
+    * `Api key`
+    * `Org ID`
+
+### Verifone Secret Key
+![](/docs/integrations/images/verifone-api-key.png)    
+
+* Go to the Verifone merchant dashboard and click on the `Account info` tab
+* Copy and paste these keys in the respective fields in Togai
+
+## Flows
+
+### 1. Sync accounts created from Togai to Verifone
+* A new account is created in Togai
+* Togai then creates a corresponding customer in Verifone and syncs the customer identifier between Togai and Verifone.
+* You can see this mapping of customer identifier in the Settings tab of every customer. The setting name for Verifone customer identifier in Togai is `RazorPayCustomerId`.
+
+### 2. Sync Togai invoices to Verifone
+* A new invoice is created in Togai
+* Togai then creates a corresponding payment request on Verifone using the setting `VerifoneCustomerId` for the customer on Verifone.
+

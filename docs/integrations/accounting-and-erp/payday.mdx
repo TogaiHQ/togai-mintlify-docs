@@ -1,0 +1,42 @@
+---
+title: "Payday"
+---
+
+The **Togai** and **Payday** Integration supports a bidirectional sync  Togai and Payday. This API guide will walk you through the steps to set up the integration, configure apps and flows, and enable automation for your business processes.
+
+The integration between Payday and Togai requires only a one-time setup. Follow the steps below:
+
+###  Installation of App Instances  
+[](#installation-of-app-instances)  
+   * Navigate to the Integrations section from the left navigation bar in Togai  
+   * Click on `Apps` to access the list of apps with tight integration support  
+   * Locate and select `Payday` from the available apps  
+   * Click on the `+Add connection` button  
+   * Provide a name for the connection and paste your `Payday Client ID` and `Payday Client Secret` into the appropriate field
+
+###  Available Flows
+
+Here are the out-of-the-box flows that you can use in the future: 
+
+**1\. Sync Togai Accounts to Payday **
+
+* Flow is triggered when a new account is created in Togai
+* Togai then creates a corresponding customer in Payday and syncs the customer identifier between Togai and Payday, so that the customer can be identified in both systems.
+* The mapping of customer identifier in the Settings tab of every Togai Account. The setting name for MS Dynamics customer identifier in Togai is `PaydayAccountPlatformId`.
+
+**2\. Create Invoice in Payday on Togai Invoice **
+
+* A new invoice is created in Togai
+* Togai then creates an invoice in Payday for the corresponding invoice.
+* If the correponding customer is not present in Payday, the customer is first created and invoice is raised to that customer in payday.
+* You can see this mapping of invoice in the Settings for each invoice
+
+###  Invoice ID
+
+To refer to invoice in Payday or Togai, you can obtain the account ID.
+
+* In Togai, go to Customers, select an account, and find the  invoice ID under Billing.
+* Payday invoice ID is added as a setting for that invoice
+* Use invoice ID to reference the invoice in Payday, or vice versa.
+
+By following this API guide, you can leverage the Togai and Payday Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.
