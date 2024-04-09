@@ -234,7 +234,7 @@
             "docs/integrations/communications/aws-ses",
             "docs/integrations/communications/slack",
             "docs/integrations/communications/smtp",
-            "/docs/integrations/communications/ms-exchange-online"
+            "docs/integrations/communications/ms-exchange-online"
           ]
         },
         {
