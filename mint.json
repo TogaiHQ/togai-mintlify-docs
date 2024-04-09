@@ -181,7 +181,7 @@
             "docs/integrations/payments/adyen",
             "docs/integrations/payments/paystack",
             "docs/integrations/payments/razorpay",
-            "/docs/integrations/payments/verifone"
+            "docs/integrations/payments/verifone"
           ]
         },
         {
@@ -215,7 +215,7 @@
             "docs/integrations/accounting-and-erp/xero",
             "docs/integrations/accounting-and-erp/odoo",
             "docs/integrations/accounting-and-erp/zohobooks",
-            "/docs/integrations/accounting-and-erp/payday"
+            "docs/integrations/accounting-and-erp/payday"
           ]
         },
         {
