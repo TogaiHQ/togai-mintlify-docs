@@ -180,8 +180,8 @@
             "docs/integrations/payments/stripe",
             "docs/integrations/payments/adyen",
             "docs/integrations/payments/paystack",
-            "docs/integrations/payments/razorpay"
-            
+            "docs/integrations/payments/razorpay",
+            "/docs/integrations/payments/verifone"
           ]
         },
         {
@@ -214,7 +214,8 @@
             "docs/integrations/accounting-and-erp/sage",
             "docs/integrations/accounting-and-erp/xero",
             "docs/integrations/accounting-and-erp/odoo",
-            "docs/integrations/accounting-and-erp/zohobooks"
+            "docs/integrations/accounting-and-erp/zohobooks",
+            "/docs/integrations/accounting-and-erp/payday"
           ]
         },
         {
@@ -232,7 +233,8 @@
           "pages": [
             "docs/integrations/communications/aws-ses",
             "docs/integrations/communications/slack",
-            "docs/integrations/communications/smtp"
+            "docs/integrations/communications/smtp",
+            "/docs/integrations/communications/ms-exchange-online"
           ]
         },
         {
