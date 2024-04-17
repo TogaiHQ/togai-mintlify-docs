@@ -82,6 +82,12 @@
       "name": "Postman collection",
       "icon": "folder-open",
       "url": "https://www.postman.com/togai-workspace/workspace/togai-public"
+    },
+    {
+      "name": "Open API spec",
+      "icon": "brackets-curly",
+      "iconType": "solid",
+      "url": "https://github.com/TogaiHQ/togai-mintlify-docs/blob/main/openapi.yaml"
     }
   ],
   "versions": [
