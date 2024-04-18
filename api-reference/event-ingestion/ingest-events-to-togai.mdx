@@ -1,3 +1,51 @@
 ---
 openapi: post /ingest
 ---
+
+
+## Pre-Defined event types other than raw events
+<Info>
+<ol>
+  <li>
+    **Named License Event:** For ingesting named license related events.
+    <ul>
+        <li>
+            **Schema Name:** togai-named-license
+        </li>
+        <li>
+            **Required dimensions**:
+            <ol>
+                <li>**license_id:** ID of the license</li>
+                <li>**name:** Unique name of the license</li>
+            </ol>
+        </li>
+        <li>
+            **Required attributes**:
+            <ol>
+                <li>**action:** Action performed on the license, supported values are <code>1</code> or <code>-1</code> for add and remove respectively</li>
+            </ol>
+        </li>
+    </ul>
+  </li>
+  <li>
+    **Usage Event:** For ingesting usage directly to usage meters.
+    <ul>
+        <li>
+            **Schema Name:** togai-usage
+        </li>
+        <li>
+            **Required dimensions**:
+            <ol>
+                <li>**usage_meter_id:** ID of the usage meter</li>
+            </ol>
+        </li>
+        <li>
+            **Required attributes**:
+            <ol>
+                <li>**usage:** Usage Value</li>
+            </ol>
+        </li>
+    </ul>
+  </li>
+</ol>
+</Info>
