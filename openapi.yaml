@@ -680,6 +680,7 @@ paths:
         - $ref: '#/components/parameters/start_date'
         - $ref: '#/components/parameters/end_date'
         - $ref: '#/components/parameters/include_price_plan_info'
+        - $ref: '#/components/parameters/compact'
       responses:
         '200':
           $ref: '#/components/responses/PricingSchedulePaginatedResponse'
@@ -2021,6 +2022,10 @@ paths:
             examples:
               IngestEventRequest:
                 $ref: '#/components/examples/IngestEventRequest'
+              NamedLicenseEventRequest:
+                $ref: '#/components/examples/NamedLicenseEventRequest'
+              UsageEventRequest:
+                $ref: '#/components/examples/UsageEventRequest'
         description: Request body to ingest events to Togai usage and billing management service.
         required: true
       responses:
@@ -3306,6 +3311,21 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         '429':
           $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    patch:
+      tags:
+        - Wallet
+      summary: Update wallet details for an account
+      description: Update wallet details for an account
+      operationId: updateWalletForAccount
+      parameters:
+        - $ref: '#/components/parameters/account_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateWalletRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/WalletBalanceResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
   /accounts/{account_id}/wallet/entries:
@@ -5137,7 +5157,7 @@ components:
           items:
             type: string
         pricePlanDetails:
-          $ref: '#/components/schemas/PricePlanDetailsWithoutRateCards'
+          $ref: '#/components/schemas/PricePlanDetails'
         pricingRules:
           type: array
           items:
@@ -5172,6 +5192,8 @@ components:
             - pricePlanId
           properties:
             pricePlanId:
+              type: string
+            pricePlanName:
               type: string
             pricePlanInfo:
               type: object
@@ -7053,31 +7075,6 @@ components:
               minItems: 1
               items:
                 $ref: '#/components/schemas/FixedFeeRateCard'
-    PricePlanDetailsWithoutRateCards:
-      type: object
-      required:
-        - supportedCurrencies
-        - activeCurrencies
-      properties:
-        supportedCurrencies:
-          type: array
-          uniqueItems: true
-          items:
-            type: string
-        activeCurrencies:
-          type: array
-          uniqueItems: true
-          readOnly: true
-          items:
-            type: string
-        pricingCycleConfig:
-          $ref: '#/components/schemas/PricingCycleConfig'
-        minimumCommitment:
-          $ref: '#/components/schemas/MinimumCommitment'
-        type:
-          $ref: '#/components/schemas/PricePlanType'
-        deferredRevenue:
-          type: boolean
     PricePlanType:
       type: string
       description: Type of price plan
@@ -7262,6 +7259,7 @@ components:
         - startDate
         - endDate
         - version
+        - isOverriden
       properties:
         id:
           type: string
@@ -7281,6 +7279,8 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/PricingRule'
+        isOverriden:
+          type: boolean
     ProratedRefundMode:
       type: string
       enum:
@@ -7427,6 +7427,8 @@ components:
       description: Payload for ingesting events
       type: object
       additionalProperties: false
+      required:
+        - event
       properties:
         event:
           $ref: '#/components/schemas/Event'
@@ -8370,6 +8372,16 @@ components:
       properties:
         topupAmount:
           type: number
+    UpdateWalletRequest:
+      type: object
+      description: Payload to update wallet of an account
+      additionalProperties: false
+      properties:
+        effectiveFrom:
+          type: string
+          format: date-time
+        status:
+          $ref: '#/components/schemas/WalletStatus'
     ExternalPaymentReference:
       type: object
       description: external payment reference object
@@ -8620,6 +8632,8 @@ components:
           type: string
         ruleId:
           type: string
+        ruleName:
+          type: string
         order:
           type: integer
           format: int32
@@ -8740,6 +8754,11 @@ components:
           type: string
           format: date-time
           example: '2021-01-01T00:00:00Z'
+    WalletStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
     WalletBalanceResponse:
       description: Wallet Balance response
       type: object
@@ -8747,8 +8766,9 @@ components:
       required:
         - id
         - accountId
+        - effectiveFrom
+        - status
         - customerId
-        - purpose
         - balance
         - creditUnit
       properties:
@@ -8772,12 +8792,13 @@ components:
         externalId:
           type: string
         status:
-          type: string
-          enum:
-            - ACTIVE
+          $ref: '#/components/schemas/WalletStatus'
         holdAmount:
           type: number
           example: 500
+        effectiveFrom:
+          type: string
+          format: date-time
         createdAt:
           type: string
           format: date-time
@@ -8855,6 +8876,7 @@ components:
         - invoiceType
         - totalAmount
         - paidAmount
+        - netTermDays
       properties:
         id:
           description: Identifier of invoice
@@ -8945,6 +8967,9 @@ components:
           type: number
         invoiceDetails:
           $ref: '#/components/schemas/InvoiceDetails'
+        netTermDays:
+          type: integer
+          description: Number of days from the invoice date after which an invoice is considered overdue.
     Invoice:
       description: Structure of invoice
       type: object
@@ -8958,6 +8983,7 @@ components:
         - invoiceType
         - totalAmount
         - paidAmount
+        - netTermDays
       properties:
         id:
           description: Identifier of invoice
@@ -9075,6 +9101,9 @@ components:
           type: number
         paidAmount:
           type: number
+        netTermDays:
+          type: integer
+          description: Number of days from the invoice date after which an invoice is considered overdue.
     Payment:
       description: Payment object
       type: object
@@ -9082,7 +9111,7 @@ components:
       required:
         - id
         - accountId
-        - externalPaymentReference
+        - externalPaymentReferences
         - lineItemRecords
         - totalAmount
         - currency
@@ -9911,7 +9940,7 @@ components:
           schema:
             $ref: '#/components/schemas/WalletBalanceResponse'
           examples:
-            CreditBalanceResponse:
+            WalletBalanceResponse:
               $ref: '#/components/examples/WalletBalanceResponse'
     WalletEntriesPaginatedResponse:
       description: Response for Credit Balance Request
@@ -10001,6 +10030,13 @@ components:
       schema:
         type: string
         example: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    compact:
+      in: query
+      name: compact
+      required: false
+      schema:
+        type: boolean
+        example: false
     dry_run:
       in: query
       name: dry_run
@@ -11996,6 +12032,7 @@ components:
             startDate: '1970-01-01T00:00:00Z'
             endDate: '9999-01-01T00:00:00Z'
             version: 1
+            isOverriden: false
             pricePlanDetails:
               supportedCurrencies:
                 - USD
@@ -12220,6 +12257,7 @@ components:
             version: 1
             startDate: '2080-10-04T00:00:00Z'
             endDate: '2099-10-04T00:00:00Z'
+            isOverriden: false
             pricePlanDetails:
               supportedCurrencies:
                 - USD
@@ -12259,6 +12297,7 @@ components:
                   - currency: USD
                     rate: 10
         nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+        previousToken: eyJwYXlsb2FkIjp7InN0YXJ0X2RhdGUiOiInsic3RhcnRfZGF0ZWxsfSwidG9rZW5UeXBlIjoiUifQ==
     Setting:
       value:
         id: UserSetting
@@ -12543,6 +12582,33 @@ components:
             location: Seattle
             costCenterCode: '1234'
             travelType: Business
+    UsageEventRequest:
+      summary: example named license event ingestion request
+      value:
+        event:
+          id: 42162b5e-22f6-4cd3-a9d9-019ba2c485c1
+          timestamp: '2024-04-18T16:00:17'
+          accountId: customer@biswa
+          schemaName: togai-usage
+          dimensions:
+            usage_meter_id: um.21UFaN6gpmS.RAbFG
+          attributes:
+            - name: usage
+              value: '10'
+    NamedLicenseEventRequest:
+      summary: example usage event ingestion request
+      value:
+        event:
+          id: id-123
+          timestamp: '2024-04-18T13:23:55'
+          accountId: sampleID
+          schemaName: togai-named-license
+          dimensions:
+            license_id: addon.sample.sample
+            name: unique_name
+          attributes:
+            - name: action
+              value: '1'
     IngestEventBatchRequest:
       summary: example batch event ingestion request
       value:
@@ -12831,26 +12897,25 @@ components:
         accountId: acc123
         currency: USD
         externalPaymentReferences:
-          - sourceName: XYZ Company
-            sourceType: CARD
-            transactionNumber: TXN123
-            description: Card payment
+          sourceName: XYZ Company
+          sourceType: CARD
+          transactionNumber: TXN123
+          description: Card payment
         lineItemRecords:
           - togaiId: inv.234.12efwe
             amount: 1000
             type: INVOICE
-            source: MANUAL
+            order: 1
           - togaiId: inv.235.12efwe
             amount: 600
             type: INVOICE
-            source: MANUAL
+            order: 2
           - togaiId: cred.236.12efwe
             amount: 100
             type: CREDIT
-            source: MANUAL
+            order: 3
         totalAmount: 1700
         version: 1
-        isLatest: true
         createdBy: user123
         createdAt: '2023-01-01T12:00:00'
     ListPaymentResponse:
@@ -12863,23 +12928,23 @@ components:
             accountId: acc123
             currency: USD
             externalPaymentReferences:
-              - sourceName: XYZ Company
-                sourceType: CARD
-                transactionNumber: TXN123
-                description: Card payment
+              sourceName: XYZ Company
+              sourceType: CARD
+              transactionNumber: TXN123
+              description: Card payment
             lineItemRecords:
               - togaiId: inv.234.12efwe
                 amount: 1000
                 type: INVOICE
-                source: MANUAL
+                order: 1
               - togaiId: inv.235.12efwe
                 amount: 600
                 type: INVOICE
-                source: MANUAL
+                order: 2
               - togaiId: cred.236.12efwe
                 amount: 100
                 type: CREDIT
-                source: MANUAL
+                order: 3
             totalAmount: 1700
             version: 1
             createdBy: user123
@@ -12890,7 +12955,7 @@ components:
         id: inv.hkgkgyh.ghg
         sequenceId: 2020-07-2958
         customerId: 7VcRw9xZDIqsC5E
-        accountId: ACC001
+        ownerId: ACC001
         usageInfo:
           - description: rides - local
             type: USAGE_METER_USAGE
@@ -12901,57 +12966,67 @@ components:
             value: 5
             units: USAGE_UNITS
         revenueInfo:
-          description: Total amount due
-          type: NET_REVENUE
+          description: Grand Total Amount
+          type: GRAND_TOTAL_AMOUNT
           units: USD
           value: 881.94
           lineItems:
-            - description: Sum Total
-              type: GROSS_REVENUE
+            - description: Total Amount
+              type: TOTAL_AMOUNT
               units: USD
-              value: 981.94
+              value: 881.94
               lineItems:
-                - description: Payout_NEFT
-                  type: USAGE_RATE_CARD_REVENUE
+                - description: Total amount due
+                  type: NET_AMOUNT
                   units: USD
-                  value: 392.1
+                  value: 881.94
                   lineItems:
-                    - description: Slab 1
-                      type: USAGE_RATE_CARD_SLAB_REVENUE
-                      valuePerQuantity: 0.001
-                      quantity: 10000
+                    - description: Sum Total
+                      type: GROSS_AMOUNT
                       units: USD
-                      value: 10
-                    - description: Slab 2
-                      type: USAGE_RATE_CARD_SLAB_REVENUE
-                      valuePerQuantity: 0.001
-                      quantity: 10000
-                      units: USD
-                      value: 10
-                - description: Payout IMPS
-                  type: USAGE_RATE_CARD_REVENUE
-                  valuePerQuantity: 0.001
-                  quantity: 32109
-                  units: USD
-                  value: 589.94
-                  lineItems:
-                    - description: Slab 1
-                      type: USAGE_RATE_CARD_SLAB_REVENUE
-                      valuePerQuantity: 0.001
-                      quantity: 10000
-                      units: USD
-                      value: 10
-                    - description: Slab 2
-                      type: USAGE_RATE_CARD_SLAB_REVENUE
-                      valuePerQuantity: 0.001
-                      quantity: 10000
-                      units: USD
-                      value: 10
+                      value: 981.94
+                      lineItems:
+                        - description: Payout_NEFT
+                          type: USAGE_RATE_CARD_AMOUNT
+                          units: USD
+                          value: 392.1
+                          lineItems:
+                            - description: Slab 1
+                              type: USAGE_RATE_CARD_SLAB_AMOUNT
+                              valuePerQuantity: 0.001
+                              quantity: 10000
+                              units: USD
+                              value: 10
+                            - description: Slab 2
+                              type: USAGE_RATE_CARD_SLAB_AMOUNT
+                              valuePerQuantity: 0.001
+                              quantity: 10000
+                              units: USD
+                              value: 10
+                        - description: Payout IMPS
+                          type: USAGE_RATE_CARD_AMOUNT
+                          valuePerQuantity: 0.001
+                          quantity: 32109
+                          units: USD
+                          value: 589.94
+                          lineItems:
+                            - description: Slab 1
+                              type: USAGE_RATE_CARD_SLAB_AMOUNT
+                              valuePerQuantity: 0.001
+                              quantity: 10000
+                              units: USD
+                              value: 10
+                            - description: Slab 2
+                              type: USAGE_RATE_CARD_SLAB_AMOUNT
+                              valuePerQuantity: 0.001
+                              quantity: 10000
+                              units: USD
+                              value: 10
         invoiceDetails:
           customer:
             name: John Doe
             primaryEmail: john@togai.com
-            billingAddress:
+            address:
               line1: 2281 Broadway Street
               line2: G-31
               postalCode: '29501'
@@ -12960,22 +13035,40 @@ components:
               country: US
           account:
             name: Togai
+            address:
+              line1: 2281 Broadway Street
+              line2: G-31
+              postalCode: '29501'
+              city: Florence
+              state: South Carolina
+              country: US
+            primaryEmail: john@togai.com
             invoiceCurrency: USD
           pricePlanName: Togai Basic
+        totalAmount: 881.94
+        paidAmount: 0
+        invoiceClass: INVOICE
+        invoiceType: STANDARD
         status: DUE
+        finalizingStatus: FINALIZED
         startDate: '2020-07-04T12:00:00.000Z'
-        endDate: '2020-07-04T12:00:00.000Z'
-        invoiceDate: '2020-07-04T12:00:00.000Z'
-        generatedAt: '2020-07-04T12:00:00.000Z'
-        updatedAt: '2020-07-04T12:00:00.000Z'
+        endDate: '2020-08-04T12:00:00.000Z'
+        invoiceDate: '2020-08-04T12:00:00.000Z'
+        generatedAt: '2020-08-04T12:00:00.000Z'
+        updatedAt: '2020-08-04T12:00:00.000Z'
     ListInvoicesResponse:
       summary: A sample ListInvoicesResponse
       value:
         data:
           - id: inv.hkgkgyh.ghg
             customerId: 7VcRw9xZDIqsC5E
-            accountId: ACC001
+            ownerId: ACC001
+            invoiceClass: INVOICE
+            invoiceType: AD_HOC
             status: DUE
+            finalizingStatus: FINALIZED
+            totalAmount: 100
+            paidAmount: 0
             startDate: '2020-07-04T12:00:00.000Z'
             endDate: '2020-07-04T12:00:00.000Z'
             invoiceDate: '2020-07-04T12:00:00.000Z'
@@ -13023,10 +13116,9 @@ components:
         status: VOIDED
         createdAt: '2024-03-13T12:33:39.986252Z'
         applicableEntityIds: []
-        effectiveUntil: null
+        effectiveUntil: '2025-03-06'
         creditAmount: 10
         grantorId: addon.22IZs2ZVEnw.0zDFe
-        idempotencyKey: null
         creditUnit: USD
         holdAmount: 0
         consumedAmount: 0
@@ -13097,18 +13189,26 @@ components:
           description: Card payment
         lineItemRecords:
           - togaiId: inv.234.12efwe
+            order: 1
             amount: 1000
             type: INVOICE
           - togaiId: inv.236.12efwe
+            order: 2
             amount: 500
             type: INVOICE
           - togaiId: cred.236.12efwe
+            order: 3
             amount: 200
             type: CREDIT
     TopupWalletRequest:
       summary: A sample for TopupWalletRequest
       value:
         topupAmount: 50
+    UpdateWalletRequest:
+      summary: A sample for UpdateWalletRequest
+      value:
+        effectiveFrom: '2023-02-04T00:00:00Z'
+        status: ACTIVE
     ManageMiscellaneousChargesRequest:
       summary: A sample for ManageMiscellaneousChargesRequest
       value:
@@ -13131,15 +13231,14 @@ components:
         availableBalance: 800
         runningBalance: 700
         inapplicableCredits: 100
-        units: USD
+        unit: USD
         lastUpdatedAt: '2020-07-04T12:00:00.000Z'
     WalletBalanceResponse:
-      summary: A sample for CreditBalanceResponse
+      summary: A sample for WalletBalanceResponse
       value:
         id: wallet.1223.sf23f
         accountId: ACC001
         customerId: CUST001
-        availableBalance: PREPAID_CREDIT
         balance: 500
         creditUnit: USD
         externalId: ext_id_123
@@ -13171,16 +13270,14 @@ components:
         status: DRAFT
         lineItems:
           - description: Payout IMPS
-            type: CUSTOM_AMOUNT
             valuePerQuantity: 0.001
             quantity: 32109
-            units: USD
     UpdateInvoiceRequest:
       summary: A sample for UpdateInvoiceRequest
       value:
         startDate: '2020-06-04T12:00:00.000Z'
         endDate: '2020-07-04T12:00:00.000Z'
-        status: DRAFT
+        status: DUE
         lineItems:
           - description: Payout IMPS
             valuePerQuantity: 0.001
@@ -13637,6 +13734,15 @@ components:
           examples:
             CreatePaymentRequest:
               $ref: '#/components/examples/TopupWalletRequest'
+    UpdateWalletRequest:
+      description: Payload to update wallet of an account
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateWalletRequest'
+          examples:
+            CreatePaymentRequest:
+              $ref: '#/components/examples/UpdateWalletRequest'
     ManageMiscellaneousChargesRequest:
       description: Payload to update custom line items
       content:
