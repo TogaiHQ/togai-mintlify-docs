@@ -401,7 +401,8 @@
             "api-reference/price-plans/activate-a-price-plan",
             "api-reference/price-plans/add-currencies-to-a-price-plan",
             "api-reference/price-plans/remove-a-draft-currency-from-a-price-plan",
-            "api-reference/price-plans/create-a-price-plan-migration"
+            "api-reference/price-plans/create-a-price-plan-migration",
+            "api-reference/price-plans/archive-a-price-plan"
           ]
         },
         {

@@ -1343,6 +1343,30 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+
+    delete:
+      tags:
+        - Price Plans
+      summary: Archive a price plan
+      description: Archive a price plan
+      operationId: archivePricePlan
+      parameters:
+        - $ref: '#/components/parameters/price_plan_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/BaseSuccessResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /price_plans/{price_plan_id}/activate:
     post:
       tags:
