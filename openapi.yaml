@@ -1343,7 +1343,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-
     delete:
       tags:
         - Price Plans
@@ -2097,8 +2096,8 @@ paths:
         - Event Ingestion
       summary: Ingest events to Togai in batch
       description: |-
-        This API let’s you to ingest events in batch upto 1000 events.
-        Ingest large amounts of events up to 1000 in batches in an array using this API.
+        This API let’s you to ingest events in batch upto 500 events.
+        Ingest large amounts of events up to 500 in batches in an array using this API.
       operationId: ingestBatch
       requestBody:
         content:
@@ -4708,8 +4707,6 @@ components:
       required:
         - sourceId
         - sourceVersion
-        - targetId
-        - targetVersion
         - migrationMode
       properties:
         sourceId:
@@ -6768,7 +6765,7 @@ components:
       additionalProperties:
         type: string
         minLength: 1
-        maxLength: 50
+        maxLength: 200
         example:
           Country: India
     EntitlementOverageRateCard:
@@ -7897,6 +7894,7 @@ components:
             - INGESTION_FAILED_DUPLICATE_EVENT
             - INGESTION_FAILED_NO_EVENT_ID
             - INGESTION_FAILED_INVALID_NAMED_LICENSE_EVENT
+            - INGESTION_FAILED_INSUFFICIENT_CREDITS
             - REVERTED
             - UNKNOWN
           example: INGESTION_COMPLETED
@@ -8185,6 +8183,7 @@ components:
             EVENT_STATUS 
             SCHEMA_NAME 
             USAGE_METER_ID 
+            RAW_EVENT_STATUS
             Please refer the table above for the list of combinations allowed in the groupBy
         configs:
           description: |
@@ -8207,27 +8206,27 @@ components:
             title: MetricQueryFilterEntry
             description: |
 
-              | Metric Name       | FilterEntry Name |    Allowed groupBy fields                 |      Default Values      |                 Allowed Values                  |
-              |-------------------|------------------|-------------------------------------------|--------------------------|-------------------------------------------------|
-              | EVENTS            | ACCOUNT_ID       | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<one or more valid account IDs>               |
-              | EVENTS            | CUSTOMER_ID      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<one or more valid customer IDs>              |
-              | EVENTS            | SCHEMA_NAME      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | None                     | *\<at most one valid schema names>              |
-              | EVENTS            | EVENT_STATUS     | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME,    | [PROCESSED, UNPROCESSED] | oneOrMoreOf PROCESSED, UNPROCESSED, IN_PROGRESS |
-              | USAGE             | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-              | USAGE             | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-              | USAGE             | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-              | REVENUE           | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-              | REVENUE           | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-              | REVENUE           | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-              | EVENTS            | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | <From auth token>        |                                                 |
-              | USAGE             | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | <From auth token>        |                                                 |
-              | REVENUE           | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | <From auth token>        |                                                 |
-              | USAGE_FOR_CYCLE   | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-              | USAGE_FOR_CYCLE   | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-              | USAGE_FOR_CYCLE   | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
-              | REVENUE_FOR_CYCLE | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid account IDs>               |
-              | REVENUE_FOR_CYCLE | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid customer IDs>              |
-              | REVENUE_FOR_CYCLE | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID   | None                     | *\<one or more valid usage meter name>          |
+              | Metric Name       | FilterEntry Name |    Allowed groupBy fields                               |      Default Values      |                 Allowed Values                                  |
+              |-------------------|------------------|---------------------------------------------------------|--------------------------|-----------------------------------------------------------------|
+              | EVENTS            | ACCOUNT_ID       | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<one or more valid account IDs>                               |
+              | EVENTS            | CUSTOMER_ID      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<one or more valid customer IDs>                              |
+              | EVENTS            | SCHEMA_NAME      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<at most one valid schema names>                              |
+              | EVENTS            | EVENT_STATUS     | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | [PROCESSED, UNPROCESSED] | oneOrMoreOf PROCESSED, UNPROCESSED, IN_PROGRESS, IngestionStatus|      
+              | USAGE             | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | USAGE             | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | USAGE             | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE           | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | REVENUE           | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | REVENUE           | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | EVENTS            | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | USAGE             | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | REVENUE           | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | USAGE_FOR_CYCLE   | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | USAGE_FOR_CYCLE   | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | USAGE_FOR_CYCLE   | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE_FOR_CYCLE | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | REVENUE_FOR_CYCLE | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | REVENUE_FOR_CYCLE | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
             additionalProperties: false
             required:
               - fieldName
@@ -8856,6 +8855,7 @@ components:
         - id
         - walletId
         - transactionType
+        - status
         - amount
         - createdAt
         - closingBalance
@@ -8876,6 +8876,12 @@ components:
             - CREDITED
             - DEBITED
           example: CREDITED
+        status:
+          type: string
+          enum:
+            - COMPLETED
+            - ON_HOLD
+          example: COMPLETED
         entityId:
           type: string
         amount:
