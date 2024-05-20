@@ -13,9 +13,9 @@ The integration between Zuora and Togai requires only a one-time setup. Follow t
 * Select `Zuora` from the available apps
 * Click on the `+Add connection` button
 
-![](/docs/integrations/images/eb4f882-image.png) 
+![](/docs/integrations/images/zuora_applink.png)
 
-* Fill in the following details to create a connection:
+ * Fill in the following details to create a connection:
    * **App link name**: Name for the connection
    * **Endpoint URL:** The Zuora endpoint that is required to fetch the data. 
    <Tip>
@@ -26,21 +26,49 @@ The integration between Zuora and Togai requires only a one-time setup. Follow t
    <Tip>
       Refer to the Zuora documentation on [how to create an OAuth Client for a User](https://knowledgecenter.zuora.com/Zuora%5FCentral%5FPlatform/Tenant%5FManagement/A%5FAdministrator%5FSettings/Manage%5FUsers#Create%5Fan%5FOAuth%5FClient%5Ffor%5Fa%5FUser), which has instructions on how to create a client.
    </Tip>
-   * **Charge ID:** This is an optional field. If you want to sync the credits to Zuora from Togai, then credits will be added against this Zuora `Charge Id`.
 
+
+## Zuora Webhook Creation guide
+   1. Go to `Setting Billing -> Setup Profiles, Notifications and Email Templates`
+   2. Go to `Custom Events` tab. Create Custom Event for `account create` if not already present
+   3. Go to `Notifications` tab. Create a notification callout using the custom event.
+      Add Account.Id in mergefields
+      Add the webhook endpoint URL
+   4. Select method as `POST`
+   5. Click on preview post body. Add custom post body for webhook.
+```json title="custom_post_body.json"
+{
+  "AccountId": "{{Account.Id}}"
+}
+```
 
 ## Flows
 
-![](/docs/integrations/images/b1ecc3d-image.png)
+![](/docs/integrations/images/zuora_flows.png)
 
-### 1. Sync customers created from Zuora to Togai  
+### 1. Sync customers from Zuora to Togai  
    1. The flow listens to the webhook for customer creation in Zuora.
    2. If a webhook for customer creation exists, Togai listens and automatically creates a corresponding customer in Togai and syncs the customer ID between Togai and Zuora.  
    3. You can see this mapping of IDs in the Settings tab for that customer.
 
-### 2. Sync subscriptions in Zuora to Togai  
-   1. When a Subscription is created in Zuora, the corresponding price plan will be created in Togai  .
-   2. The price plan will then be associated to the specific account inside Togai. 
-   3. You can see the mapping of customer ID betwee Zuora and Togai in the Settings tab of that customer inside Togai
+### 2. Sync accounts from Togai to Zuora 
+   1. When an account is created in Togai, corresponding customer account is created in Zuora
+   2. You can see this mapping of IDs in the Settings tab for that account in Togai.
+
+### 3. Togai - Zuora Invoice Sync 
+   1. Event data is ingested into Togai using Togai APIs.
+   2. At the end of the billing cycle, an invoice in Togai is automatically generated. You can see this invoice in the ‘Invoices’ section
+   3. When the ongoing invoice gets converted into a generated invoice, the invoice is synced from Togai to Zuora as a standalone invoice under the corresponding customer account in Zuora.
+
+### 4. Togai - Zuora Sync Usage Quantity
+   1. When the ongoing invoice gets converted into a generated invoice, the usage component in the invoice is synced to zuora as usage
+   2. Togai usage quantity is synced as zuora quantity and per_unit amount is synced as well
+   3. The subscription and charge ID's are mapped as settings for the corresponding usage meter in Togai.
+
+### 5. Togai - Zuora Sync Usage Quantity
+   1. When the ongoing invoice gets converted into a generated invoice, the usage component in the invoice is synced to zuora as usage
+   2. Togai usage revenue is synced as zuora quantity and per_unit amount is marked as 1.
+   3. The subscription and charge ID's are mapped as settings for the corresponding usage meter in Togai.
+
 
 By following this API guide, you can leverage the Togai and Zuora Integration to automate processes, save time on manual tasks, and ensure seamless data synchronization.
