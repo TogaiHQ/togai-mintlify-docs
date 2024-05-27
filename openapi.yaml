@@ -3847,6 +3847,12 @@ components:
             $ref: '#/components/schemas/DimensionsSchema'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        filterFields:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+          description: List of fields that can be used for filtering in usage meter
         eventIdTemplate:
           description: Template used to generate event id based on event payload
           type: string
@@ -3871,8 +3877,25 @@ components:
             $ref: '#/components/schemas/DimensionsSchema'
         enrichments:
           $ref: '#/components/schemas/Enrichments'
+        filterFields:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
+          description: List of fields that can be used for filtering in usage meter
         eventIdTemplate:
           description: Template used to generate event id based on event payload
+          type: string
+    UsageMeterFilterEntry:
+      description: Filter entry with field and value
+      type: object
+      required:
+        - field
+        - value
+      properties:
+        field:
+          type: string
+        value:
           type: string
     CreateUsageMeterRequest:
       description: Request to create usage meter
@@ -3896,17 +3919,18 @@ components:
           description: Description of the usage meter
           type: string
           maxLength: 255
+        filters:
+          description: The usage meter's applicability will be determined by comparing the filter condition agianst the events.
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageMeterFilterEntry'
         type:
           description: Type of usage meter
           type: string
           enum:
             - COUNTER
         aggregation:
-          description: Aggregation to be applied on usage meter result
-          type: string
-          enum:
-            - COUNT
-            - SUM
+          $ref: '#/components/schemas/UsageMeterAggregation'
         computations:
           type: array
           items:
@@ -3943,18 +3967,15 @@ components:
             - COUNTER
           example: COUNTER
         aggregation:
-          description: |
-            Aggregation to be applied on usage meter result
-            * COUNT - Counts number of events matching the usage meter
-            * SUM - Sums up results of computation of all events matching usage meter
-          type: string
-          enum:
-            - COUNT
-            - SUM
+          $ref: '#/components/schemas/UsageMeterAggregation'
         computations:
           type: array
           items:
             $ref: '#/components/schemas/Computation'
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageMeterFilterEntry'
     CreatePricePlanRequest:
       description: Request to create a price plan
       type: object
@@ -5747,6 +5768,11 @@ components:
           items:
             $ref: '#/components/schemas/DimensionsSchema'
           uniqueItems: true
+        filterFields:
+          type: array
+          uniqueItems: true
+          items:
+            type: string
         featureDetails:
           $ref: '#/components/schemas/FeatureDetails'
         enrichments:
@@ -5863,6 +5889,15 @@ components:
         order:
           type: integer
           format: int32
+    UsageMeterAggregation:
+      description: |
+        Aggregation to be applied on usage meter result
+        * COUNT - Counts number of events matching the usage meter
+        * SUM - Sums up results of computation of all events matching usage meter
+      type: string
+      enum:
+        - COUNT
+        - SUM
     UsageMeter:
       description: Structure of usage meter
       type: object
@@ -5899,6 +5934,10 @@ components:
           type: string
           maxLength: 255
           example: Meter to track cab rides
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageMeterFilterEntry'
         type:
           description: Type of usage meter
           type: string
@@ -5915,11 +5954,7 @@ components:
             - ARCHIVED
           example: DRAFT
         aggregation:
-          description: Aggregation to be applied on usage meter result
-          type: string
-          enum:
-            - COUNT
-            - SUM
+          $ref: '#/components/schemas/UsageMeterAggregation'
         computations:
           type: array
           minItems: 0
@@ -6957,6 +6992,8 @@ components:
           description: A tag string to group licenseRateCards
         invoiceTiming:
           $ref: '#/components/schemas/InvoiceTiming'
+        usageCycle:
+          $ref: '#/components/schemas/UsageCycleInterval'
         enableProration:
           type: boolean
           example: false
@@ -7116,14 +7153,7 @@ components:
         - gracePeriod
       properties:
         interval:
-          type: string
-          description: Interval field allow you to define the billing interval you would like to set
-          enum:
-            - WEEKLY
-            - MONTHLY
-            - QUARTERLY
-            - HALF_YEARLY
-            - ANNUALLY
+          $ref: '#/components/schemas/PricingCycleInterval'
         startOffset:
           type: object
           description: |
@@ -7208,6 +7238,15 @@ components:
               - 28th Feb  - {dayOffset: LAST, monthOffset: 2}
               - 15th Aug - {dayOffset: 15, monthOffset: 8}
               - 15th Dec - {dayOffset: 15, monthOffset: 12}
+    PricingCycleInterval:
+      type: string
+      description: Interval field allow you to define the billing interval you would like to set
+      enum:
+        - WEEKLY
+        - MONTHLY
+        - QUARTERLY
+        - HALF_YEARLY
+        - ANNUALLY
     PricingModel:
       type: string
       description: |
@@ -7422,6 +7461,15 @@ components:
           type: object
           additionalProperties:
             type: string
+    UsageCycleInterval:
+      type: string
+      description: Interval field allow you to define the billing interval you would like to set
+      enum:
+        - WEEKLY
+        - MONTHLY
+        - QUARTERLY
+        - HALF_YEARLY
+        - ANNUALLY
     UsageRateCard:
       type: object
       required:
@@ -8138,13 +8186,17 @@ components:
       description: |
         Define the metric you would like to get - allowed options are
         EVENTS - Aggregation of raw events,
-        USAGE - Aggregated usage value from Usage meters,
+        USAGE - Default to METER_USAGE. To be deprecated soon,
+        METER_USAGE - Aggregated usage value from Usage meters,
+        NAMED_LICENSE_USAGE - Aggregated usage value from Named Licenses,
         REVENUE - Aggregated revenue value from Pricing Plans
         USAGE_FOR_CYCLE - Usage in pricing cycle
         REVENUE_FOR_CYCLE - Revenue in pricing cycle
       enum:
         - EVENTS
         - USAGE
+        - METER_USAGE
+        - NAMED_LICENSE_USAGE
         - REVENUE
         - USAGE_FOR_CYCLE
         - REVENUE_FOR_CYCLE
@@ -8182,7 +8234,8 @@ components:
             ACCOUNT_ID
             EVENT_STATUS 
             SCHEMA_NAME 
-            USAGE_METER_ID 
+            USAGE_METER_ID [Use BILLABLE_ID as this will be deprecated soon...]
+            BILLABLE_ID
             RAW_EVENT_STATUS
             Please refer the table above for the list of combinations allowed in the groupBy
         configs:
@@ -8206,27 +8259,31 @@ components:
             title: MetricQueryFilterEntry
             description: |
 
-              | Metric Name       | FilterEntry Name |    Allowed groupBy fields                               |      Default Values      |                 Allowed Values                                  |
-              |-------------------|------------------|---------------------------------------------------------|--------------------------|-----------------------------------------------------------------|
-              | EVENTS            | ACCOUNT_ID       | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<one or more valid account IDs>                               |
-              | EVENTS            | CUSTOMER_ID      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<one or more valid customer IDs>                              |
-              | EVENTS            | SCHEMA_NAME      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | None                     | *\<at most one valid schema names>                              |
-              | EVENTS            | EVENT_STATUS     | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS | [PROCESSED, UNPROCESSED] | oneOrMoreOf PROCESSED, UNPROCESSED, IN_PROGRESS, IngestionStatus|      
-              | USAGE             | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
-              | USAGE             | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
-              | USAGE             | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
-              | REVENUE           | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
-              | REVENUE           | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
-              | REVENUE           | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
-              | EVENTS            | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
-              | USAGE             | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
-              | REVENUE           | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | <From auth token>        |                                                                 |
-              | USAGE_FOR_CYCLE   | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
-              | USAGE_FOR_CYCLE   | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
-              | USAGE_FOR_CYCLE   | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
-              | REVENUE_FOR_CYCLE | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
-              | REVENUE_FOR_CYCLE | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
-              | REVENUE_FOR_CYCLE | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | Metric Name       | FilterEntry Name |    Allowed groupBy fields                                           |      Default Values      |                 Allowed Values                                  |
+              |-------------------|------------------|---------------------------------------------------------------------|--------------------------|-----------------------------------------------------------------|
+              | EVENTS            | ACCOUNT_ID       | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS             | None                     | *\<one or more valid account IDs>                               |
+              | EVENTS            | CUSTOMER_ID      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS             | None                     | *\<one or more valid customer IDs>                              |
+              | EVENTS            | SCHEMA_NAME      | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS             | None                     | *\<at most one valid schema names>                              |
+              | EVENTS            | EVENT_STATUS     | ACCOUNT_ID, EVENT_STATUS, SCHEMA_NAME, RAW_EVENT_STATUS             | [PROCESSED, UNPROCESSED] | oneOrMoreOf PROCESSED, UNPROCESSED, IN_PROGRESS, IngestionStatus|      
+              | USAGE             | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | USAGE             | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | USAGE             | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | USAGE             | BILLABLE_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE           | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | REVENUE           | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | REVENUE           | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE           | BILLABLE_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | EVENTS            | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | USAGE             | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | REVENUE           | ORGANIZATION_ID  | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | <From auth token>        |                                                                 |
+              | USAGE_FOR_CYCLE   | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | USAGE_FOR_CYCLE   | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | USAGE_FOR_CYCLE   | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | USAGE_FOR_CYCLE   | BILLABLE_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE_FOR_CYCLE | ACCOUNT_ID       | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid account IDs>                               |
+              | REVENUE_FOR_CYCLE | CUSTOMER_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid customer IDs>                              |
+              | REVENUE_FOR_CYCLE | USAGE_METER_ID   | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
+              | REVENUE_FOR_CYCLE | BILLABLE_ID      | ACCOUNT_ID, USAGE_METER_ID, BILLABLE_ID CUSTOMER_ID                 | None                     | *\<one or more valid usage meter name>                          |
             additionalProperties: false
             required:
               - fieldName
@@ -8337,6 +8394,54 @@ components:
               value:
                 type: string
                 description: Value of the feature
+    RevenueSummaryWithMetadata:
+      type: object
+      required:
+        - revenue
+      properties:
+        revenue:
+          type: number
+        revenueSummary:
+          description: |
+            Field: revenue is computed for all rate cards
+            Field: slabRevenues is supported for only usage/license
+            Field: metadata is populated based on application of rateConfig('minimumRate', 'maximumRate')
+          type: array
+          items:
+            $ref: '#/components/schemas/RevenueSummaryWithMetadata'
+        slabRevenues:
+          type: array
+          items:
+            $ref: '#/components/schemas/SlabRevenueWithMetadata'
+        metadata:
+          type: object
+          additionalProperties:
+            type: string
+    SlabRevenue:
+      type: object
+      required:
+        - order
+        - usage
+        - revenue
+      properties:
+        order:
+          type: integer
+          format: int32
+          minimum: 1
+          maximum: 10
+        usage:
+          type: number
+        revenue:
+          type: number
+    SlabRevenueWithMetadata:
+      allOf:
+        - $ref: '#/components/schemas/SlabRevenue'
+        - type: object
+          properties:
+            metadata:
+              type: object
+              additionalProperties:
+                type: string
     CreateCreditRequest:
       type: object
       description: payload to create credits
@@ -9206,6 +9311,7 @@ components:
             - ENTITLEMENT_OVERAGE_RATE_CARD_AMOUNT
             - ENTITLEMENT_OVERAGE_RATE_CARD_SLAB_AMOUNT
             - LICENSE_RATE_CARD_AMOUNT
+            - USAGE_CYCLE_AMOUNT
             - LICENSE_RATE_CARD_SLAB_AMOUNT
             - USAGE_RATE_CARD_AMOUNT
             - USAGE_RATE_CARD_SLAB_AMOUNT
@@ -9229,6 +9335,7 @@ components:
             - RATE_CONFIG_ADJUSTMENT_AMOUNT
             - TOTAL_TAX_AMOUNT
             - TAX_AMOUNT
+            - PROXY_AMOUNT
           description: |
             Type of the line item
             - GRAND_TOTAL_AMOUNT: Sum of all total amount of individual invoices in a grouped(composite) invoice
