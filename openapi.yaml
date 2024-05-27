@@ -7463,7 +7463,13 @@ components:
             type: string
     UsageCycleInterval:
       type: string
-      description: Interval field allow you to define the billing interval you would like to set
+      description: |
+        UsageCycleInterval field allows you to treat the billing interval as many smaller windows. Revenue is calculated for
+        each of the windows (usage cycles) and their sum is considered as the billing interval revenue.
+        Example: 1 Named License being used across entire billing interval. Rate Value: $1/license
+        CASE 1: Without usage cycle. $1 is charged for the entire billing cycle.
+        CASE 2: Usage cycle is configure to be WEEKLY and the billing interval has 4 weeks. In this case $1 is charged 
+        for each week totalling to $4 across for the billing interval
       enum:
         - WEEKLY
         - MONTHLY
