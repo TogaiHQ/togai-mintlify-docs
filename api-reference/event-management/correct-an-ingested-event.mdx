@@ -7,8 +7,8 @@ openapi: post /events/correction
 <Info>
 <ul>
   <li>**Sync mode:** Maximum of first 30 events matching the filters with the default sort order being 
-    **EVENT_SOURCE_TIME to DESC, EVENT_ID to ASC** can be corrected in a single request. </li>
-  <li>**Async mode:** When query parameter **async = true**, events matching the filters will be considered for correction and takes place in background. \
+    **EVENT_SOURCE_TIME DESC, EVENT_ID ASC** can be corrected in a single request. </li>
+  <li>**Async mode:** When query parameter **async = true** is given, events matching the filters will be considered for correction and takes place in background. \
   Status of background job can be obtained using [List Jobs API](api-reference/jobs/list-jobs)</li>
 </ul>
 </Info>
