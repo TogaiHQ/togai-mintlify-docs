@@ -6,8 +6,9 @@ openapi: post /events/correction
 <Warning>All matching events will be considered for correction</Warning>
 <Info>
 <ul>
-  <li>**Sync mode:** Maximum of 5 events matching the filters can be corrected in a request. </li>
-  <li>**Async mode:** Events matching the filters will be considered for correction and takes place in background. \
+  <li>**Sync mode:** Maximum of first 30 events matching the filters with the default sort order being 
+    **EVENT_SOURCE_TIME DESC, EVENT_ID ASC** can be corrected in a single request. </li>
+  <li>**Async mode:** When query parameter **async = true** is given, events matching the filters will be considered for correction and takes place in background. \
   Status of background job can be obtained using [List Jobs API](api-reference/jobs/list-jobs)</li>
 </ul>
 </Info>
@@ -29,6 +30,9 @@ openapi: post /events/correction
 </ParamField>
 <ParamField query="created_at" type="string">
   Timestamp corresponding to the event ingestion time in Togai
+</ParamField>
+<ParamField query="async" type="boolean">
+  Determines the mode of the correction. Defaults to false
 </ParamField>
 </Accordion>
 </AccordionGroup>
