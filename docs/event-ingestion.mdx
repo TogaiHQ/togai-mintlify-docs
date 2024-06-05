@@ -48,6 +48,8 @@ If your ingestion request to Togai fails with a network error or a 5xx HTTP stat
 
 <Warning>**Avoid retries on 4xx status code responses** - If a call to /ingest fails with a 4xx HTTP status code, this indicates an issue with the payload. Do not automatically retry such a call. Instead, put it aside in a dead letter queue and trigger an alarm so you can investigate the failure and resolve the issue. </Warning>
 
+More about the event statuses can be found at [event statuses](/docs/event_statuses)
+
 ## Event pipeline and auditing
 
 Togai provides a complete pipeline view for every event where you can see the data flow for the event from ingestion to usage tracking to revenue computation and invoice for a customer. This allows you to always have full visibility of your event data, audit them and also use it for debugging when required.

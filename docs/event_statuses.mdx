@@ -1,0 +1,83 @@
+---
+title: "Event Statuses"
+---
+
+## INGESTION_IN_PROGRESS
+1.  If the ingested event already exists and
+
+
+        - if it is an entitled event,
+
+
+            - if the status of the existing event is not IN_PROGRESS, we consider the ingested event as separate correction event and mark it as IN_PROGRESS
+
+
+            - else we do an event sha check to check if event is a duplicate. If found duplicate we mark it as INGESTION_FAILED_DUPLICATE_EVENT else we process the existing event.
+
+
+        - else
+            - on idempotency check success, we mark event as IN_PROGRESS
+
+
+            - else event is marked as INGESTION_FAILED_DUPLICATE_EVENT upon duplicate check
+
+
+    else we mark it as IN_PROGRESS
+
+## INGESTION_FAILED
+1. If the event is not of internal schema type and if the attributes or dimensions are missing in the event.
+2. On failure of getting the necessary details to process the events like schema, account etc.
+
+## INGESTION_FAILED_SCHEMA_NOT_DEFINED
+1. Upon processing an IN_PROGRESS event if the schema definition is not found
+2. Upon processing an IN_PROGRESS event internal schema defined task like named_license, usage events, if the name of the internal schema is mentioned wrong
+
+## INGESTION_FAILED_UNITS_INVALID
+1. On computation of usage from matched usage_meters, if the json logic parsing, evaluation, big decimal conversion of usage_units fails
+
+## INGESTION_COMPLETED_NO_MATCHING_METERS
+1. In case of entitledEvent from IN_PROGRESS state, if the presence of usageMeter is not found before ingestion of the entitled event
+2. In case of non named_license event, if there is no usage meters found.
+
+## INGESTION_COMPLETED_EVENT_METERED
+1. On succesful completion of named_license_event
+2. On succesful insertion of usage_metadata for any other event than named_license_event
+
+## INGESTION_COMPLETED_EVENT_NOT_METERED
+1. If no usage_metadata is generated
+
+## UNKNOWN
+1. On failure of transformation of valid event status number to IngestionStatus 
+
+## INGESTION_FAILED_ENRICHMENT_FAILED
+1. For entitled event in IN_PROGRESS, if enrichment processing fails
+
+## INGESTION_FAILED_PAST_GRACE_PERIOD
+1. On processing an IN_PROGRESS event, if the ingestion_timestamp is more than the cycle end date plus grace_period
+
+## INGESTION_FAILED_ACCOUNT_NOT_FOUND
+1. If the process of getting account details fails as a part of processing IN_PROGRESS events
+
+## INGESTION_FAILED_DUPLICATE_EVENT
+1. If insertion of usage_metadata, usage_entries, usage_for_cycle results in EntityAlreadyExistsException
+
+## REVERTED
+1. For undo event corrections, in case of existing event status not in (IN_PROGRESS, INGESTION_FAILED_DUPLICATE_EVENT, INGESTION_FAILED_INSUFFICIENT_CREDITS, REVERTED)
+2. For redo event corrections, in case of existing event status not in (IN_PROGRESS, INGESTION_FAILED_DUPLICATE_EVENT, REVERTED, INGESTION_FAILED_UNITS_INVALID, INGESTION_FAILED_PAST_GRACE_PERIOD)
+3. For redo_event event corrections, in case of existing event status not in (IN_PROGRESS, INGESTION_FAILED_DUPLICATE_EVENT, REVERTED, INGESTION_FAILED_UNITS_INVALID, INGESTION_FAILED_PAST_GRACE_PERIOD, INGESTION_FAILED_ACCOUNT_NOT_FOUND)
+
+## INGESTION_FAILED_NO_EVENT_ID
+1. If event with no id is received and there is no eventIdTemplate or eventIdTemplate parsing fails
+
+## INGESTION_FAILED_INVALID_NAMED_LICENSE_EVENT
+1. On processing an IN_PROGRESS named license event, if the event is not a valid internal event type
+
+## INGESTION_FAILED_INSUFFICIENT_CREDITS
+1. On processing an IN_PROGRESS event, if the event is not entitled and the schema has feature_details we try to deduct wallet entries, on failure of deduct wallet entries we mark it as INGESTION_FAILED_INSUFFICIENT_CREDITS
+
+
+
+
+
+
+
