@@ -1,0 +1,35 @@
+---
+title: "Generate portal token"
+description: "Generates and returns a bearer token belonging to a contact scoped to the accounts to which portal access has been granted"
+api: post /organizations/{organization_id}/token
+---
+
+### Authorizations
+<ParamField path="Authorization" type="string" required>
+  Bearer authentication header of the form `Bearer <token>`, where `<token>` is your auth token.
+</ParamField>
+
+### Path Parameters
+<ParamField path="organization_id" type="string" required>
+  Id of the organization. An organization is a tenant in Togai.
+</ParamField>
+
+
+### Body
+<ParamField body="email" type="string" required>
+    email id of the contact whose token.
+</ParamField>
+
+## Response
+<ResponseField name="token" type="string" required>
+  JWT bearer token of the contact.
+</ResponseField>
+
+<ResponseExample>
+```json
+{
+  "token": "eyJraWQiOiI5YWNhYTQzNC1jYjVkLTQzOTgtOTc4OS0yZDdjNjViNzc4MDgiLCJhbGciOiJFUzI1NiIsInppcCI6IkdaSVAifQ.H4sIAAAAAAAA_72SXUvDMBiF_8oIu1hL0zad_TB3pXcyFPzCi6LEmLaBtilJOh3O_27qnBOnIjh6lbyHk3OeF_IMuFIAg0rrTmHP46Rxq1WnhUtFAxzAiQYYxSiO4yiM5w5gT91GSKLgeBCWTJr3yPWNu1fDvZItvj6hmt9IlZ5j2iuETS7sFZOeHxRhUKAQRon_AI_MCO_nUQgTlDDkk4IlcWSShCxN0i7FSKzVXNesMedA3DmTL0VvJZ2oOV156WJxl2bZ2dXp5cVfKp3J7XfYuoTm1KIx5IMw3fe59meXyvNpyXS2HZ0JqWvxmLdj4RJKRd9qz7V_ZH23DKgzw7quudKWa4-K6m1QZrxdCk6ZWne9pBVRTFm_oW_9H3ZrrCX-_an3V8I72vIgBQdcOG_Byys183uiHAQAAA.Ji5sLX1cD814Wv1kmXmJMXqW3y-HJ6oEXfggrpdf571otTywIR3fXgcKXFciUDAyt8awgp5v5wQUoGINHoirSA"
+}
+```
+
+</ResponseExample>

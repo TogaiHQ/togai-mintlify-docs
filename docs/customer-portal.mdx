@@ -1,0 +1,12 @@
+Togai provides a customer portal for end users to view and manage their price plans, check their pricing schedule, view usage and cost metrics in real-time and the billing details including the invoices. To enable customer portal, you can create contacts in the Contacts tab in the Customer detail view page.
+
+Togai also provides ability to manage access and roles for contacts under a customer. To add a contact, provide the name and email and proceed to setup the access - you can enable read/write access and also configure which accounts a contact has access for in the customer portal.
+
+There are 2 ways a contact can access the Customer portal - 
+
+1. Authenticated link - You can directly link the Togai customer portal in your dashboard, by generating a [portal token](/api-reference/authentication/customer-portal-auth) and passing the portal token as a query parameter in this customer portal link: https://billing.togai.com/{organization_id}?access-token={portal_token}
+
+2. Username & password - You can send a verification email to the contact's mail id using which they can access the customer portal in a separate dashboard, and set their password. Once that is done, they can use their email and password to login to their customer portal in this link: https://billing.togai.com/{organization_id}
+
+
+You can check the organization_id by viewing the customer portal link in any of your customer details.
