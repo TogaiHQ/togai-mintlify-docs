@@ -172,7 +172,8 @@
       "pages": [
         "docs/admin-center",
         "docs/settings",
-        "docs/quotas-and-limits"
+        "docs/quotas-and-limits",
+        "docs/JSON-logic-custom-operators"
       ]
     },
     {

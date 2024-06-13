@@ -1,0 +1,172 @@
+---
+title: "JSON Logic at Togai"
+---
+
+[JSON Logic](https://jsonlogic.com) is a mechanism that can be used to apply logical transformations to JSON values and that is also itself expressed in JSON. It's a small, safe way to represent one decision.
+
+Togai accepts JSONLogic to provide flexibility of plugging in logic into various parts of the product to handle bespoke requirements elegantly. Togai constructs, which accept JSONLogic are listed below.
+
+- **[Event Enrichments](/docs/event-enrichments)**
+- **[Usage Meters](/docs/usage-meter)**
+- **[Pricing Rules](/docs/pricing-rules)**
+
+  
+# Custom JSON Logic Operators
+
+In addition to the [default operators](https://jsonlogic.com/operations.html) provided by the JSONLogic, Togai provides certain custom operators to reinforce the power of the platform.
+
+We outline these operators, their input formats, and examples below to help you leverage their functionality effectively.
+
+## Date and Duration  Operators
+### **1. Date (`date`)**
+Convert a date string into a date object.
+
+This operator is only used to make equality check work as expected. 
+
+For example, the dates `2024-05-28T00:00:00Z` and `2024-05-27T16:00:00-0800` are contextually equal. But, JsonLogic equality operator `==` does not know that these are dates and hence, treats them as normal strings and returns a falsy response. To overcome this, it is expected to convert the date_string to date (data type) before applying the equality check.
+
+**Input Format**: `[date_string]`
+
+**Example-1**: 
+
+**Input**: 
+```json
+{"==" [{"date": ["2024-05-28T00:00:00Z"]}}, {"date": ["2024-05-27T16:00:00-0800"]}}]
+```
+
+**Output**: `true`
+
+**Example-2**: 
+
+**Input**: 
+```json
+{"date": ["non-date string"]}
+```
+
+**Output**: `null`
+
+
+<Note>
+  If any one of the argument is a Date object, we attempt to cast the other argument into a Date by default.
+  i.e, All the below JSONLogics computes to `true`
+
+  ```
+  {"==": ["2024-05-28T00:00:00Z", {"date": ["2024-05-28T00:00:00Z"]}]}
+  {"==": [{"date": ["2024-05-28T00:00:00Z"]}, "2024-05-28T00:00:00Z"]}
+  {"==": [{"date": ["2024-05-28T00:00:00Z"]}, {"date": ["2024-05-28T00:00:00Z"]}]}
+  ```
+</Note>
+
+### **2. Duration Between Dates (`duration.between`)**
+Using the `duration.between` operator computes the time elapsed between two dates and returns duration as string.
+
+**Opertion**: `duration.between`
+
+**Return value**:  [ISO 8601 Duration](https://en.wikipedia.org/wiki/ISO_8601?#Durations) as `string` 
+
+
+
+**Example**: 
+```json
+{"duration.between": ["2024-05-01T00:00:00Z", "2024-06-01T00:00:00Z"]} 
+```
+**Output**: `PT744H`
+
+#### Use case
+**Application of JSON Logic ("duration.between") in Pricing Rules**
+
+Consider a scenario where a pricing rule allows 75 free photos per day, but the number of days varies per billing cycle. 
+  
+This can be implemented by leveraging the start and end dates of the billing cycle which are inputs to pricing rules:
+
+- **Calculate the Number of Days in the Cycle**: Use the duration.between operator to find the duration between the start and end dates. 
+```json
+{"duration.between": [{"var": ["invoice.start_date"]}, {"var": ["invoice.end_date"]}]}
+```
+- **Calculate Free Photos Allowed**: Multiply the duration by the daily free photo allowance.
+
+```json
+{"*": [
+  {"duration.between": [
+    {"var": ["invoice.start_date"]}, {"var": ["invoice.end_date"]}]
+  },
+  75
+]}
+```
+- **Handle Edge case**: In case, the usage is less than the free photos, we do not want the usage to go below 0.
+
+**Final Pricing rule computation:**
+  
+```json
+{"max" : [
+  {"-": [
+    {"var": "usage.urc.um.22FOGdYZY6G.0TkcT"},
+    {"*": [
+      {"duration.between": [{"var": ["invoice.start_date"]}, {"var": ["invoice.end_date"]}]},
+      75
+    ]}
+  ]},
+  0
+]}
+```
+
+The same logic is constructed using simple jsonLogic builder as follows
+```
+max(#duration.between(@invoice.End Date, @invoice.Start Date) * 75, 0)
+```
+
+### **3. Date Addition (`date.add`)**
+
+This operator adds a duration string to a date. Returns `null` in case the date or duration string is invalid.
+
+**Input Format**: `[date_string, duration_string]`
+
+**Example**: 
+
+```json
+{"date.add": ["2024-05-28T00:00:00Z", "PT24H"]}
+```
+
+**Output**: `2024-05-29T00:00Z`
+
+### **4. Date Subtraction (`date.sub`)**
+Subtracts a specified duration from a date.
+
+**Input Format**: `[date_string, duration_string]`
+
+**Example**: 
+```json
+{"date.sub": ["2024-05-28T00:00:00Z", "PT24H"]}
+```
+
+**Output**: `2024-05-27T00:00Z`
+
+### **5. Duration Of (`duration.of`)**
+The date operations are not natively available in the JSON logic, we did a custom add of the date logic by adding another layer of logic. 
+
+This means that for instance the input given as 100 days will be converted into the ISO recommended format of P100D.
+
+**INPUT FORMAT**: `[interval_to_add,_interval_unit]`
+
+**Supported Interval Unit**: `MILLIS`, `SECONDS`, `MINUTES`, `HOURS`, `DAYS`, `WEEKS`, `MONTHS`, `YEARS`
+
+**Example**: 
+```json
+{"duration.of": [100, "DAYS"]}
+```
+
+**Output**: `P100D`
+
+### **6. Duration As ("duration.as")**
+This operator allows us to convert a duration to a desired interval.
+
+**Input Format**: `[duration_string, interval_unit]`
+
+**Supported Interval Unit**: `MILLIS`, `SECONDS`, `MINUTES`, `HOURS`, `DAYS` 
+
+**Example**:
+```json
+{"duration.as": ["PT24H", "DAYS"]}
+```
+
+**Output**: 1
