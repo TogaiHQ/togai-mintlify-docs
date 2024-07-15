@@ -49,6 +49,8 @@ tags:
     description: Report Template level calls
   - name: Dashboards
     description: Dashboard level calls
+  - name: Customer Portal
+    description: Portal level calls
   - name: Event Management
     description: APIs for getting events ingested in Togai
     externalDocs:
@@ -1453,6 +1455,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/price_plan_id'
         - $ref: '#/components/parameters/pricing_schedule_id'
+        - $ref: '#/components/parameters/invoice_timing'
       responses:
         '200':
           $ref: '#/components/responses/PricingRulesPaginatedResponse'
@@ -2015,6 +2018,30 @@ paths:
       responses:
         '200':
           $ref: '#/components/responses/FileDownloadUrlResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /portal/token:
+    post:
+      tags:
+        - Customer Portal
+      summary: Get delegate token for customer portal
+      description: Get delegate token for customer portal
+      operationId: getCustomerPortalDelegateToken
+      requestBody:
+        $ref: '#/components/requestBodies/GetCustomerPortalDelegateTokenRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/TokenResponse'
         '400':
           $ref: '#/components/responses/ErrorResponse'
         '401':
@@ -3087,32 +3114,6 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
-  /invoices/{invoice_id}/payments:
-    post:
-      tags:
-        - Invoices
-      summary: Update payment status in Invoice
-      description: Update payment status in Invoice
-      operationId: invoicePayments
-      parameters:
-        - $ref: '#/components/parameters/invoice_id'
-      requestBody:
-        $ref: '#/components/requestBodies/InvoicePaymentsRequest'
-      responses:
-        '200':
-          $ref: '#/components/responses/InvoiceResponse'
-        '400':
-          $ref: '#/components/responses/ErrorResponse'
-        '401':
-          $ref: '#/components/responses/ErrorResponse'
-        '403':
-          $ref: '#/components/responses/ErrorResponse'
-        '404':
-          $ref: '#/components/responses/ErrorResponse'
-        '429':
-          $ref: '#/components/responses/ErrorResponse'
-        default:
-          $ref: '#/components/responses/ErrorResponse'
   /accounts/{account_id}/miscellaneous_charges:
     put:
       tags:
@@ -4074,6 +4075,8 @@ components:
           description: Order of the pricing rule
           type: integer
           format: int32
+        invoiceTiming:
+          $ref: '#/components/schemas/PricingRuleTiming'
         condition:
           description: JSON logic condition deciding whether to compute this pricing rule or not
           type: string
@@ -5035,6 +5038,14 @@ components:
           type: string
           description: error description
           maxLength: 500
+    TokenResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - token
+      properties:
+        token:
+          type: string
     CreateCustomerResponse:
       type: object
       additionalProperties: false
@@ -5410,6 +5421,31 @@ components:
               type: boolean
             packageQuantity:
               type: integer
+    GetCustomerPortalDelegateTokenRequest:
+      description: Request to get delegate token for customer portal
+      type: object
+      additionalProperties: false
+      required:
+        - customerId
+      properties:
+        customerId:
+          description: Identifier of the customer
+          type: string
+        accountIds:
+          description: |
+            Identifier of the accounts under the customer for which access is requested. Maximum of 5 account ids can be provided
+          type: array
+          items:
+            type: string
+        allAccountsAccess:
+          description: Flag to specify if access for every account under the customer is required
+          type: boolean
+        expiry:
+          description: |
+            Expiry in seconds from the time of generation. 
+            If not provided, generated token will have the expiry of the token used for requesting.
+          type: integer
+          format: int64
     SettingPaginatedResponse:
       type: object
       additionalProperties: false
@@ -7275,6 +7311,8 @@ components:
           type: integer
           format: int32
           minimum: 1
+        invoiceTiming:
+          $ref: '#/components/schemas/PricingRuleTiming'
         order:
           type: integer
           format: int32
@@ -7310,6 +7348,17 @@ components:
           type: object
           additionalProperties:
             type: string
+    PricingRuleTiming:
+      type: string
+      enum:
+        - IN_ADVANCE
+        - IN_ARREARS
+      x-enum-varnames:
+        - IN_ADVANCE
+        - IN_ARREARS
+      description: |
+        If IN_ADVANCE, the rule will be applied on rate cards with invoice timing IN_ADVANCE .
+        If IN_ARREARS, the rule will be applied on rate cards with invoice timing IN_ARREARS .
     PricingSchedule:
       type: object
       description: Represents effectiveness period and config of a price plan. i.e, price plan bound by time.
@@ -7614,7 +7663,7 @@ components:
             - RELATIVE
             - ABSOLUTE
         quantity:
-          type: integer
+          type: number
           description: The quantity to be updated
         effectiveFrom:
           type: string
@@ -7693,7 +7742,7 @@ components:
           example: acc.fdjsl.313
         quantity:
           description: Absolute quantity of the license
-          type: integer
+          type: number
           example: 10
         effectiveFrom:
           type: string
@@ -8621,23 +8670,6 @@ components:
       properties:
         items:
           $ref: '#/components/schemas/MiscellaneousCharges'
-    InvoicePaymentsRequest:
-      description: Payload to update payment information of invoice
-      type: object
-      additionalProperties: false
-      required:
-        - status
-      properties:
-        status:
-          description: Payment status of the invoice
-          type: string
-          enum:
-            - PAID
-            - VOID
-            - UN_COLLECTIBLE
-            - REFUND_INITIATED
-            - REFUND_COMPLETED
-          example: PAID
     CreateCustomInvoiceRequest:
       description: Payload to create invoice
       type: object
@@ -8719,6 +8751,7 @@ components:
             - PAID
             - VOID
             - UN_COLLECTIBLE
+            - REFUND_INITIATED
           example: DUE
         lineItems:
           type: array
@@ -9004,6 +9037,36 @@ components:
         closingBalance:
           type: number
           example: 200
+    InvoicesType:
+      description: Represents the type of entity(STANDARD/AD_HOC/COMPOSITE)
+      type: string
+      enum:
+        - STANDARD
+        - AD_HOC
+        - CUSTOM
+        - COMPOSITE
+        - STANDARD_ADVANCED
+        - ADHOC_ADVANCED
+    InvoicesClass:
+      description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
+      type: string
+      enum:
+        - INVOICE
+        - ORDER
+        - BILLABLE
+    InvoicesStatus:
+      description: Status of the invoice
+      type: string
+      enum:
+        - DRAFT
+        - DUE
+        - PAID
+        - VOID
+        - UN_COLLECTIBLE
+        - REFUND_INITIATED
+        - REFUND_COMPLETED
+        - MERGED
+        - PARTIALLY_PAID
     InvoiceSummary:
       description: Structure of invoice response
       type: object
@@ -9030,18 +9093,7 @@ components:
         pricePlanId:
           type: string
         status:
-          description: Status of the invoice
-          type: string
-          enum:
-            - DRAFT
-            - DUE
-            - PAID
-            - VOID
-            - UN_COLLECTIBLE
-            - REFUND_INITIATED
-            - REFUND_COMPLETED
-            - MERGED
-            - PARTIALLY_PAID
+          $ref: '#/components/schemas/InvoicesStatus'
           example: DUE
         finalizingStatus:
           type: string
@@ -9049,21 +9101,10 @@ components:
             - FINALIZING
             - FINALIZED
         invoiceClass:
-          description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
-          type: string
-          enum:
-            - INVOICE
-            - ORDER
-            - BILLABLE
+          $ref: '#/components/schemas/InvoicesClass'
           example: INVOICE
         invoiceType:
-          description: Represents the type of entity(STANDARD/AD_HOC/COMPOSITE)
-          type: string
-          enum:
-            - STANDARD
-            - AD_HOC
-            - CUSTOM
-            - COMPOSITE
+          $ref: '#/components/schemas/InvoicesType'
           example: STANDARD
         startDate:
           description: Start date of the invoice
@@ -9145,18 +9186,7 @@ components:
         invoiceDetails:
           $ref: '#/components/schemas/InvoiceDetails'
         status:
-          description: Status of the invoice
-          type: string
-          enum:
-            - DRAFT
-            - DUE
-            - PAID
-            - VOID
-            - UN_COLLECTIBLE
-            - REFUND_INITIATED
-            - REFUND_COMPLETED
-            - MERGED
-            - PARTIALLY_PAID
+          $ref: '#/components/schemas/InvoicesStatus'
           example: DUE
         finalizingStatus:
           type: string
@@ -9164,22 +9194,10 @@ components:
             - FINALIZING
             - FINALIZED
         invoiceClass:
-          description: Represents the class of entity( INVOICE/ORDER/BILLABLE)
-          type: string
-          enum:
-            - INVOICE
-            - ORDER
-            - BILLABLE
+          $ref: '#/components/schemas/InvoicesClass'
           example: INVOICE
         invoiceType:
-          description: Represents the type of entity(STANDARD/AD_HOC/COMPOSITE)
-          type: string
-          enum:
-            - STANDARD
-            - AD_HOC
-            - CUSTOM
-            - COMPOSITE
-          example: STANDARD
+          $ref: '#/components/schemas/InvoicesType'
         autoAdvance:
           type: boolean
           example: true
@@ -9610,13 +9628,6 @@ components:
             type: boolean
             default: false
             example: true
-    TokenResponse:
-      type: object
-      required:
-        - token
-      properties:
-        token:
-          type: string
   responses:
     BaseSuccessResponse:
       description: OK
@@ -9635,6 +9646,12 @@ components:
               summary: Error message
               value:
                 message: <Reason message>
+    TokenResponse:
+      description: OK
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TokenResponse'
     CreateCustomerResponse:
       description: Response for Create customer request
       content:
@@ -10112,19 +10129,6 @@ components:
           examples:
             PricingRulesLogsPaginatedResponse:
               $ref: '#/components/examples/PricingRulesLogsPaginatedResponse'
-    TokenResponse:
-      description: Response with token
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/TokenResponse'
-          examples:
-            TokenResponse:
-              $ref: '#/components/examples/TokenResponse'
-        text/plain:
-          schema:
-            type: string
-          example: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
   parameters:
     customer_id:
       in: path
@@ -10302,6 +10306,16 @@ components:
       schema:
         type: string
         example: setting.USER.success_threshold.ACCOUNT.G234DZZKBKACATFFGVGEMERFI
+    invoice_timing:
+      in: query
+      name: invoice_timing
+      description: Optional field to filter pricing rules based on invoice timing
+      required: false
+      schema:
+        type: string
+        enum:
+          - IN_ADVANCE
+          - IN_ARREARS
     job_id:
       in: path
       name: job_id
@@ -11760,6 +11774,18 @@ components:
         value: '{"USD":"1"}'
         name: Base_Currency
         dataType: JSON
+    GetCustomerPortalDelegateTokenRequestAllAccountAccess:
+      value:
+        customerId: acme_cust
+        allAccountAccess: true
+        expiry: 60000
+    GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess:
+      value:
+        customerId: acme_cust
+        accountIds:
+          - acme_accnt_1
+          - acme_accnt_2
+        expiry: 60000
     CreatePricePlanMigrationRequest:
       value:
         requireConfirmation: true
@@ -13363,10 +13389,6 @@ components:
             quantity: 10
           - name: json logic charge
             value: '{"var": "um.linitem.id"}'
-    InvoicePaymentsRequest:
-      summary: A sample for InvoicePaymentsRequest
-      value:
-        status: PAID
     CreditBalanceResponse:
       summary: A sample for CreditBalanceResponse
       value:
@@ -13425,9 +13447,6 @@ components:
           - description: Payout IMPS
             valuePerQuantity: 0.001
             quantity: 32109
-    TokenResponse:
-      value:
-        token: XlK5h64gNDBfMXAPKKGRmWjaxmXJJzDKIJNWqSWj
   requestBodies:
     CreatePurchaseRequest:
       description: Payload to initiate a purchase
@@ -13746,6 +13765,18 @@ components:
           examples:
             CreateAliasRequest:
               $ref: '#/components/examples/CreateBulkAliasRequest'
+    GetCustomerPortalDelegateTokenRequest:
+      description: Payload to get delegate token for customer portal
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/GetCustomerPortalDelegateTokenRequest'
+          examples:
+            GetCustomerPortalDelegateTokenRequestAllAccountAccess:
+              $ref: '#/components/examples/GetCustomerPortalDelegateTokenRequestAllAccountAccess'
+            GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess:
+              $ref: '#/components/examples/GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess'
     GetMetricsRequest:
       content:
         application/json:
@@ -13895,16 +13926,6 @@ components:
           examples:
             ManageMiscellaneousChargesRequest:
               $ref: '#/components/examples/ManageMiscellaneousChargesRequest'
-    InvoicePaymentsRequest:
-      description: Payload to update payments of invoice
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/InvoicePaymentsRequest'
-          examples:
-            InvoicePaymentsRequest:
-              $ref: '#/components/examples/InvoicePaymentsRequest'
     CreateCustomInvoiceRequest:
       description: Payload to create invoice
       content:
