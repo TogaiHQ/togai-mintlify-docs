@@ -8791,21 +8791,53 @@ components:
       additionalProperties: false
       required:
         - id
-        - ruleId
         - order
         - changes
       properties:
         id:
           type: string
-        ruleId:
+        type:
           type: string
-        ruleName:
-          type: string
+          enum:
+            - CONDITION_TRUE
+            - CONDITION_FALSE
+            - CONDITION_ERROR
+            - COMPUTATION_ERROR
         order:
           type: integer
           format: int32
         changes:
           $ref: '#/components/schemas/PricingRuleChangesLog'
+        rule:
+          $ref: '#/components/schemas/PricingRuleInfo'
+        variablesValue:
+          type: object
+          nullable: true
+          additionalProperties:
+            $ref: '#/components/schemas/PricingRulesValues'
+    PricingRulesValues:
+      title: PricingRulesValues
+      type: object
+      properties:
+        name:
+          type: string
+        value:
+          type: string
+    PricingRuleInfo:
+      description: Pricing Rule Info
+      type: object
+      additionalProperties: false
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        condition:
+          type: string
+        computation:
+          type: string
     PricingRuleChangesLog:
       description: Pricing Rules Logs Changes
       type: object
@@ -8816,6 +8848,8 @@ components:
         - newRevenue
       properties:
         key:
+          type: string
+        keyName:
           type: string
         oldRevenue:
           type: number
