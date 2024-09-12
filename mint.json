@@ -297,7 +297,6 @@
             "api-reference/accounts/list-accounts-of-customer",
             "api-reference/accounts/create-an-account",
             "api-reference/accounts/get-an-account",
-            "api-reference/accounts/delete-an-account",
             "api-reference/accounts/update-an-account",
             {
               "group": "Account Aliases",
