@@ -2030,6 +2030,195 @@ paths:
           $ref: '#/components/responses/ErrorResponse'
         default:
           $ref: '#/components/responses/ErrorResponse'
+  /alert_templates:
+    get:
+      tags:
+        - Alerts
+      summary: List alert templates
+      description: Returns a list of alert templates with pagination and sort.
+      operationId: getAlertTemplates
+      responses:
+        '200':
+          $ref: '#/components/responses/AlertTemplatesPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /alert_templates/{alert_template_id}:
+    get:
+      tags:
+        - Alerts
+      summary: Get an alert template
+      description: Get an alert template
+      operationId: getAlertTemplate
+      parameters:
+        - $ref: '#/components/parameters/alert_template_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/AlertTemplateResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /alerts:
+    post:
+      tags:
+        - Alerts
+      summary: Create an alert
+      description: Create an alert
+      operationId: createAlert
+      requestBody:
+        $ref: '#/components/requestBodies/CreateAlertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/AlertResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+    get:
+      tags:
+        - Alerts
+      summary: List alerts
+      description: Returns a list of alerts with pagination and sort.
+      operationId: listAlerts
+      responses:
+        '200':
+          $ref: '#/components/responses/AlertsPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /alerts/{alert_id}:
+    patch:
+      tags:
+        - Alerts
+      summary: Update an alert
+      description: Update an alert
+      operationId: updateAlert
+      parameters:
+        - $ref: '#/components/parameters/alert_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateAlertRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/AlertResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /incidents:
+    get:
+      tags:
+        - Alerts
+      summary: List incidents
+      description: Returns a list of incidents with pagination and sort.
+      operationId: getIncidents
+      responses:
+        '200':
+          $ref: '#/components/responses/IncidentsPaginatedResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /incidents/{incident_id}:
+    get:
+      tags:
+        - Alerts
+      summary: Get an incident
+      description: Get an incident
+      operationId: getIncident
+      parameters:
+        - $ref: '#/components/parameters/incident_id'
+      responses:
+        '200':
+          $ref: '#/components/responses/IncidentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
+  /incidents/{incident_id}/status:
+    put:
+      tags:
+        - Alerts
+      summary: Update an incident status
+      description: Update an incident status
+      operationId: updateIncidentStatus
+      parameters:
+        - $ref: '#/components/parameters/incident_id'
+      requestBody:
+        $ref: '#/components/requestBodies/UpdateIncidentStatusRequest'
+      responses:
+        '200':
+          $ref: '#/components/responses/IncidentResponse'
+        '400':
+          $ref: '#/components/responses/ErrorResponse'
+        '401':
+          $ref: '#/components/responses/ErrorResponse'
+        '403':
+          $ref: '#/components/responses/ErrorResponse'
+        '404':
+          $ref: '#/components/responses/ErrorResponse'
+        '429':
+          $ref: '#/components/responses/ErrorResponse'
+        default:
+          $ref: '#/components/responses/ErrorResponse'
   /portal/token:
     post:
       tags:
@@ -4059,6 +4248,10 @@ components:
             2. Metrics API return revenue metrics only after the grace period of the account's pricing cycle 
             (i.e, only once the invoice becomes DUE)
           type: boolean
+        allow_ongoing_cycle_updates:
+          description: |
+            Allow changes to price plan from the beginning of the ongoing cycle.
+          type: boolean
     CreatePricingRule:
       type: object
       additionalProperties: false
@@ -5019,6 +5212,237 @@ components:
         value:
           type: string
           maxLength: 255
+    CreateAlertRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - alertTemplateId
+        - interval
+        - status
+      properties:
+        alertTemplateId:
+          type: string
+        interval:
+          type: integer
+        validity:
+          type: integer
+          description: Validity of the alert in minutes, if null then alert will be valid forever
+        description:
+          type: string
+        entityDetails:
+          additionalProperties:
+            type: object
+        ownerDetails:
+          additionalProperties:
+            type: object
+        parameters:
+          additionalProperties:
+            type: object
+        status:
+          $ref: '#/components/schemas/AlertStatus'
+    AlertTemplate:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - name
+        - interval
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Alert Template ID
+        name:
+          type: string
+          description: Alert Template Name
+        description:
+          type: string
+          description: Alert Template Description
+        interval:
+          type: integer
+          description: Cron Interval
+        entitySchema:
+          type: string
+          description: Entity Schema
+        entityType:
+          type: string
+          description: Entity Type
+        ownerSchema:
+          type: string
+          description: Owner Schema
+        ownerType:
+          type: string
+          description: Owner Type
+        parametersSchema:
+          type: string
+          description: Parameters Schema
+        createdAt:
+          type: string
+          format: date-time
+          description: Created At
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated At
+    AlertTemplatesPaginatedResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlertTemplate'
+        nextToken:
+          type: string
+    AlertsPaginatedResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Alert'
+        nextToken:
+          type: string
+    Alert:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - version
+        - alertTemplateId
+        - interval
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Alert ID
+        version:
+          type: integer
+          description: Alert Version
+        description:
+          type: string
+          description: Alert Description
+        status:
+          $ref: '#/components/schemas/AlertStatus'
+        validity:
+          type: integer
+          description: Validity of the alert in minutes, if null then alert will be valid forever
+        alertTemplateId:
+          type: string
+          description: Alert Template Id
+        interval:
+          type: integer
+          description: Interval
+        entityDetails:
+          additionalProperties:
+            type: object
+        ownerDetails:
+          additionalProperties:
+            type: object
+        parameters:
+          additionalProperties:
+            type: object
+        createdAt:
+          type: string
+          format: date-time
+          description: Created At
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated At
+    AlertStatus:
+      type: string
+      enum:
+        - ACTIVE
+        - INACTIVE
+    UpdateIncidentStatusRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - status
+      properties:
+        status:
+          type: string
+          description: Incident Status
+          enum:
+            - CLOSED
+    UpdateAlertRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        description:
+          type: string
+        status:
+          $ref: '#/components/schemas/AlertStatus'
+        interval:
+          type: integer
+        validity:
+          type: integer
+        parameters:
+          additionalProperties:
+            type: object
+    Incident:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - alertId
+        - alertVersion
+        - alertTemplateId
+        - status
+        - createdAt
+      properties:
+        id:
+          type: string
+          description: Incident ID
+        alertId:
+          type: string
+          description: Alert ID
+        alertVersion:
+          type: integer
+          description: Alert Version
+        alertTemplateId:
+          type: string
+          description: Alert Template Id
+        validUntil:
+          type: string
+          format: date-time
+        reportData:
+          additionalProperties:
+            type: object
+        status:
+          type: string
+          description: Incident Status
+        lastCheckedAt:
+          type: string
+          format: date-time
+          description: Last Checked At
+        createdAt:
+          type: string
+          format: date-time
+          description: Created At
+        updatedAt:
+          type: string
+          format: date-time
+          description: Updated At
+    IncidentsPaginatedResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - data
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Incident'
+        nextToken:
+          type: string
     BaseSuccessResponse:
       type: object
       additionalProperties: false
@@ -6688,6 +7112,9 @@ components:
         displayName:
           type: string
           description: Name your rate card, this will be used in invoice
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         ratePlan:
           $ref: '#/components/schemas/RatePlan'
         rateValues:
@@ -6764,6 +7191,9 @@ components:
           type: string
         displayName:
           type: string
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         tag:
           type: string
           description: A tag string to group creditGrantRateCard
@@ -6853,6 +7283,9 @@ components:
         displayName:
           type: string
           description: Name to be displayed during invoice
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         tag:
           type: string
           description: A tag string to group rate cards
@@ -6949,6 +7382,9 @@ components:
         displayName:
           type: string
           description: Name of the attached AddOn
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         tag:
           type: string
           description: A tag string to group fixedFeeRateCards
@@ -7023,6 +7459,9 @@ components:
         displayName:
           type: string
           description: Name of the attached AddOn
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         tag:
           type: string
           description: A tag string to group licenseRateCards
@@ -7159,6 +7598,10 @@ components:
           $ref: '#/components/schemas/PricePlanType'
         deferredRevenue:
           type: boolean
+        allow_ongoing_cycle_updates:
+          description: |
+            Allow changes to price plan from the beginning of the ongoing cycle.
+            type: boolean
     PricePlanDetailsOverride:
       allOf:
         - $ref: '#/components/schemas/CreatePricePlanDetailsOverride'
@@ -7535,6 +7978,9 @@ components:
         displayName:
           type: string
           description: Name your rate card, this will be displayed in the Togai App
+        name:
+          type: string
+          description: Unique identifier for the rate card in a price plan. If left null it is auto-generated.
         tag:
           type: string
           description: A tag string to group usageRateCards
@@ -7566,7 +8012,7 @@ components:
         events:
           type: array
           minItems: 1
-          maxItems: 500
+          maxItems: 1000
           items:
             $ref: '#/components/schemas/Event'
     IngestEventResponse:
@@ -10049,6 +10495,60 @@ components:
           examples:
             AccountAliasesPaginatedResponse:
               $ref: '#/components/examples/AccountAliasesPaginatedResponse'
+    AlertTemplateResponse:
+      description: Response for getting alert template
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlertTemplate'
+          examples:
+            AlertResponse:
+              $ref: '#/components/examples/AlertTemplateResponse'
+    AlertTemplatesPaginatedResponse:
+      description: Response for list Alert request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlertTemplatesPaginatedResponse'
+          examples:
+            AlertTemplatesPaginatedResponse:
+              $ref: '#/components/examples/AlertTemplatesPaginatedResponse'
+    AlertsPaginatedResponse:
+      description: Response for list Alert request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AlertsPaginatedResponse'
+          examples:
+            AlertsPaginatedResponse:
+              $ref: '#/components/examples/AlertsPaginatedResponse'
+    AlertResponse:
+      description: Response for install alert request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Alert'
+          examples:
+            AlertResponse:
+              $ref: '#/components/examples/AlertResponse'
+    IncidentResponse:
+      description: Response for getting incident
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Incident'
+          examples:
+            IncidentResponse:
+              $ref: '#/components/examples/IncidentResponse'
+    IncidentsPaginatedResponse:
+      description: Response for list incidents request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/IncidentsPaginatedResponse'
+          examples:
+            IncidentsPaginatedResponse:
+              $ref: '#/components/examples/IncidentsPaginatedResponse'
     InvoiceResponse:
       description: Response for Get invoice requests
       content:
@@ -10378,6 +10878,27 @@ components:
       schema:
         type: boolean
         example: true
+    incident_id:
+      in: path
+      name: incident_id
+      required: true
+      schema:
+        type: string
+        example: inc.20aUyEZSuYq.SoGbS
+    alert_template_id:
+      in: path
+      name: alert_template_id
+      required: true
+      schema:
+        type: string
+        example: abcd-efgh-ijkl-mnop
+    alert_id:
+      in: path
+      name: alert_id
+      required: true
+      schema:
+        type: string
+        example: alert.20aUyEZSuYq.SoGbS
     account_id:
       in: path
       description: account_id corresponding to an account
@@ -11097,6 +11618,94 @@ components:
             createdAt: '2022-06-04T00:00:00Z'
             updatedAt: '2022-06-04T00:00:00Z'
         nextToken: fdsjhklfhdslhfjdklsahfkjdsa...
+    AlertTemplateResponse:
+      value:
+        id: abcd-efgh-ijkl-mnop
+        name: Alert1
+        desc: Alert1 Description
+        entitySchema: '{"type":"object","properties":{"usageMeterId":{"type":"string"}}}'
+        entityType: UsageMeter
+        interval: '30'
+        parametersSchema: '{"type":"object","properties":{"threshold":{"type":"number"}}}'
+        ownerSchema: '{"type":"object","properties":{"accountId":{"type":"string"}}}'
+        ownerType: Account
+        createdAt: '2020-01-01T00:00:00Z'
+        updatedAt: '2020-01-01T00:00:00Z'
+    AlertTemplatesPaginatedResponse:
+      value:
+        data:
+          - id: abcd-efgh-ijkl-mnop
+            name: Alert1
+            desc: Alert1 Description
+            entitySchema: '{"type":"object","properties":{"usageMeterId":{"type":"string"}}}'
+            entityType: UsageMeter
+            defaultInterval: '30'
+            parametersSchema: '{"type":"object","properties":{"threshold":{"type":"number"}}}'
+            ownerSchema: '{"type":"object","properties":{"accountId":{"type":"string"}}}'
+            ownerType: Account
+            createdAt: '2020-01-01T00:00:00Z'
+            updatedAt: '2020-01-01T00:00:00Z'
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    AlertResponse:
+      value:
+        id: alert.1zYnCiM9Bpg.lv25y
+        version: 1
+        alertId: alert.1zYnCiM9Bpg.lv25y
+        description: Alert1 Description
+        cronInterval: '30'
+        ownerDetails:
+          accountId: account_1
+        entityDetails:
+          usageMeterId: um.1zYnCiM9Bpg.lv25y
+        parameters:
+          threshold: 10
+        status: ACTIVE
+        createdAt: '2020-01-01T00:00:00Z'
+        updatedAt: '2020-01-01T00:00:00Z'
+    AlertsPaginatedResponse:
+      value:
+        data:
+          - id: alert.1zYnCiM9Bpg.lv25y
+            version: 1
+            alertId: alert.1zYnCiM9Bpg.lv25y
+            description: Alert1 Description
+            cronInterval: '30'
+            ownerDetails:
+              accountId: account_1
+            entityDetails:
+              usageMeterId: um.1zYnCiM9Bpg.lv25y
+            parameters:
+              threshold: 10
+            status: ACTIVE
+            createdAt: '2020-01-01T00:00:00Z'
+            updatedAt: '2020-01-01T00:00:00Z'
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
+    IncidentResponse:
+      value:
+        id: incident.1zYnCiM9Bpg.lv25y
+        alertTemplateId: abcd-efgh-ijkl-mnop
+        alertId: alert.1zYnCiM9Bpg.lv25y
+        alertVersion: 1
+        validUntil: '2020-01-01T00:00:00Z'
+        reportData:
+          usageValue: 10
+        status: ACTIVE
+        createdAt: '2020-01-01T00:00:00Z'
+        updatedAt: '2020-01-01T00:00:00Z'
+    IncidentsPaginatedResponse:
+      value:
+        data:
+          - id: incident.1zYnCiM9Bpg.lv25y
+            alertTemplateId: abcd-efgh-ijkl-mnop
+            alertId: alert.1zYnCiM9Bpg.lv25y
+            alertVersion: 1
+            validUntil: '2020-01-01T00:00:00Z'
+            reportData:
+              usageValue: 10
+            status: ACTIVE
+            createdAt: '2020-01-01T00:00:00Z'
+            updatedAt: '2020-01-01T00:00:00Z'
+        nextToken: eyJsYXN0SXRlbUlkIjogInN0cmluZyIsICJwYWdlU2l6ZSI6IDEwMCwgInNvcnRPcmRlciI6ICJhc2MifQ==
     AddAccountAliasesRequest:
       value:
         aliases:
@@ -11808,10 +12417,10 @@ components:
         value: '{"USD":"1"}'
         name: Base_Currency
         dataType: JSON
-    GetCustomerPortalDelegateTokenRequestAllAccountAccess:
+    GetCustomerPortalDelegateTokenRequestAllAccountsAccess:
       value:
         customerId: acme_cust
-        allAccountAccess: true
+        allAccountsAccess: true
         expiry: 60000
     GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess:
       value:
@@ -11832,6 +12441,22 @@ components:
       value:
         aliases:
           - value: alias1
+    CreateAlertRequest:
+      value:
+        alertTemplateId: abcd-efgh-ijkl-mnop
+        interval: '30'
+        entityDetails:
+          usageMeterId: um.1zYnCiM9Bpg.lv25y
+        ownerDetails:
+          accountId: account_1
+        parameters:
+          threshold: 10
+    UpdateAlertRequest:
+      value:
+        status: INACTIVE
+    UpdateIncidentStatusRequest:
+      value:
+        status: CLOSE
     Customer:
       summary: A sample Customer
       value:
@@ -13807,10 +14432,38 @@ components:
           schema:
             $ref: '#/components/schemas/GetCustomerPortalDelegateTokenRequest'
           examples:
-            GetCustomerPortalDelegateTokenRequestAllAccountAccess:
-              $ref: '#/components/examples/GetCustomerPortalDelegateTokenRequestAllAccountAccess'
+            GetCustomerPortalDelegateTokenRequestAllAccountsAccess:
+              $ref: '#/components/examples/GetCustomerPortalDelegateTokenRequestAllAccountsAccess'
             GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess:
               $ref: '#/components/examples/GetCustomerPortalDelegateTokenRequestSelectedAccountsAccess'
+    CreateAlertRequest:
+      description: Payload to install an alert
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/CreateAlertRequest'
+          examples:
+            CreateAlertRequest:
+              $ref: '#/components/examples/CreateAlertRequest'
+    UpdateAlertRequest:
+      description: Payload to update alert
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateAlertRequest'
+          examples:
+            AlertResponse:
+              $ref: '#/components/examples/UpdateAlertRequest'
+    UpdateIncidentStatusRequest:
+      description: Payload to update incident status
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/UpdateIncidentStatusRequest'
+          examples:
+            UpdateIncidentStatusRequest:
+              $ref: '#/components/examples/UpdateIncidentStatusRequest'
     GetMetricsRequest:
       content:
         application/json:
